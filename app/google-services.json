@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "39173987489",
+    "project_id": "seniorcare-tfg",
+    "storage_bucket": "seniorcare-tfg.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:39173987489:android:04ae098dd9c924d1dde4e0",
+        "android_client_info": {
+          "package_name": "com.paula.seniorcare_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "39173987489-g5va4nqe1rggiql67t2rioia17pr8dml.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.paula.seniorcare_app",
+            "certificate_hash": "5529ad9bfdb097364b94e60bcf6729e00103122d"
+          }
+        },
+        {
+          "client_id": "39173987489-uqh5d2n78ur9mitch5gla7gho3jv6cff.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBGfdqYH4oVapPiWocioXj037mO4fqAtoI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "39173987489-uqh5d2n78ur9mitch5gla7gho3jv6cff.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

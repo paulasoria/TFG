@@ -1,0 +1,94 @@
+package com.paula.seniorcare_app
+
+import android.R.attr
+import android.content.Context
+import android.content.DialogInterface
+import android.content.Intent
+import android.os.Bundle
+import android.widget.EditText
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.auth.FirebaseAuth
+import kotlinx.android.synthetic.main.activity_auth.logInButton
+import kotlinx.android.synthetic.main.activity_log_in.*
+import kotlinx.android.synthetic.main.activity_log_in.email
+import kotlinx.android.synthetic.main.activity_log_in.password
+import kotlinx.android.synthetic.main.activity_reset_password.*
+import kotlinx.android.synthetic.main.activity_reset_password.view.*
+import kotlinx.android.synthetic.main.activity_sign_up.*
+
+
+class LogInActivity : AppCompatActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_log_in)
+
+        //Setup
+        setup();    //Configurar pantalla
+    }
+
+    private fun setup() {
+        title = "Inicio de sesión"
+        logInButton.setOnClickListener() {
+            if (email.editText?.text.toString().trim().isNotEmpty() && password.editText?.text.toString().trim().isNotEmpty()) {
+                FirebaseAuth.getInstance().signInWithEmailAndPassword(email.editText?.text.toString(), password.editText?.text.toString()).addOnCompleteListener {
+                    if (it.isSuccessful) {
+                        //Guardado de datos
+                        val prefs = getSharedPreferences(getString(R.string.prefs_file), Context.MODE_PRIVATE).edit()
+                        prefs.putString("email", email.editText?.text.toString())
+                        //RECORDAR QUE SI INICIO SESIÓN NO PODEMOS OBTENER NI EL ROL NI EL NOMBRE, ETC.
+                        prefs.apply()
+                        showHome()
+                    } else {
+                        showAlertLogIn()
+                    }
+                }
+            } else {
+                if (email.editText?.text.toString().trim().isEmpty()){
+                    email.error = "El campo no puede estar vacío"
+                } else { email.error = null }
+
+                if (password.editText?.text.toString().trim().isEmpty()) {
+                    password.error = "El campo no puede estar vacío"
+                } else { password.error = null }
+            }
+        }
+
+        resetPasswordButton.setOnClickListener() {
+            val builder = AlertDialog.Builder(this)
+            val view = layoutInflater.inflate(R.layout.activity_reset_password, null)
+            builder.setView(view)
+            builder.setTitle("Contraseña olvidada")
+            builder.setMessage("Escribe tu email y te enviaremos un correo para reestablecer tu contraseña")
+            builder.setPositiveButton("Aceptar", DialogInterface.OnClickListener { _,_ ->
+                if (view.resetPasswordEditText.text.toString().isNotEmpty()){
+                    FirebaseAuth.getInstance().sendPasswordResetEmail(view.resetPasswordEditText.text.toString()).addOnCompleteListener {
+                        if (it.isSuccessful) {
+                            val toast = Toast.makeText(this, "Correo enviado", Toast.LENGTH_SHORT).show()
+                        } else {
+                            val toast = Toast.makeText(this, "Se ha producido un error", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                }
+            })
+            builder.setNegativeButton("Cancelar",null)
+            val dialog: AlertDialog = builder.create()
+            dialog.show()
+        }
+    }
+
+    private fun showAlertLogIn(){
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Error")
+        builder.setMessage("Se ha producido un error autenticando al usuario")
+        builder.setPositiveButton("Aceptar",null)
+        val dialog: AlertDialog = builder.create()
+        dialog.show()
+    }
+
+    private fun showHome() {
+        val homeIntent = Intent(this,HomeActivity::class.java)
+        startActivity(homeIntent)
+    }
+}

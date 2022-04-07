@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">SeniorCare</string>
+    <string name="prefs_file">com.paula.seniorcare_app.PREFERENCE_FILE_KEY</string>
+    <string-array name="rol_usuario">
+        <item>Administrador</item>
+        <item>Familiar</item>
+    </string-array>
+</resources>

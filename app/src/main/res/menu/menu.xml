@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/fragmentCalls"
+        android:icon="@drawable/ic_call"
+        android:title="Llamadas" />
+    <item
+        android:id="@+id/fragmentRelatives"
+        android:icon="@drawable/ic_person"
+        android:title="Familiares" />
+    <item
+        android:id="@+id/fragmentAlerts"
+        android:icon="@drawable/ic_alarm"
+        android:title="Alertas" />
+</menu>
