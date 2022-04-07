@@ -1,31 +1,23 @@
 package com.paula.seniorcare_app
 
-import android.R.attr
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
-import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_auth.logInButton
 import kotlinx.android.synthetic.main.activity_log_in.*
-import kotlinx.android.synthetic.main.activity_log_in.email
-import kotlinx.android.synthetic.main.activity_log_in.password
-import kotlinx.android.synthetic.main.activity_reset_password.*
 import kotlinx.android.synthetic.main.activity_reset_password.view.*
-import kotlinx.android.synthetic.main.activity_sign_up.*
-
 
 class LogInActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_log_in)
 
-        //Setup
-        setup();    //Configurar pantalla
+        setup();
     }
 
     private fun setup() {
@@ -37,7 +29,6 @@ class LogInActivity : AppCompatActivity() {
                         //Guardado de datos
                         val prefs = getSharedPreferences(getString(R.string.prefs_file), Context.MODE_PRIVATE).edit()
                         prefs.putString("email", email.editText?.text.toString())
-                        //RECORDAR QUE SI INICIO SESIÓN NO PODEMOS OBTENER NI EL ROL NI EL NOMBRE, ETC.
                         prefs.apply()
                         showHome()
                     } else {
@@ -46,11 +37,11 @@ class LogInActivity : AppCompatActivity() {
                 }
             } else {
                 if (email.editText?.text.toString().trim().isEmpty()){
-                    email.error = "El campo no puede estar vacío"
+                    email.error = getString(R.string.empty_field)
                 } else { email.error = null }
 
                 if (password.editText?.text.toString().trim().isEmpty()) {
-                    password.error = "El campo no puede estar vacío"
+                    password.error = getString(R.string.empty_field)
                 } else { password.error = null }
             }
         }
@@ -81,7 +72,7 @@ class LogInActivity : AppCompatActivity() {
     private fun showAlertLogIn(){
         val builder = AlertDialog.Builder(this)
         builder.setTitle("Error")
-        builder.setMessage("Se ha producido un error autenticando al usuario")
+        builder.setMessage(getString(R.string.login_error))
         builder.setPositiveButton("Aceptar",null)
         val dialog: AlertDialog = builder.create()
         dialog.show()
