@@ -1,8 +1,15 @@
 <resources>
     <string name="app_name">SeniorCare</string>
     <string name="prefs_file">com.paula.seniorcare_app.PREFERENCE_FILE_KEY</string>
+    <string name="empty_field">El campo no puede estar vacío</string>
+    <string name="google_error">Se ha producido un error autenticando con Google</string>
+    <string name="signup_error">Se ha producido un error registrando al usuario</string>
+    <string name="login_error">Se ha producido un error autenticando al usuario</string>
+    <string name="no_results">No hay resultados para esta búsqueda</string>
     <string-array name="rol_usuario">
         <item>Administrador</item>
         <item>Familiar</item>
     </string-array>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

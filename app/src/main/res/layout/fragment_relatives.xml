@@ -10,13 +10,31 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_marginTop="5dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp">
+
+            <Button
+                android:id="@+id/addRelativeButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/dark_blue"
+                android:text="Añadir familiar" />
+
+        </LinearLayout>
+
         <TextView
+            android:id="@+id/noResultsTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:textSize="40sp"
+            android:text="Aún no tienes ningún familiar añadido"
             android:textColor="@color/white"
-            android:text="Familiares" />
+            android:visibility="visible" />
 
     </RelativeLayout>
 

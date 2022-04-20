@@ -29,9 +29,12 @@
 
         <ImageView
             android:id="@+id/profileImageView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            tools:srcCompat="@tools:sample/avatars" />
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:maxWidth="150dp"
+            android:maxHeight="150dp"
+            android:layout_gravity="center"
+            android:src="@drawable/no_photo_user"/>
 
         <Space
             android:layout_width="match_parent"

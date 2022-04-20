@@ -2,18 +2,21 @@ package com.paula.seniorcare_app
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
 import kotlinx.android.synthetic.main.activity_profile.*
-
-
-enum class ProviderType {
-    BASIC,
-    GOOGLE
-}
+import java.net.URL
+import java.nio.file.Path
 
 class ProfileActivity : AppCompatActivity() {
+
+    private val db = FirebaseFirestore.getInstance()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile)
@@ -25,19 +28,16 @@ class ProfileActivity : AppCompatActivity() {
         title = "Perfil"
 
         val prefs = getSharedPreferences(getString(R.string.prefs_file), Context.MODE_PRIVATE)
-        val name = prefs.getString("name", null)
         val email = prefs.getString("email", null)
-        val rol = prefs.getString("rol", null)
-        nameTextView.text = name
-        emailTextView.text = email
-        rolTextView.text = rol
+        var downloadImage : String?
 
-        for (user in FirebaseAuth.getInstance().currentUser!!.providerData) {
-            if (user.providerId == "google.com") {
-                providerTextView.text = "Google"
-            } else {
-                providerTextView.text = "Email"
-            }
+        db.collection("users").document(FirebaseAuth.getInstance().currentUser?.email.toString()).get().addOnSuccessListener {
+            downloadImage = it.get("image") as String?
+            Glide.with(this).load(downloadImage.toString()).into(profileImageView)
+            nameTextView.text = it.get("name") as String?
+            emailTextView.text = it.get("email") as String?
+            rolTextView.text = it.get("rol") as String?
+            providerTextView.text = it.get("provider") as String
         }
 
         logOutButton.setOnClickListener{

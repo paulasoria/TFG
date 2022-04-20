@@ -18,7 +18,8 @@
             android:id="@+id/profileButton"
             android:layout_width="59sp"
             android:layout_height="59sp"
-            android:background="@color/grayish_blue"
+            android:background="@drawable/round_button_shape"
+            android:layout_margin="4dp"
             android:scrollbarSize="4dp"
             app:srcCompat="@drawable/ic_person" />
     </LinearLayout>

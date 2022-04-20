@@ -11,18 +11,19 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.activity_auth.*
 
 class AuthActivity : AppCompatActivity() {
 
-    private val GOOGLE_SIGN_IN = 100
+    private val GOOGLE_SIGN_IN = 1
+    private val db = FirebaseFirestore.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_auth)
 
-        //Setup
-        setup();    //Configurar pantalla
+        setup();
         session();    //Comprobar si existe una sesión activa
     }
 
@@ -34,7 +35,7 @@ class AuthActivity : AppCompatActivity() {
     private fun session(){
         val prefs = getSharedPreferences(getString(R.string.prefs_file), Context.MODE_PRIVATE)
         val email = prefs.getString("email", null)
-        if(email != null){  //Hay sesión activa, navegamos a la pantalla de inicio
+        if(email != null){
             authLayout.visibility = View.INVISIBLE
             showHome()
         }
@@ -52,8 +53,8 @@ class AuthActivity : AppCompatActivity() {
         }
 
         googleButton.setOnClickListener {
-            //val googleConf = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken("39173987489-g5va4nqe1rggiql67t2rioia17pr8dml.apps.googleusercontent.com").requestEmail().build()
-            val googleConf = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(getString(R.string.default_web_client_id)).requestEmail().build()
+            //val googleConf = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(getString(R.string.default_web_client_id)).requestEmail().build()
+            val googleConf = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken("39173987489-uqh5d2n78ur9mitch5gla7gho3jv6cff.apps.googleusercontent.com").requestEmail().build()
             val googleClient = GoogleSignIn.getClient(this, googleConf)
             googleClient.signOut()
             startActivityForResult(googleClient.signInIntent, GOOGLE_SIGN_IN)
@@ -63,7 +64,7 @@ class AuthActivity : AppCompatActivity() {
     private fun showAlertGoogle(){
         val builder = AlertDialog.Builder(this)
         builder.setTitle("Error")
-        builder.setMessage("Se ha producido un error autenticando con Google")
+        builder.setMessage(getString(R.string.google_error))
         builder.setPositiveButton("Aceptar",null)
         val dialog: AlertDialog = builder.create()
         dialog.show()
@@ -85,6 +86,15 @@ class AuthActivity : AppCompatActivity() {
                     val credential = GoogleAuthProvider.getCredential(account.idToken, null)
                     FirebaseAuth.getInstance().signInWithCredential(credential).addOnCompleteListener {
                         if (it.isSuccessful) {
+                            db.collection("users").document(account.email.toString()).set(
+                                hashMapOf("image" to R.drawable.no_photo_user,
+                                    "name" to account.displayName,
+                                    "email" to account.email,
+                                    "rol" to "No se sabe",   //REVISAR
+                                    "provider" to "Google"
+                                    //,"relatives" to relativesList
+                                    )
+                            )
                             showHome()
                         } else {
                             showAlertGoogle()

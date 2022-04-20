@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/grayish_blue"
+    android:padding="10dp"
+    tools:context=".AddRelativeFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <SearchView
+            android:id="@+id/relativesSearchView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/round_button_shape"
+            android:backgroundTint="@color/light_grayish_blue"
+            android:queryHint="Busca familiares por email" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="10dp" />
+
+        <GridView
+            android:id="@+id/relativesGridView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:columnWidth="150dp"
+            android:horizontalSpacing="10dp"
+            android:verticalSpacing="15dp"
+            android:numColumns="auto_fit"/>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/noResultsTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="No hay resultados para esta búsqueda"
+        android:textColor="@color/white"
+        android:visibility="invisible" />
+
+</FrameLayout>

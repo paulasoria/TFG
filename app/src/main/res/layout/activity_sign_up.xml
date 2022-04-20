@@ -28,6 +28,20 @@
             android:textColor="@color/white"
             android:textSize="40sp" />
 
+        <ImageView
+            android:id="@+id/userImageView"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:maxWidth="150dp"
+            android:maxHeight="150dp"
+            android:layout_gravity="center"
+            android:src="@drawable/no_photo_user"
+            android:clickable="true"/>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="8dp" />
+
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/name"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
