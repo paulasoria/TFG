@@ -10,6 +10,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.android.synthetic.main.activity_profile.*
+import kotlinx.android.synthetic.main.activity_sign_up.*
 import java.net.URL
 import java.nio.file.Path
 
@@ -38,6 +39,14 @@ class ProfileActivity : AppCompatActivity() {
             emailTextView.text = it.get("email") as String?
             rolTextView.text = it.get("rol") as String?
             providerTextView.text = it.get("provider") as String
+        }
+
+        editImageButton.setOnClickListener {
+
+        }
+
+        editNameButton.setOnClickListener {
+
         }
 
         logOutButton.setOnClickListener{

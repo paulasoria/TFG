@@ -74,7 +74,7 @@ class SignUpActivity : AppCompatActivity() {
                                     )
                                 )
                             } else {
-                                Log.d("LOG", "ERROR DE MIS PUTOS MUERTOS EN VINAGRE DE MÓDENA")
+                                Log.d("LOG", "Error")
                             }
                         }
                         showHome()

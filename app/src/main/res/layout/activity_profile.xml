@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/dark_blue"
-    tools:context=".HomeActivity">
+    tools:context=".ProfileActivity">
 
     <LinearLayout
         android:layout_width="0dp"
@@ -27,14 +27,30 @@
             android:textColor="@color/white"
             android:textSize="40sp" />
 
-        <ImageView
-            android:id="@+id/profileImageView"
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            android:maxWidth="150dp"
-            android:maxHeight="150dp"
-            android:layout_gravity="center"
-            android:src="@drawable/no_photo_user"/>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center">
+
+            <ImageView
+                android:id="@+id/profileImageView"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:maxWidth="150dp"
+                android:maxHeight="150dp"
+                android:layout_gravity="center"
+                android:src="@drawable/no_photo_user" />
+
+            <ImageButton
+                android:id="@+id/editImageButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_edit"
+                android:backgroundTint="@color/dark_blue"
+                android:layout_gravity="bottom"/>
+
+        </LinearLayout>
 
         <Space
             android:layout_width="match_parent"
@@ -65,6 +81,14 @@
                 android:text="Nombre"
                 android:textColor="@color/light_grayish_blue"
                 android:textSize="18sp" />
+
+            <ImageButton
+                android:id="@+id/editNameButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_edit"
+                android:backgroundTint="@color/dark_blue"/>
+
         </LinearLayout>
 
         <Space
@@ -168,11 +192,11 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="horizontal">
+            android:orientation="vertical">
 
             <Button
                 android:id="@+id/logOutButton"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Cerrar sesión" />
