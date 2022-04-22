@@ -10,9 +10,14 @@ import android.widget.GridView
 import android.widget.SearchView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import com.google.firebase.firestore.FirebaseFirestore
 import com.paula.seniorcare_app.model.User
 import kotlinx.android.synthetic.main.fragment_add_relative.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class AddRelativeFragment : Fragment(), SearchView.OnQueryTextListener {
     private val db = FirebaseFirestore.getInstance()
@@ -48,8 +53,12 @@ class AddRelativeFragment : Fragment(), SearchView.OnQueryTextListener {
     override fun onQueryTextSubmit(p0: String?): Boolean {
         Log.d(TAG,"Text Submit: "+p0)
         relativesSearchView.clearFocus()
-        if (p0 != null) {
-            getSearchUsers(p0)
+        GlobalScope.launch(Dispatchers.Main) {  //SE ADELANTABA, CORRUTINAS, AHORA FUNCIONA A LA SEGUNDA ¿?
+            withContext(Dispatchers.IO) {
+                if (p0 != null) {
+                    getSearchUsers(p0)
+                }
+            }
         }
         showResults()
         return true
@@ -78,12 +87,11 @@ class AddRelativeFragment : Fragment(), SearchView.OnQueryTextListener {
             noResultsTextView.visibility = View.VISIBLE
             noResultsTextView.text = getString(R.string.no_results)
         } else {
-            noResultsTextView.visibility = View.VISIBLE
-            noResultsTextView.text = "Sí hay cousas"
-            /*adapter = RelativesAdapter(searchList, requireContext())
+            noResultsTextView.visibility = View.INVISIBLE
+            adapter = RelativesAdapter(searchList, requireContext())
             relativesGridView.adapter = adapter
-            relativesGridView.setOnClickListener(){
-                //Lo que sea
+            /*relativesGridView.setOnItemClickListener(){
+                //Ver perfil de usuario
             }*/
         }
     }

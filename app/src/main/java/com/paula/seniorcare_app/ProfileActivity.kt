@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
@@ -16,7 +17,11 @@ import java.nio.file.Path
 
 class ProfileActivity : AppCompatActivity() {
 
+    private val GALLERY_INTENT = 2
+    var userEmail = FirebaseAuth.getInstance().currentUser?.email
     private val db = FirebaseFirestore.getInstance()
+    private val st = FirebaseStorage.getInstance().reference
+    private var uri: Uri = Uri.EMPTY
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,12 +46,32 @@ class ProfileActivity : AppCompatActivity() {
             providerTextView.text = it.get("provider") as String
         }
 
-        editImageButton.setOnClickListener {
+        editImageButton.setOnClickListener {    //SE ADELANTA CREO (PORQUE NO GUARDA IMAGEN EN BBDD), MIRAR CORRUTINAS
+            selectImageFromGallery()
+            //modificar bbdd
+            val filename = userEmail.toString() + "_profile_image.jpg"
+            val filepath = st.child("profile_images").child(filename)
+            //filepath.delete()
+            filepath.putFile(uri).continueWithTask {
+                if (!it.isSuccessful) {
+                    it.exception
+                }
+                filepath.downloadUrl
+            }.addOnCompleteListener {
+                if (it.isSuccessful) {
+                    val uploadedImageUri: String = it.result.toString()
 
+                    //Modificar un usuario en la base de datos
+                    db.collection("users").document(userEmail.toString()).update("image", uploadedImageUri)
+                } else {
+                    Log.d("LOG", "Error")
+                }
+            }
         }
 
         editNameButton.setOnClickListener {
-
+            //Mostrar dialogo
+            //db.collection("users").document(userEmail.toString()).update("name", userName)
         }
 
         logOutButton.setOnClickListener{
@@ -60,6 +85,20 @@ class ProfileActivity : AppCompatActivity() {
 
             val authIntent = Intent(this,AuthActivity::class.java)
             startActivity(authIntent)
+        }
+    }
+
+    private fun selectImageFromGallery(){
+        val galleryIntent = Intent(Intent.ACTION_PICK)
+        galleryIntent.type = "image/*"
+        startActivityForResult(galleryIntent, GALLERY_INTENT)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if(requestCode == GALLERY_INTENT && resultCode == RESULT_OK){
+            uri = data!!.data!!
+            profileImageView.setImageURI(uri)
         }
     }
 }

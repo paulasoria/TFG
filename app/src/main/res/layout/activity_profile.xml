@@ -85,8 +85,9 @@
             <ImageButton
                 android:id="@+id/editNameButton"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
                 android:src="@drawable/ic_edit"
+                android:layout_gravity="center"
                 android:backgroundTint="@color/dark_blue"/>
 
         </LinearLayout>
