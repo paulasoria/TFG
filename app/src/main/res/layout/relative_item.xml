@@ -23,9 +23,11 @@
             android:id="@+id/relativeItemName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="10dp"
+            android:paddingTop="10dp"
+            android:paddingLeft="10dp"
             android:textSize="20sp"
-            android:text="Nombre"/>
+            android:text="Nombre"
+            android:textAllCaps="true"/>
 
         <TextView
             android:id="@+id/relativeItemEmail"

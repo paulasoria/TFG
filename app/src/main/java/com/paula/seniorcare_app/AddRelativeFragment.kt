@@ -53,7 +53,7 @@ class AddRelativeFragment : Fragment(), SearchView.OnQueryTextListener {
     override fun onQueryTextSubmit(p0: String?): Boolean {
         Log.d(TAG,"Text Submit: "+p0)
         relativesSearchView.clearFocus()
-        GlobalScope.launch(Dispatchers.Main) {  //SE ADELANTABA, CORRUTINAS, AHORA FUNCIONA A LA SEGUNDA ¿?
+        GlobalScope.launch(Dispatchers.Main) {  //SE ADELANTA, CORRUTINAS, AHORA FUNCIONA A LA SEGUNDA ¿?
             withContext(Dispatchers.IO) {
                 if (p0 != null) {
                     getSearchUsers(p0)

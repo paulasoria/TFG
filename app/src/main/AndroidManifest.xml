@@ -14,6 +14,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SeniorCare_App">
         <activity
+            android:name=".RelativeProfileActivity"
+            android:exported="false" />
+        <activity
             android:name=".HomeActivity"
             android:exported="false" />
         <activity
