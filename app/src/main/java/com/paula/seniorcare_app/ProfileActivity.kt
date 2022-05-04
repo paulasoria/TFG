@@ -50,7 +50,7 @@ class ProfileActivity : AppCompatActivity() {
             //modificar bbdd
             val filename = userEmail.toString() + "_profile_image.jpg"
             val filepath = st.child("profile_images").child(filename)
-            //filepath.delete()
+            filepath.delete()
             filepath.putFile(uri).continueWithTask {
                 if (!it.isSuccessful) {
                     it.exception
