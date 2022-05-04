@@ -1,7 +1,6 @@
 package com.paula.seniorcare_app
 
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
@@ -17,12 +16,12 @@ class LogInActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_log_in)
 
-        setup();
+        setup()
     }
 
     private fun setup() {
         title = "Inicio de sesión"
-        logInButton.setOnClickListener() {
+        logInButton.setOnClickListener {
             if (email.editText?.text.toString().trim().isNotEmpty() && password.editText?.text.toString().trim().isNotEmpty()) {
                 FirebaseAuth.getInstance().signInWithEmailAndPassword(email.editText?.text.toString(), password.editText?.text.toString()).addOnCompleteListener {
                     if (it.isSuccessful) {
@@ -46,23 +45,23 @@ class LogInActivity : AppCompatActivity() {
             }
         }
 
-        resetPasswordButton.setOnClickListener() {
+        resetPasswordButton.setOnClickListener {
             val builder = AlertDialog.Builder(this)
             val view = layoutInflater.inflate(R.layout.activity_reset_password, null)
             builder.setView(view)
             builder.setTitle("Contraseña olvidada")
             builder.setMessage("Escribe tu email y te enviaremos un correo para reestablecer tu contraseña")
-            builder.setPositiveButton("Aceptar", DialogInterface.OnClickListener { _,_ ->
+            builder.setPositiveButton("Aceptar") { _,_ ->
                 if (view.resetPasswordEditText.text.toString().isNotEmpty()){
                     FirebaseAuth.getInstance().sendPasswordResetEmail(view.resetPasswordEditText.text.toString()).addOnCompleteListener {
                         if (it.isSuccessful) {
-                            val toast = Toast.makeText(this, "Correo enviado", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(this, "Correo enviado", Toast.LENGTH_SHORT).show()
                         } else {
-                            val toast = Toast.makeText(this, "Se ha producido un error", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(this, "Se ha producido un error", Toast.LENGTH_SHORT).show()
                         }
                     }
                 }
-            })
+            }
             builder.setNegativeButton("Cancelar",null)
             val dialog: AlertDialog = builder.create()
             dialog.show()

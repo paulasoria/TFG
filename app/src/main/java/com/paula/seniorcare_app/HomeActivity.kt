@@ -35,7 +35,7 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun setup(){
-        profileButton.setOnClickListener(){
+        profileButton.setOnClickListener {
             val profileIntent = Intent(this,ProfileActivity::class.java)
             startActivity(profileIntent)
         }

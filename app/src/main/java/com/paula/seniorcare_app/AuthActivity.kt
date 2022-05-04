@@ -23,8 +23,8 @@ class AuthActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_auth)
 
-        setup();
-        session();    //Comprobar si existe una sesión activa
+        setup()
+        session()    //Comprobar si existe una sesión activa
     }
 
     override fun onStart() {
