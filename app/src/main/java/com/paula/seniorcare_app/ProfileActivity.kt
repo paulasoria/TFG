@@ -119,6 +119,7 @@ class ProfileActivity : AppCompatActivity() {
             nameTextView.text = newNameEditText.text.toString()
             db.collection("users").document(userEmail.toString()).update("name", newNameEditText.text.toString())
         }
+
         builder.setNegativeButton("Cancelar",null)
         builder.setView(dialogLayout)
         builder.show()

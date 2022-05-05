@@ -63,7 +63,6 @@ class SignUpActivity : AppCompatActivity() {
                                 createUser(url)
                             }
                         }
-
                         showHome()
                     } else {
                         showAlertSignUp()
