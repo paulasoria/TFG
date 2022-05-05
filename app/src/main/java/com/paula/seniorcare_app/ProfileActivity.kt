@@ -1,5 +1,6 @@
 package com.paula.seniorcare_app
 
+import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -8,11 +9,18 @@ import android.util.Log
 import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
+import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
 import kotlinx.android.synthetic.main.activity_profile.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
 
 class ProfileActivity : AppCompatActivity() {
 
@@ -50,21 +58,15 @@ class ProfileActivity : AppCompatActivity() {
             //modificar bbdd
             val filename = userEmail.toString() + "_profile_image.jpg"
             val filepath = st.child("profile_images").child(filename)
-            filepath.delete()
-            filepath.putFile(uri).continueWithTask {
-                if (!it.isSuccessful) {
-                    it.exception
+            //filepath.delete()
+            lifecycleScope.launch {
+                withContext(Dispatchers.IO) {
+                    downloadImage = uploadImage(filepath, uri).toString()
                 }
-                filepath.downloadUrl
-            }.addOnCompleteListener {
-                if (it.isSuccessful) {
-                    val uploadedImageUri: String = it.result.toString()
-
-                    //Modificar un usuario en la base de datos
-                    db.collection("users").document(userEmail.toString()).update("image", uploadedImageUri)
-                } else {
-                    Log.d("LOG", "Error")
-                }
+                //Modificar un usuario en la base de datos
+                db.collection("users").document(userEmail.toString()).update("image", downloadImage)
+                    .addOnSuccessListener { Log.d(ContentValues.TAG, "DocumentSnapshot successfully updated!") }
+                    .addOnFailureListener { e -> Log.w(ContentValues.TAG, "Error updating document", e) }
             }
         }
 
@@ -84,6 +86,11 @@ class ProfileActivity : AppCompatActivity() {
             val authIntent = Intent(this,AuthActivity::class.java)
             startActivity(authIntent)
         }
+    }
+
+    suspend fun uploadImage(filepath: StorageReference, uri: Uri): Task<Uri> {
+        filepath.putFile(uri).await()
+        return filepath.downloadUrl
     }
 
     private fun selectImageFromGallery(){

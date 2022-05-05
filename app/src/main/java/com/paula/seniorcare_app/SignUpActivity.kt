@@ -1,5 +1,6 @@
 package com.paula.seniorcare_app
 
+import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -8,6 +9,7 @@ import android.util.Log
 import android.widget.ArrayAdapter
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.google.android.gms.tasks.Continuation
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
@@ -15,9 +17,14 @@ import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.UploadTask
 import kotlinx.android.synthetic.main.activity_auth.signUpButton
 import kotlinx.android.synthetic.main.activity_sign_up.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
 
 class SignUpActivity : AppCompatActivity() {
 
@@ -50,33 +57,13 @@ class SignUpActivity : AppCompatActivity() {
                         prefs.putString("email", email.editText?.text.toString())
                         prefs.apply()
 
-                        //Imagen
-                        val filename = email.editText?.text.toString() + "_profile_image.jpg"
-                        val filepath = st.child("profile_images").child(filename)
-                        filepath.putFile(uri).continueWithTask {
-                            if (!it.isSuccessful) {
-                                it.exception
-                            }
-                            filepath.downloadUrl
-                        }.addOnCompleteListener{
-                            if (it.isSuccessful) {
-                                val uploadedImageUri: String = it.result.toString()
-
-                                //Crear un usuario en la base de datos
-                                db.collection("users").document(email.editText?.text.toString()).set(
-                                    hashMapOf(
-                                        "image" to uploadedImageUri,
-                                        "name" to name.editText?.text.toString(),
-                                        "email" to email.editText?.text.toString(),
-                                        "rol" to rol_menu.text.toString(),
-                                        "provider" to "SeniorCare",
-                                        //"relatives" to relativesList
-                                    )
-                                )
-                            } else {
-                                Log.d("LOG", "ERROR")
+                        lifecycleScope.launch{
+                            withContext(Dispatchers.IO) {
+                                val url = uploadImage()
+                                createUser(url)
                             }
                         }
+
                         showHome()
                     } else {
                         showAlertSignUp()
@@ -100,6 +87,28 @@ class SignUpActivity : AppCompatActivity() {
             roles
         )
         rol_menu.setAdapter(adapter)
+    }
+
+    private suspend fun uploadImage(): Uri? {
+        val filename = email.editText?.text.toString() + "_profile_image.jpg"
+        val filepath = st.child("profile_images").child(filename)
+        filepath.putFile(uri).continueWithTask{
+            filepath.downloadUrl
+        }.await()
+        return filepath.downloadUrl.result
+    }
+
+    private suspend fun createUser(url: Uri?){
+        db.collection("users").document(email.editText?.text.toString()).set(
+            hashMapOf(
+                "image" to url.toString(),
+                "name" to name.editText?.text.toString(),
+                "email" to email.editText?.text.toString(),
+                "rol" to rol_menu.text.toString(),
+                "provider" to "SeniorCare",
+                //"relatives" to relativesList
+            )
+        ).await()
     }
 
     private fun showAlertSignUp(){
