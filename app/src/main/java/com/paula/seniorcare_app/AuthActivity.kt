@@ -77,7 +77,6 @@ class AuthActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-
         if(requestCode == GOOGLE_SIGN_IN){
             val task = GoogleSignIn.getSignedInAccountFromIntent(data)
             try {
@@ -86,8 +85,10 @@ class AuthActivity : AppCompatActivity() {
                     val credential = GoogleAuthProvider.getCredential(account.idToken, null)
                     FirebaseAuth.getInstance().signInWithCredential(credential).addOnCompleteListener {
                         if (it.isSuccessful) {
-                            db.collection("users").document(account.email.toString()).set(
-                                hashMapOf("image" to R.drawable.no_photo_user,
+                            db.collection("users").document(account.id.toString()).set(
+                                hashMapOf(
+                                    "uid" to account.id.toString(),
+                                    "image" to R.drawable.no_photo_user,
                                     "name" to account.displayName,
                                     "email" to account.email,
                                     "rol" to "No se sabe",   //REVISAR

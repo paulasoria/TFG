@@ -43,7 +43,7 @@
             android:layout_height="8dp" />
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/name"
+            android:id="@+id/nameTextInput"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -64,7 +64,7 @@
             android:layout_height="8dp" />
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/email"
+            android:id="@+id/emailTextInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -85,7 +85,7 @@
             android:layout_height="8dp" />
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/password"
+            android:id="@+id/passwordTextInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -107,7 +107,7 @@
             android:layout_height="8dp" />
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/dropdown_menu"
+            android:id="@+id/dropdownMenu"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
@@ -116,7 +116,7 @@
             app:errorIconDrawable="@null" >
 
             <AutoCompleteTextView
-                android:id="@+id/rol_menu"
+                android:id="@+id/rolMenuTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="none"

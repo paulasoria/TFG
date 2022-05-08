@@ -6,10 +6,14 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_auth.logInButton
 import kotlinx.android.synthetic.main.activity_log_in.*
+import kotlinx.android.synthetic.main.activity_log_in.emailTextInput
+import kotlinx.android.synthetic.main.activity_log_in.passwordTextInput
 import kotlinx.android.synthetic.main.activity_reset_password.view.*
+import kotlinx.android.synthetic.main.activity_sign_up.*
 
 class LogInActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -20,28 +24,22 @@ class LogInActivity : AppCompatActivity() {
     }
 
     private fun setup() {
-        title = "Inicio de sesión"
         logInButton.setOnClickListener {
-            if (email.editText?.text.toString().trim().isNotEmpty() && password.editText?.text.toString().trim().isNotEmpty()) {
-                FirebaseAuth.getInstance().signInWithEmailAndPassword(email.editText?.text.toString(), password.editText?.text.toString()).addOnCompleteListener {
-                    if (it.isSuccessful) {
+            val email = emailTextInput.editText?.text.toString();
+            val password = passwordTextInput.editText?.text.toString();
+            if (email.trim().isNotEmpty() && password.trim().isNotEmpty()) {
+                FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password).addOnSuccessListener {
                         //Guardado de datos
                         val prefs = getSharedPreferences(getString(R.string.prefs_file), Context.MODE_PRIVATE).edit()
-                        prefs.putString("email", email.editText?.text.toString())
+                        prefs.putString("email", emailTextInput.editText?.text.toString())
                         prefs.apply()
                         showHome()
-                    } else {
-                        showAlertLogIn()
-                    }
+                }.addOnFailureListener {
+                    showAlertLogIn()
                 }
             } else {
-                if (email.editText?.text.toString().trim().isEmpty()){
-                    email.error = getString(R.string.empty_field)
-                } else { email.error = null }
-
-                if (password.editText?.text.toString().trim().isEmpty()) {
-                    password.error = getString(R.string.empty_field)
-                } else { password.error = null }
+                emptyEditText(emailTextInput)
+                emptyEditText(passwordTextInput)
             }
         }
 
@@ -53,12 +51,10 @@ class LogInActivity : AppCompatActivity() {
             builder.setMessage("Escribe tu email y te enviaremos un correo para reestablecer tu contraseña")
             builder.setPositiveButton("Aceptar") { _,_ ->
                 if (view.resetPasswordEditText.text.toString().isNotEmpty()){
-                    FirebaseAuth.getInstance().sendPasswordResetEmail(view.resetPasswordEditText.text.toString()).addOnCompleteListener {
-                        if (it.isSuccessful) {
-                            Toast.makeText(this, "Correo enviado", Toast.LENGTH_SHORT).show()
-                        } else {
-                            Toast.makeText(this, "Se ha producido un error", Toast.LENGTH_SHORT).show()
-                        }
+                    FirebaseAuth.getInstance().sendPasswordResetEmail(view.resetPasswordEditText.text.toString()).addOnSuccessListener {
+                        Toast.makeText(this, "Correo enviado", Toast.LENGTH_SHORT).show()
+                    }.addOnFailureListener {
+                        Toast.makeText(this, "Se ha producido un error", Toast.LENGTH_SHORT).show()
                     }
                 }
             }
@@ -66,6 +62,12 @@ class LogInActivity : AppCompatActivity() {
             val dialog: AlertDialog = builder.create()
             dialog.show()
         }
+    }
+
+    private fun emptyEditText(x: TextInputLayout) {
+        if(x.editText?.text.toString().trim().isEmpty()){
+            x.error = getString(R.string.empty_field)
+        } else { x.error = null }
     }
 
     private fun showAlertLogIn(){

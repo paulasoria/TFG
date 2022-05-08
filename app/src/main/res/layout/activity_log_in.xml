@@ -29,7 +29,7 @@
             android:textSize="40sp" />
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/email"
+            android:id="@+id/emailTextInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -50,7 +50,7 @@
             android:layout_height="8dp" />
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/password"
+            android:id="@+id/passwordTextInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
