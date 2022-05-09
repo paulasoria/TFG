@@ -42,7 +42,7 @@ class ProfileActivity : AppCompatActivity() {
             Glide.with(this).load(downloadImage.toString()).into(profileImageView)
             nameTextView.text = it.get("name") as String?
             emailTextView.text = it.get("email") as String?
-            rolTextView.text = it.get("rol") as String?
+            roleTextView.text = it.get("role") as String?
             providerTextView.text = it.get("provider") as String
         }
 

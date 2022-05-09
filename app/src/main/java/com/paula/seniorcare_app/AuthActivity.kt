@@ -91,7 +91,7 @@ class AuthActivity : AppCompatActivity() {
                                     "image" to R.drawable.no_photo_user,
                                     "name" to account.displayName,
                                     "email" to account.email,
-                                    "rol" to "No se sabe",   //REVISAR
+                                    "role" to "No se sabe",   //REVISAR
                                     "provider" to "Google"
                                     //,"relatives" to relativesList
                                     )

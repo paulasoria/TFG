@@ -43,8 +43,8 @@ class SignUpActivity : AppCompatActivity() {
             val name = nameTextInput.editText?.text.toString();
             val email = emailTextInput.editText?.text.toString();
             val password = passwordTextInput.editText?.text.toString();
-            val rolMenu = rolMenuTextView.text.toString();
-            if (name.trim().isNotEmpty() && email.trim().isNotEmpty() && password.trim().isNotEmpty() && rolMenu.trim().isNotEmpty()) {
+            val roleMenu = roleMenuTextView.text.toString();
+            if (name.trim().isNotEmpty() && email.trim().isNotEmpty() && password.trim().isNotEmpty() && roleMenu.trim().isNotEmpty()) {
                 FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password).addOnSuccessListener {
                     //Guardado de datos
                     val prefs = getSharedPreferences(getString(R.string.prefs_file), Context.MODE_PRIVATE).edit()
@@ -59,7 +59,7 @@ class SignUpActivity : AppCompatActivity() {
                             "image" to null,
                             "name" to name,
                             "email" to email,
-                            "rol" to rolMenu,
+                            "role" to roleMenu,
                             "provider" to "SeniorCare",
                             //"relatives" to relativesList
                         )
@@ -86,7 +86,7 @@ class SignUpActivity : AppCompatActivity() {
                 emptyEditText(nameTextInput)
                 emptyEditText(emailTextInput)
                 emptyEditText(passwordTextInput)
-                if(rolMenuTextView.text.toString().trim().isEmpty()){
+                if(roleMenuTextView.text.toString().trim().isEmpty()){
                     dropdownMenu.error = getString(R.string.empty_field)
                 } else { dropdownMenu.error = null }
             }
@@ -98,7 +98,7 @@ class SignUpActivity : AppCompatActivity() {
             R.layout.lista_roles,
             roles
         )
-        rolMenuTextView.setAdapter(adapter)
+        roleMenuTextView.setAdapter(adapter)
     }
 
     private fun showAlertSignUp(){

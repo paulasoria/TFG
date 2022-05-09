@@ -14,7 +14,7 @@ class RelativeProfileActivity : AppCompatActivity() {
         val user = intent.getSerializableExtra("user") as User
         nameTextView.text = user.name.toString()
         emailTextView.text = user.email.toString()
-        //rol
+        //role
         Glide.with(this).load(user.image.toString()).into(profileImageView)
     }
 }

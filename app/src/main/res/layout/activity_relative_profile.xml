@@ -108,7 +108,7 @@
             android:layout_height="8dp" />
 
         <LinearLayout
-            android:id="@+id/rolLinearLayout"
+            android:id="@+id/roleLinearLayout"
             android:layout_width="match_parent"
             android:layout_height="30dp"
             android:orientation="horizontal">
@@ -125,7 +125,7 @@
                 android:layout_height="match_parent" />
 
             <TextView
-                android:id="@+id/rolTextView"
+                android:id="@+id/roleTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
