@@ -84,7 +84,8 @@ class ProfileActivity : AppCompatActivity() {
             filepath.putFile(uri).continueWithTask {
                 filepath.downloadUrl
             }.addOnSuccessListener {
-                db.collection("users").document(uid).update("image", downloadImage)
+                downloadImage = it.toString()
+                db.collection("users").document(uid).update("image", it.toString())
                     .addOnSuccessListener { Log.d(ContentValues.TAG, "DocumentSnapshot successfully updated!") }
                     .addOnFailureListener { e -> Log.w(ContentValues.TAG, "Error updating document", e) }
             }
