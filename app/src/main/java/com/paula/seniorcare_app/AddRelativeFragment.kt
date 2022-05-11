@@ -1,9 +1,7 @@
 package com.paula.seniorcare_app
 
-import android.content.ContentValues.TAG
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,16 +13,14 @@ import com.google.firebase.firestore.QuerySnapshot
 import com.paula.seniorcare_app.model.User
 import kotlinx.android.synthetic.main.fragment_add_relative.*
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 
-
 class AddRelativeFragment : Fragment(), SearchView.OnQueryTextListener {
     private val db = FirebaseFirestore.getInstance()
     private var adapter: RelativesAdapter? = null
-    private var relativesList = ArrayList<User>()
+    //private var relativesList = ArrayList<User>()
     private var searchList = ArrayList<User>()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -34,7 +30,7 @@ class AddRelativeFragment : Fragment(), SearchView.OnQueryTextListener {
         return view
     }
 
-    private fun getAllUsers(){
+    /*private fun getAllUsers(){
         relativesList.clear()
         db.collection("users").get().addOnSuccessListener { documents ->
             //relativesList.addAll(documents.toObjects(User::class.java))
@@ -47,9 +43,9 @@ class AddRelativeFragment : Fragment(), SearchView.OnQueryTextListener {
                 relativesList.add(user)
             }
         }
-    }
+    }*/
 
-    suspend fun getSearchUsersCoroutine(p0:String): QuerySnapshot? {
+    private suspend fun getSearchUsersCoroutine(p0:String): QuerySnapshot? {
         return try {
             val data = db.collection("users").whereGreaterThanOrEqualTo("email",p0).whereEqualTo("email",p0).get().await()
             data
@@ -60,6 +56,7 @@ class AddRelativeFragment : Fragment(), SearchView.OnQueryTextListener {
 
     override fun onQueryTextSubmit(p0: String?): Boolean {
         //Log.d(TAG,"Text Submit: "+p0)
+        searchList.clear()
         relativesSearchView.clearFocus()
         lifecycleScope.launch {
             withContext(Dispatchers.IO) {
@@ -81,10 +78,11 @@ class AddRelativeFragment : Fragment(), SearchView.OnQueryTextListener {
     }
 
     override fun onQueryTextChange(p0: String?): Boolean {
+
         return true
     }
 
-    private fun getSearchUsers(p0:String){
+    /*private fun getSearchUsers(p0:String){
         searchList.clear()
         db.collection("users").whereGreaterThanOrEqualTo("email",p0).whereEqualTo("email",p0).get().addOnSuccessListener { documents ->
             //searchList.addAll(documents.toObjects(User::class.java))
@@ -97,7 +95,7 @@ class AddRelativeFragment : Fragment(), SearchView.OnQueryTextListener {
                 searchList.add(user)
             }
         }
-    }
+    }*/
 
     private fun showResults(){
         if(searchList.isEmpty()){

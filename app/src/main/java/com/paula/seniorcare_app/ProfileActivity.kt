@@ -9,11 +9,17 @@ import android.util.Log
 import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
 import kotlinx.android.synthetic.main.activity_profile.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
 
 class ProfileActivity : AppCompatActivity() {
 
@@ -24,6 +30,7 @@ class ProfileActivity : AppCompatActivity() {
     private var uri: Uri = Uri.EMPTY
     private var downloadImage : String? = null
     private val uid = FirebaseAuth.getInstance().currentUser!!.uid
+    private val TAG = "ProfileActivity"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,7 +42,6 @@ class ProfileActivity : AppCompatActivity() {
     private fun setup(){
         val prefs = getSharedPreferences(getString(R.string.prefs_file), Context.MODE_PRIVATE)
         val email = prefs.getString("email", null)
-
 
         db.collection("users").document(uid).get().addOnSuccessListener {
             downloadImage = it.get("image") as String?
@@ -80,15 +86,54 @@ class ProfileActivity : AppCompatActivity() {
 
             val segments = uri.path!!.split("/".toRegex()).toTypedArray()
             val filename = segments[segments.size - 1]
-            val filepath = st.child(uid).child(filename)
-            filepath.putFile(uri).continueWithTask {
-                filepath.downloadUrl
-            }.addOnSuccessListener {
-                downloadImage = it.toString()
-                db.collection("users").document(uid).update("image", it.toString())
-                    .addOnSuccessListener { Log.d(ContentValues.TAG, "DocumentSnapshot successfully updated!") }
-                    .addOnFailureListener { e -> Log.w(ContentValues.TAG, "Error updating document", e) }
+
+            lifecycleScope.launch {
+                withContext(Dispatchers.IO){
+                    val uploadedSuccessfully = uploadPhotoToFireStorage(st, uri, filename, uid)
+                    if (uploadedSuccessfully) {
+                        val url = getURLofPhotoInFireStorage(st, filename, uid)
+                        url?.let {
+                            updatePhotoURLForUser(db, uid, url)
+                        }
+                    } else {
+                        //TODO: Show the error to the user... something goes wrong...
+                        // give feedback to the user if necessary.
+                    }
+                }
             }
+        }
+    }
+
+    private suspend fun uploadPhotoToFireStorage(st: StorageReference, uri: Uri, filename: String, uid: String): Boolean {
+        return try {
+            val filepath = st.child(uid).child(filename)
+            filepath.putFile(uri).await()
+            true
+        } catch (e: Exception) {
+            Log.e(TAG, "UPLOADING PHOTO ERROR", e)
+            return false
+        }
+    }
+
+    private suspend fun getURLofPhotoInFireStorage(st: StorageReference, filename: String, uid: String): String? {
+        return try {
+            val filepath = st.child(uid).child(filename)
+            val result = filepath.downloadUrl.await()
+            val url = result.toString()
+            url
+        } catch (e: Exception) {
+            Log.e(TAG, "GETTING PHOTO URL ERROR", e)
+            return null
+        }
+    }
+
+    private suspend fun updatePhotoURLForUser(db: FirebaseFirestore, uid: String, url: String): Boolean? {
+        return try {
+            db.collection("users").document(uid).update("image", url).await()
+            true
+        } catch (e: Exception) {
+            Log.e(TAG, "UPDATING PHOTO URL ERROR", e)
+            return false
         }
     }
 

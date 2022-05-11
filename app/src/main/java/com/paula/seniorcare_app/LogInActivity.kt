@@ -13,7 +13,6 @@ import kotlinx.android.synthetic.main.activity_log_in.*
 import kotlinx.android.synthetic.main.activity_log_in.emailTextInput
 import kotlinx.android.synthetic.main.activity_log_in.passwordTextInput
 import kotlinx.android.synthetic.main.activity_reset_password.view.*
-import kotlinx.android.synthetic.main.activity_sign_up.*
 
 class LogInActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,8 +24,8 @@ class LogInActivity : AppCompatActivity() {
 
     private fun setup() {
         logInButton.setOnClickListener {
-            val email = emailTextInput.editText?.text.toString();
-            val password = passwordTextInput.editText?.text.toString();
+            val email = emailTextInput.editText?.text.toString()
+            val password = passwordTextInput.editText?.text.toString()
             if (email.trim().isNotEmpty() && password.trim().isNotEmpty()) {
                 FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password).addOnSuccessListener {
                         //Guardado de datos
