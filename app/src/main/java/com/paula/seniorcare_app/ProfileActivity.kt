@@ -22,14 +22,7 @@ import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 
 class ProfileActivity : AppCompatActivity() {
-
     private val GALLERY_INTENT = 2
-    private val userEmail = FirebaseAuth.getInstance().currentUser?.email
-    private val db = FirebaseFirestore.getInstance()
-    private val st = FirebaseStorage.getInstance().reference
-    private var uri: Uri = Uri.EMPTY
-    private var downloadImage : String? = null
-    private val uid = FirebaseAuth.getInstance().currentUser!!.uid
     private val TAG = "ProfileActivity"
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,6 +35,10 @@ class ProfileActivity : AppCompatActivity() {
     private fun setup(){
         val prefs = getSharedPreferences(getString(R.string.prefs_file), Context.MODE_PRIVATE)
         val email = prefs.getString("email", null)
+
+        val db = FirebaseFirestore.getInstance()
+        val uid = FirebaseAuth.getInstance().currentUser!!.uid
+        var downloadImage : String?
 
         db.collection("users").document(uid).get().addOnSuccessListener {
             downloadImage = it.get("image") as String?
@@ -80,8 +77,12 @@ class ProfileActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+        val db = FirebaseFirestore.getInstance()
+        val st = FirebaseStorage.getInstance().reference
+        val uid = FirebaseAuth.getInstance().currentUser!!.uid
+
         if(requestCode == GALLERY_INTENT && resultCode == RESULT_OK){
-            uri = data!!.data!!
+            val uri = data!!.data!!
             profileImageView.setImageURI(uri)
 
             val segments = uri.path!!.split("/".toRegex()).toTypedArray()
@@ -142,17 +143,33 @@ class ProfileActivity : AppCompatActivity() {
         val inflater = layoutInflater
         val dialogLayout = inflater.inflate(R.layout.edit_text_layout, null)
         val newNameEditText = dialogLayout.findViewById<EditText>(R.id.et_editText)
+        val db = FirebaseFirestore.getInstance()
+        val uid = FirebaseAuth.getInstance().currentUser!!.uid
+
         newNameEditText.hint = nameTextView.text.toString()
 
         builder.setTitle("Introduce tu nombre")
         builder.setPositiveButton("Guardar") { _,_ ->
             nameTextView.text = newNameEditText.text.toString()
-            db.collection("users").document(userEmail.toString()).update("name", newNameEditText.text.toString())
-                .addOnSuccessListener { Log.d(ContentValues.TAG, "DocumentSnapshot successfully updated!") }
-                .addOnFailureListener { e -> Log.w(ContentValues.TAG, "Error updating document", e) }
+
+            lifecycleScope.launch {
+                withContext(Dispatchers.IO) {
+                    editUserNameInDatabase(db, uid, newNameEditText.text.toString())
+                }
+            }
         }
         builder.setNegativeButton("Cancelar",null)
         builder.setView(dialogLayout)
         builder.show()
+    }
+
+    private suspend fun editUserNameInDatabase(db: FirebaseFirestore, uid: String, name: String){
+        try {
+            db.collection("users").document(uid).update("name", name).await()
+            true
+        } catch (e: Exception) {
+            Log.e(ContentValues.TAG, "UPDATING USER NAME ERROR", e)
+            false
+        }
     }
 }

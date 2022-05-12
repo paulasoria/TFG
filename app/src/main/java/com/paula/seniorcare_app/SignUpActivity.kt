@@ -1,6 +1,5 @@
 package com.paula.seniorcare_app
 
-import android.content.ContentValues
 import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
@@ -26,10 +25,7 @@ import kotlinx.coroutines.withContext
 class SignUpActivity : AppCompatActivity() {
 
     private val GALLERY_INTENT = 2
-    private val db = FirebaseFirestore.getInstance()
-    private val st = FirebaseStorage.getInstance().reference
     private var uri: Uri = Uri.EMPTY
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,7 +35,8 @@ class SignUpActivity : AppCompatActivity() {
     }
 
     private fun setup(){
-        title = "Registro"
+        val db = FirebaseFirestore.getInstance()
+        val st = FirebaseStorage.getInstance().reference
 
         userImageView.setOnClickListener {
             selectImageFromGallery()
@@ -58,19 +55,6 @@ class SignUpActivity : AppCompatActivity() {
                     prefs.apply()
 
                     val uid = FirebaseAuth.getInstance().currentUser!!.uid
-                    //Crear un usuario en la base de datos
-                    db.collection("users").document(uid).set(
-                        hashMapOf(
-                            "uid" to uid,
-                            "image" to null,
-                            "name" to name,
-                            "email" to email,
-                            "role" to roleMenu,
-                            "provider" to "SeniorCare",
-                            //"relatives" to relativesList
-                        )
-                    ).addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully written!") }
-                        .addOnFailureListener { e -> Log.w(TAG, "Error writing document", e) }
 
                     //Imagen
                     val segments = uri.path!!.split("/".toRegex()).toTypedArray()
@@ -82,7 +66,7 @@ class SignUpActivity : AppCompatActivity() {
                             if (uploadedSuccessfully) {
                                 val url = getURLofPhotoInFireStorage(st, filename, uid)
                                 url?.let {
-                                    updatePhotoURLForUser(db, uid, url)
+                                    createUserInDatabase(db, uid, url, name, email, roleMenu, /*relativesList*/)
                                 }
                             } else {
                                 //TODO: Show the error to the user... something goes wrong...
@@ -115,6 +99,26 @@ class SignUpActivity : AppCompatActivity() {
         roleMenuTextView.setAdapter(adapter)
     }
 
+    private suspend fun createUserInDatabase(db: FirebaseFirestore, uid: String, url: String, name: String, email: String, roleMenu: String, /*relativesList*/): Boolean {
+        return try {
+            db.collection("users").document(uid).set(
+                hashMapOf(
+                    "uid" to uid,
+                    "image" to url,
+                    "name" to name,
+                    "email" to email,
+                    "role" to roleMenu,
+                    "provider" to "SeniorCare",
+                    //"relatives" to relativesList
+                )
+            ).await()
+            true
+        } catch (e: Exception) {
+            Log.e(TAG, "CREATING USER IN DATABASE ERROR", e)
+            return false
+        }
+    }
+
     private suspend fun uploadPhotoToFireStorage(st: StorageReference, uri: Uri, filename: String, uid: String): Boolean {
         return try {
             val filepath = st.child(uid).child(filename)
@@ -122,7 +126,7 @@ class SignUpActivity : AppCompatActivity() {
             true
         } catch (e: Exception) {
             Log.e(TAG, "UPLOADING PHOTO ERROR", e)
-            return false
+            false
         }
     }
 
@@ -134,7 +138,7 @@ class SignUpActivity : AppCompatActivity() {
             url
         } catch (e: Exception) {
             Log.e(TAG, "GETTING PHOTO URL ERROR", e)
-            return null
+            null
         }
     }
 
@@ -144,7 +148,7 @@ class SignUpActivity : AppCompatActivity() {
             true
         } catch (e: Exception) {
             Log.e(TAG, "UPDATING PHOTO URL ERROR", e)
-            return false
+            false
         }
     }
 

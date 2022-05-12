@@ -18,10 +18,7 @@ import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 
 class AddRelativeFragment : Fragment(), SearchView.OnQueryTextListener {
-    private val db = FirebaseFirestore.getInstance()
-    private var adapter: RelativesAdapter? = null
     //private var relativesList = ArrayList<User>()
-    private var searchList = ArrayList<User>()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val view:View = inflater.inflate(R.layout.fragment_add_relative, container, false)
@@ -45,23 +42,26 @@ class AddRelativeFragment : Fragment(), SearchView.OnQueryTextListener {
         }
     }*/
 
-    private suspend fun getSearchUsersCoroutine(p0:String): QuerySnapshot? {
+    private suspend fun getSearchUsers(db: FirebaseFirestore, query:String): QuerySnapshot? {
         return try {
-            val data = db.collection("users").whereGreaterThanOrEqualTo("email",p0).whereEqualTo("email",p0).get().await()
+            //val data = db.collection("users").whereGreaterThanOrEqualTo("email",query).whereEqualTo("email",query).get().await()
+            val data = db.collection("users").orderBy("email").startAt(query).get().await()
             data
         } catch (e: Exception) {
             null
         }
     }
 
-    override fun onQueryTextSubmit(p0: String?): Boolean {
+    override fun onQueryTextSubmit(query: String?): Boolean {
         //Log.d(TAG,"Text Submit: "+p0)
+        val db = FirebaseFirestore.getInstance()
+        val searchList = ArrayList<User>()
         searchList.clear()
         relativesSearchView.clearFocus()
         lifecycleScope.launch {
             withContext(Dispatchers.IO) {
-                if (p0 != null) {
-                    val documents = getSearchUsersCoroutine(p0)
+                if (query != null) {
+                    val documents = getSearchUsers(db, query)
                     documents?.iterator()?.forEach { document ->
                         val name : String = document.data.getValue("name").toString()
                         val email : String = document.data.getValue("email").toString()
@@ -72,32 +72,17 @@ class AddRelativeFragment : Fragment(), SearchView.OnQueryTextListener {
                     }
                 }
             }
-            showResults()
+            showResults(searchList)
         }
         return true
     }
 
-    override fun onQueryTextChange(p0: String?): Boolean {
-
+    override fun onQueryTextChange(query: String?): Boolean {
         return true
     }
 
-    /*private fun getSearchUsers(p0:String){
-        searchList.clear()
-        db.collection("users").whereGreaterThanOrEqualTo("email",p0).whereEqualTo("email",p0).get().addOnSuccessListener { documents ->
-            //searchList.addAll(documents.toObjects(User::class.java))
-            for(document in documents){
-                val name : String = document.data.getValue("name").toString()
-                val email : String = document.data.getValue("email").toString()
-                val role : String = document.data.getValue("role").toString()
-                val image : String = document.data.getValue("image").toString()
-                val user = User(name, email, null, role, image, null)
-                searchList.add(user)
-            }
-        }
-    }*/
-
-    private fun showResults(){
+    private fun showResults(searchList: ArrayList<User>){
+        val adapter: RelativesAdapter?
         if(searchList.isEmpty()){
             noResultsTextView.visibility = View.VISIBLE
             noResultsTextView.text = getString(R.string.no_results)
