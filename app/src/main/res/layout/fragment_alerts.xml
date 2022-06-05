@@ -11,12 +11,24 @@
         android:layout_height="match_parent">
 
         <TextView
+            android:id="@+id/noResultsTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:textSize="40sp"
+            android:text="Aún no tienes ninguna alerta"
             android:textColor="@color/white"
-            android:text="Alertas" />
+            android:visibility="visible" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/addAlertButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_margin="30dp"
+            android:scaleX="1.3"
+            android:scaleY="1.3"
+            android:src="@drawable/ic_add_alert" />
 
     </RelativeLayout>
 
