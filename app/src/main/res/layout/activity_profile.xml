@@ -7,201 +7,194 @@
     android:background="@color/dark_blue"
     tools:context=".ProfileActivity">
 
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:orientation="vertical"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <TextView
-            android:id="@+id/Titulo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/pacifico"
-            android:text="Perfil"
-            android:textColor="@color/white"
-            android:textSize="40sp" />
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_gravity="center">
-
-            <ImageView
-                android:id="@+id/profileImageView"
-                android:layout_width="150dp"
-                android:layout_height="150dp"
-                android:maxWidth="150dp"
-                android:maxHeight="150dp"
-                android:layout_gravity="center"
-                android:src="@drawable/no_photo_user" />
-
-            <ImageButton
-                android:id="@+id/editImageButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_edit"
-                android:backgroundTint="@color/dark_blue"
-                android:layout_gravity="bottom"/>
-
-        </LinearLayout>
-
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="20dp" />
-
-        <LinearLayout
-            android:id="@+id/NameLinearLayout"
-            android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="100dp"
-                android:layout_height="match_parent"
-                android:text="Nombre"
-                android:textColor="@color/white"
-                android:textSize="18sp" />
-
-            <Space
-                android:layout_width="10dp"
-                android:layout_height="match_parent" />
-
-            <TextView
-                android:id="@+id/nameTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:text="Nombre"
-                android:textColor="@color/light_grayish_blue"
-                android:textSize="18sp" />
-
-            <ImageButton
-                android:id="@+id/editNameButton"
-                android:layout_width="wrap_content"
-                android:layout_height="40dp"
-                android:src="@drawable/ic_edit"
-                android:layout_gravity="center"
-                android:backgroundTint="@color/dark_blue"/>
-
-        </LinearLayout>
-
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="8dp" />
-
-        <LinearLayout
-            android:id="@+id/EmailLinearLayout"
-            android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="100dp"
-                android:layout_height="match_parent"
-                android:text="Email"
-                android:textColor="@color/white"
-                android:textSize="18sp" />
-
-            <Space
-                android:layout_width="10dp"
-                android:layout_height="match_parent" />
-
-            <TextView
-                android:id="@+id/emailTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:text="Email"
-                android:textColor="@color/light_grayish_blue"
-                android:textSize="18sp" />
-        </LinearLayout>
-
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="8dp" />
-
-        <LinearLayout
-            android:id="@+id/roleLinearLayout"
-            android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="100dp"
-                android:layout_height="match_parent"
-                android:text="Rol"
-                android:textColor="@color/white"
-                android:textSize="18sp" />
-
-            <Space
-                android:layout_width="10dp"
-                android:layout_height="match_parent" />
-
-            <TextView
-                android:id="@+id/roleTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:text="Rol"
-                android:textColor="@color/light_grayish_blue"
-                android:textSize="18sp" />
-        </LinearLayout>
-
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="8dp" />
-
-        <LinearLayout
-            android:id="@+id/providerLinearLayout"
-            android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="100dp"
-                android:layout_height="match_parent"
-                android:text="Proveedor"
-                android:textColor="@color/white"
-                android:textSize="18sp" />
-
-            <Space
-                android:layout_width="10dp"
-                android:layout_height="match_parent" />
-
-            <TextView
-                android:id="@+id/providerTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:text="Proveedor"
-                android:textColor="@color/light_grayish_blue"
-                android:textSize="18sp" />
-
-        </LinearLayout>
-
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="8dp" />
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="20dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent">
 
-            <Button
-                android:id="@+id/logOutButton"
+            <TextView
+                android:id="@+id/Titulo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Cerrar sesión" />
+                android:fontFamily="@font/pacifico"
+                android:text="Perfil"
+                android:textColor="@color/white"
+                android:textSize="40sp" />
 
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_gravity="center">
+
+                <ImageView
+                    android:id="@+id/profileImageView"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:maxWidth="150dp"
+                    android:maxHeight="150dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/no_photo_user" />
+
+                <ImageButton
+                    android:id="@+id/editImageButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_edit"
+                    android:backgroundTint="@color/dark_blue"
+                    android:layout_gravity="bottom"/>
+
+            </LinearLayout>
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="20dp" />
+
+            <LinearLayout
+                android:id="@+id/NameLinearLayout"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="100dp"
+                    android:layout_height="match_parent"
+                    android:text="Nombre"
+                    android:textColor="@color/white"
+                    android:textSize="18sp" />
+
+                <Space
+                    android:layout_width="10dp"
+                    android:layout_height="match_parent" />
+
+                <TextView
+                    android:id="@+id/nameTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="Nombre"
+                    android:textColor="@color/light_grayish_blue"
+                    android:textSize="18sp" />
+
+                <ImageButton
+                    android:id="@+id/editNameButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:src="@drawable/ic_edit"
+                    android:layout_gravity="center"
+                    android:backgroundTint="@color/dark_blue"/>
+
+            </LinearLayout>
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="8dp" />
+
+            <LinearLayout
+                android:id="@+id/EmailLinearLayout"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="100dp"
+                    android:layout_height="match_parent"
+                    android:text="Email"
+                    android:textColor="@color/white"
+                    android:textSize="18sp" />
+
+                <Space
+                    android:layout_width="10dp"
+                    android:layout_height="match_parent" />
+
+                <TextView
+                    android:id="@+id/emailTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="Email"
+                    android:textColor="@color/light_grayish_blue"
+                    android:textSize="18sp" />
+            </LinearLayout>
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="8dp" />
+
+            <LinearLayout
+                android:id="@+id/roleLinearLayout"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="100dp"
+                    android:layout_height="match_parent"
+                    android:text="Rol"
+                    android:textColor="@color/white"
+                    android:textSize="18sp" />
+
+                <Space
+                    android:layout_width="10dp"
+                    android:layout_height="match_parent" />
+
+                <TextView
+                    android:id="@+id/roleTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="Rol"
+                    android:textColor="@color/light_grayish_blue"
+                    android:textSize="18sp" />
+            </LinearLayout>
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="8dp" />
+
+            <LinearLayout
+                android:id="@+id/providerLinearLayout"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="100dp"
+                    android:layout_height="match_parent"
+                    android:text="Proveedor"
+                    android:textColor="@color/white"
+                    android:textSize="18sp" />
+
+                <Space
+                    android:layout_width="10dp"
+                    android:layout_height="match_parent" />
+
+                <TextView
+                    android:id="@+id/providerTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="Proveedor"
+                    android:textColor="@color/light_grayish_blue"
+                    android:textSize="18sp" />
+
+            </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
+
+        <Button
+            android:id="@+id/logOutButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Cerrar sesión"
+            android:layout_gravity="bottom"/>
+    </FrameLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

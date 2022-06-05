@@ -31,7 +31,7 @@ class FragmentRelatives : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        val view:View = inflater.inflate(R.layout.fragment_relatives, container, false)
+        val view:View = inflater.inflate(R.layout.fragment_alerts, container, false)
         val addRelativeButton:Button = view.findViewById(R.id.addRelativeButton)
         val addRelativeFragment = AddRelativeFragment()
 
