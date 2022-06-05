@@ -12,18 +12,18 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@id/layoutAtributtes"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/layoutAtributtes">
+        app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
             android:id="@+id/profileImageView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:maxWidth="150dp"
             android:maxHeight="150dp"
-            android:layout_gravity="center"
             android:src="@drawable/no_photo_user" />
 
     </LinearLayout>
@@ -184,16 +184,30 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Hacer videollamada" />
+            android:text="Hacer videollamada"
+            android:visibility="invisible" />
 
-        <Button
-            android:id="@+id/deleteRelativeButton"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:backgroundTint="@color/dark_red"
-            android:text="Eliminar familiar" />
+            android:layout_height="wrap_content">
 
+            <Button
+                android:id="@+id/deleteRelativeButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:backgroundTint="@color/dark_red"
+                android:text="Eliminar familiar"
+                android:visibility="invisible" />
+
+            <Button
+                android:id="@+id/addRelativeButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Agregar familiar"
+                android:visibility="visible"/>
+        </RelativeLayout>
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

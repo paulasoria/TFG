@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
 import com.paula.seniorcare_app.model.User
@@ -55,6 +56,7 @@ class AddRelativeFragment : Fragment(), SearchView.OnQueryTextListener {
     override fun onQueryTextSubmit(query: String?): Boolean {
         //Log.d(TAG,"Text Submit: "+p0)
         val db = FirebaseFirestore.getInstance()
+        val currentUserEmail = FirebaseAuth.getInstance().currentUser?.email
         val searchList = ArrayList<User>()
         searchList.clear()
         relativesSearchView.clearFocus()
@@ -63,12 +65,16 @@ class AddRelativeFragment : Fragment(), SearchView.OnQueryTextListener {
                 if (query != null) {
                     val documents = getSearchUsers(db, query)
                     documents?.iterator()?.forEach { document ->
+                        val uid : String = document.data.getValue("uid").toString()
                         val name : String = document.data.getValue("name").toString()
                         val email : String = document.data.getValue("email").toString()
                         val role : String = document.data.getValue("role").toString()
                         val image : String = document.data.getValue("image").toString()
-                        val user = User(name, email, null, role, image, null)
-                        searchList.add(user)
+                        val relatives : ArrayList<String> = document.data.getValue("relatives") as ArrayList<String>
+                        val user = User(uid, name, email, null, role, image, relatives)
+                        if (email != currentUserEmail) {
+                            searchList.add(user)
+                        }
                     }
                 }
             }
@@ -86,6 +92,9 @@ class AddRelativeFragment : Fragment(), SearchView.OnQueryTextListener {
         if(searchList.isEmpty()){
             noResultsTextView.visibility = View.VISIBLE
             noResultsTextView.text = getString(R.string.no_results)
+            //QUITAR CONTENIDO DEL ADAPTER ???
+            adapter = RelativesAdapter(searchList, requireContext())
+            relativesGridView.adapter = adapter
         } else {
             noResultsTextView.visibility = View.INVISIBLE
             adapter = RelativesAdapter(searchList, requireContext())

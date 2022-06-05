@@ -12,9 +12,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
+import com.paula.seniorcare_app.model.User
 import kotlinx.android.synthetic.main.activity_auth.signUpButton
 import kotlinx.android.synthetic.main.activity_sign_up.*
 import kotlinx.coroutines.Dispatchers
@@ -66,7 +68,7 @@ class SignUpActivity : AppCompatActivity() {
                             if (uploadedSuccessfully) {
                                 val url = getURLofPhotoInFireStorage(st, filename, uid)
                                 url?.let {
-                                    createUserInDatabase(db, uid, url, name, email, roleMenu, /*relativesList*/)
+                                    createUserInDatabase(db, uid, url, name, email, roleMenu)
                                 }
                             } else {
                                 //TODO: Show the error to the user... something goes wrong...
@@ -99,8 +101,10 @@ class SignUpActivity : AppCompatActivity() {
         roleMenuTextView.setAdapter(adapter)
     }
 
-    private suspend fun createUserInDatabase(db: FirebaseFirestore, uid: String, url: String, name: String, email: String, roleMenu: String, /*relativesList*/): Boolean {
+    private suspend fun createUserInDatabase(db: FirebaseFirestore, uid: String, url: String, name: String, email: String, roleMenu: String): Boolean {
         return try {
+            val relativesNull = ArrayList<String>()
+            val petitionsNull = ArrayList<DocumentReference>()
             db.collection("users").document(uid).set(
                 hashMapOf(
                     "uid" to uid,
@@ -109,13 +113,14 @@ class SignUpActivity : AppCompatActivity() {
                     "email" to email,
                     "role" to roleMenu,
                     "provider" to "SeniorCare",
-                    //"relatives" to relativesList
+                    "relatives" to relativesNull,
+                    "petitions" to petitionsNull
                 )
             ).await()
             true
         } catch (e: Exception) {
             Log.e(TAG, "CREATING USER IN DATABASE ERROR", e)
-            return false
+            false
         }
     }
 
