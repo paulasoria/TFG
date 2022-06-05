@@ -53,7 +53,7 @@
             android:layout_weight="1"
             android:text="Registrarse" />
 
-        <Space
+        <View
             android:layout_width="match_parent"
             android:layout_height="8dp" />
 
@@ -65,7 +65,7 @@
             android:textAlignment="center"
             android:textColor="@color/white" />
 
-        <Space
+        <View
             android:layout_width="match_parent"
             android:layout_height="8dp" />
 

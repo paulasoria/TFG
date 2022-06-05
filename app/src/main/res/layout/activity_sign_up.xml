@@ -38,7 +38,7 @@
             android:src="@drawable/no_photo_user"
             android:clickable="true"/>
 
-        <Space
+        <View
             android:layout_width="match_parent"
             android:layout_height="8dp" />
 
@@ -59,7 +59,7 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
-        <Space
+        <View
             android:layout_width="match_parent"
             android:layout_height="8dp" />
 
@@ -80,7 +80,7 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
-        <Space
+        <View
             android:layout_width="match_parent"
             android:layout_height="8dp" />
 
@@ -102,7 +102,7 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
-        <Space
+        <View
             android:layout_width="match_parent"
             android:layout_height="8dp" />
 
@@ -124,7 +124,7 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
-        <Space
+        <View
             android:layout_width="match_parent"
             android:layout_height="8dp" />
 

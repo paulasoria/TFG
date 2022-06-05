@@ -20,7 +20,7 @@
             android:backgroundTint="@color/light_grayish_blue"
             android:queryHint="Busca familiares por email" />
 
-        <Space
+        <View
             android:layout_width="match_parent"
             android:layout_height="10dp" />
 

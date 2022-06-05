@@ -15,7 +15,7 @@ class HomeActivity : AppCompatActivity() {
         val relativesFragment = RelativesFragment()
         val alertsFragment = AlertsFragment()
 
-        makeCurrentFragment(relativesFragment)
+        makeCurrentFragment(historyFragment)
 
         bottom_navigation.setOnNavigationItemSelectedListener {
             when (it.itemId) {

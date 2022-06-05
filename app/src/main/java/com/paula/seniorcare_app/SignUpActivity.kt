@@ -45,10 +45,10 @@ class SignUpActivity : AppCompatActivity() {
         }
 
         signUpButton.setOnClickListener {
-            val name = nameTextInput.editText?.text.toString();
-            val email = emailTextInput.editText?.text.toString();
-            val password = passwordTextInput.editText?.text.toString();
-            val roleMenu = roleMenuTextView.text.toString();
+            val name = nameTextInput.editText?.text.toString()
+            val email = emailTextInput.editText?.text.toString()
+            val password = passwordTextInput.editText?.text.toString()
+            val roleMenu = roleMenuTextView.text.toString()
             if (name.trim().isNotEmpty() && email.trim().isNotEmpty() && password.trim().isNotEmpty() && roleMenu.trim().isNotEmpty()) {
                 FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password).addOnSuccessListener {
                     //Guardado de datos
