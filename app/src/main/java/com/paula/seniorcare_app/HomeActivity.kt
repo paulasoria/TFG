@@ -11,17 +11,17 @@ class HomeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
 
-        val fragmentCalls = FragmentCalls()
-        val fragmentRelatives = FragmentRelatives()
-        val fragmentAlerts = FragmentAlerts()
+        val historyFragment = HistoryFragment()
+        val relativesFragment = RelativesFragment()
+        val alertsFragment = AlertsFragment()
 
-        makeCurrentFragment(fragmentCalls)
+        makeCurrentFragment(relativesFragment)
 
         bottom_navigation.setOnNavigationItemSelectedListener {
             when (it.itemId) {
-                R.id.fragmentCalls -> makeCurrentFragment(fragmentCalls)
-                R.id.fragmentRelatives -> makeCurrentFragment(fragmentRelatives)
-                R.id.fragmentAlerts -> makeCurrentFragment(fragmentAlerts)
+                R.id.historyFragment -> makeCurrentFragment(historyFragment)
+                R.id.relativesFragment -> makeCurrentFragment(relativesFragment)
+                R.id.alertsFragment -> makeCurrentFragment(alertsFragment)
             }
             true
         }

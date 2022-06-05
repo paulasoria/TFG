@@ -16,7 +16,7 @@
         android:layout_centerInParent="true"
         android:textSize="40sp"
         android:textColor="@color/white"
-        android:text="Llamadas" />
+        android:text="Historial" />
 
     </RelativeLayout>
 

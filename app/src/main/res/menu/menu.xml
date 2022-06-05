@@ -2,15 +2,15 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/fragmentCalls"
-        android:icon="@drawable/ic_call"
-        android:title="Llamadas" />
+        android:id="@+id/historyFragment"
+        android:icon="@drawable/ic_history"
+        android:title="Historial" />
     <item
-        android:id="@+id/fragmentRelatives"
+        android:id="@+id/relativesFragment"
         android:icon="@drawable/ic_person"
         android:title="Familiares" />
     <item
-        android:id="@+id/fragmentAlerts"
-        android:icon="@drawable/ic_alarm"
+        android:id="@+id/alertsFragment"
+        android:icon="@drawable/ic_alert"
         android:title="Alertas" />
 </menu>
