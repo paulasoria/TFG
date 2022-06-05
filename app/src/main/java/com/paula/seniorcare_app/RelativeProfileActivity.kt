@@ -39,11 +39,13 @@ class RelativeProfileActivity : AppCompatActivity() {
 
         lifecycleScope.launch {
             withContext(Dispatchers.IO) {
-                if(relativeIsAdded(relativeUid)){
+                if(relativeIsAdded(relativeUid)){   //or petitionIsAccepted ???
                     //SI EL FAMILIAR ESTÁ AÑADIDO:
                     videocallButton.visibility = View.VISIBLE
                     deleteRelativeButton.visibility = View.VISIBLE
                     addRelativeButton.visibility = View.INVISIBLE
+                } else if(petitionIsPending(relativeUid)) {
+                    addRelativeButton.isEnabled = false
                 }
                 /*else {
                     //SI EL FAMILIAR NO ESTÁ AÑADIDO:
@@ -110,6 +112,27 @@ class RelativeProfileActivity : AppCompatActivity() {
                 }
             }
             found
+        } catch (e: Exception) {
+            false
+        }
+    }
+
+    private suspend fun petitionIsPending(uid: String): Boolean {
+        return try {
+            var pending = false
+            val db = FirebaseFirestore.getInstance()
+            val currentUid = FirebaseAuth.getInstance().currentUser!!.uid
+            val userData = db.collection("users").document(currentUid).get().await()
+            val petitionsList = userData.data?.get("petitions") as ArrayList<DocumentReference>
+            val allPetitions = db.collection("petitions").get()
+            allPetitions.result.iterator().forEach { petition ->
+                petitionsList.iterator().forEach { userPetition ->
+                    if (petition.get(uid) == uid) {
+                        pending = true
+                    }
+                }
+            }
+            pending
         } catch (e: Exception) {
             false
         }
