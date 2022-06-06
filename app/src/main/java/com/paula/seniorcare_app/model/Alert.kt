@@ -1,6 +1,8 @@
 package com.paula.seniorcare_app.model
 
 import java.io.Serializable
+import java.util.*
+import kotlin.collections.ArrayList
 
 data class Alert(
     var id: String? = null,
@@ -8,9 +10,7 @@ data class Alert(
     var receiver: String? = null,
     var tag: String? = null,
     var repetition: String? = null, //weekly or eventually
-    var hour: Int,
-    var minute: Int,
-    var dayOfWeek: String? = null, //weekly         TYPE DAYOFWEEK¿?
-    var date: String? = null, //event
-    var isOn: Boolean   //Alarma activada o desactivada
+    var time: String? = null,       //weekly or eventually
+    var daysOfWeek: Array<Int>?, //weekly    1 on, 0 off
+    var date: String? = null                 //event     y,m,d
 ) : Serializable

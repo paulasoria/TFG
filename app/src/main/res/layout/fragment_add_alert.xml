@@ -104,12 +104,13 @@
         android:orientation="vertical"
         android:layout_marginHorizontal="60dp"
         android:layout_gravity="center_horizontal|bottom"
-        android:layout_marginBottom="150dp"
-        android:visibility="visible">
+        android:layout_marginBottom="140dp"
+        android:visibility="invisible">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textSize="15sp"
             android:text="Días de la semana"
             android:textColor="@color/super_light_grayish_blue" />
 
@@ -202,31 +203,40 @@
 
     </LinearLayout>
 
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/calendarLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_marginHorizontal="80dp"
         android:layout_gravity="center_horizontal|bottom"
-        android:layout_marginBottom="120dp"
+        android:layout_marginBottom="150dp"
         android:visibility="invisible">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textSize="15sp"
             android:text="Calandario"
             android:textColor="@color/super_light_grayish_blue" />
 
         <Button
-            style="@style/Widget.AppCompat.Button.Borderless"
-            android:layout_width="wrap_content"
+            android:id="@+id/setDateButton"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="70dp"
-            app:icon="@drawable/ic_calendar"
-            app:iconSize="80dp" />
+            android:textSize="18sp"
+            android:backgroundTint="@color/light_grayish_blue"
+            android:text="00/00/0000"/>
 
-    </RelativeLayout>
+        <TextView
+            android:id="@+id/dateError"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#B00020"
+            android:visibility="invisible"
+            android:text="El campo no puede estar vacío"/>
+
+    </LinearLayout>
 
     <Button
         android:id="@+id/saveAlertButton"
