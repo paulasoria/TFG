@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -9,7 +10,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
         android:gravity="center_horizontal">
 
@@ -17,116 +18,222 @@
             android:id="@+id/setHourButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="80dp"
+            android:layout_marginTop="50dp"
             android:backgroundTint="@color/light_grayish_blue"
             android:text="00:00"
-            android:textSize="50sp"/>
+            android:textSize="50sp" />
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="50dp" />
+            android:layout_height="20dp" />
 
-        <LinearLayout
-            android:id="@+id/relativeLinearLayout"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/relativeTextInput"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:orientation="horizontal"
-            android:layout_marginHorizontal="80dp">
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="60dp"
+            android:hint="Familiar"
+            app:boxBackgroundMode="outline"
+            app:helperText="*Obligatorio"
+            app:boxStrokeColor="@color/super_light_grayish_blue"
+            app:hintTextColor="@color/super_light_grayish_blue">
 
-            <TextView
-                android:layout_width="100dp"
-                android:layout_height="match_parent"
-                android:text="Familiar"
-                android:textColor="@color/white"
-                android:textSize="18sp" />
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text" />
 
-            <View
-                android:layout_width="10dp"
-                android:layout_height="match_parent" />
-
-            <TextView
-                android:id="@+id/relativeTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:text="Familiar"
-                android:textColor="@color/super_light_grayish_blue"
-                android:textSize="18sp" />
-        </LinearLayout>
+        </com.google.android.material.textfield.TextInputLayout>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="8dp" />
 
-        <LinearLayout
-            android:id="@+id/tagLinearLayout"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tagTextInput"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:orientation="horizontal"
-            android:layout_marginHorizontal="80dp">
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="60dp"
+            android:hint="Etiqueta"
+            app:helperText="*Obligatorio"
+            app:boxStrokeColor="@color/super_light_grayish_blue"
+            app:hintTextColor="@color/super_light_grayish_blue">
 
-            <TextView
-                android:layout_width="100dp"
-                android:layout_height="match_parent"
-                android:text="Etiqueta"
-                android:textColor="@color/white"
-                android:textSize="18sp" />
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"/>
 
-            <View
-                android:layout_width="10dp"
-                android:layout_height="match_parent" />
-
-            <TextView
-                android:id="@+id/tagTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:text="Etiqueta"
-                android:textColor="@color/super_light_grayish_blue"
-                android:textSize="18sp" />
-        </LinearLayout>
+        </com.google.android.material.textfield.TextInputLayout>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="8dp" />
 
-        <LinearLayout
-            android:id="@+id/repetitionLinearLayout"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/repetitionMenu"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
             android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:orientation="horizontal"
-            android:layout_marginHorizontal="80dp">
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="60dp"
+            app:helperText="*Obligatorio"
+            app:boxBackgroundColor="@color/grayish_blue"
+            app:boxStrokeColor="@color/super_light_grayish_blue"
+            app:hintTextColor="@color/super_light_grayish_blue">
 
+            <AutoCompleteTextView
+                android:id="@+id/repetitionMenuTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Repetición"
+                android:inputType="none" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="20dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/weeklyLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginHorizontal="60dp"
+        android:layout_gravity="center_horizontal|bottom"
+        android:layout_marginBottom="150dp"
+        android:visibility="visible">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Días de la semana"
+            android:textColor="@color/super_light_grayish_blue" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
             <TextView
-                android:layout_width="100dp"
-                android:layout_height="match_parent"
-                android:text="Repetición"
-                android:textColor="@color/white"
-                android:textSize="18sp" />
-
-            <View
-                android:layout_width="10dp"
-                android:layout_height="match_parent" />
-
-            <TextView
-                android:id="@+id/repetitionTextView"
+                android:id="@+id/lunes"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:text="Repetición"
+                android:layout_height="wrap_content"
                 android:textColor="@color/super_light_grayish_blue"
-                android:textSize="18sp" />
+                android:textSize="30sp"
+                android:clickable="true"
+                android:text="L"/>
+            <View
+                android:layout_width="12dp"
+                android:layout_height="match_parent"/>
+            <TextView
+                android:id="@+id/martes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/super_light_grayish_blue"
+                android:textSize="30sp"
+                android:clickable="true"
+                android:text="M"/>
+            <View
+                android:layout_width="12dp"
+                android:layout_height="match_parent"/>
+            <TextView
+                android:id="@+id/miercoles"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/super_light_grayish_blue"
+                android:textSize="30sp"
+                android:clickable="true"
+                android:text="X"/>
+            <View
+                android:layout_width="12dp"
+                android:layout_height="match_parent"/>
+            <TextView
+                android:id="@+id/jueves"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/super_light_grayish_blue"
+                android:textSize="30sp"
+                android:clickable="true"
+                android:text="J"/>
+            <View
+                android:layout_width="12dp"
+                android:layout_height="match_parent"/>
+            <TextView
+                android:id="@+id/viernes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/super_light_grayish_blue"
+                android:textSize="30sp"
+                android:clickable="true"
+                android:text="V"/>
+            <View
+                android:layout_width="12dp"
+                android:layout_height="match_parent"/>
+            <TextView
+                android:id="@+id/sabado"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/super_light_grayish_blue"
+                android:textSize="30sp"
+                android:clickable="true"
+                android:text="S"/>
+            <View
+                android:layout_width="12dp"
+                android:layout_height="match_parent"/>
+            <TextView
+                android:id="@+id/domingo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/super_light_grayish_blue"
+                android:textSize="30sp"
+                android:clickable="true"
+                android:text="D"/>
         </LinearLayout>
 
-
+        <TextView
+            android:id="@+id/daysError"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#B00020"
+            android:visibility="invisible"
+            android:text="El campo no puede estar vacío"/>
 
     </LinearLayout>
 
+    <RelativeLayout
+        android:id="@+id/calendarLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginHorizontal="80dp"
+        android:layout_gravity="center_horizontal|bottom"
+        android:layout_marginBottom="120dp"
+        android:visibility="invisible">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Calandario"
+            android:textColor="@color/super_light_grayish_blue" />
+
+        <Button
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="70dp"
+            app:icon="@drawable/ic_calendar"
+            app:iconSize="80dp" />
+
+    </RelativeLayout>
+
     <Button
+        android:id="@+id/saveAlertButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:backgroundTint="@color/dark_blue"
-        android:text="Guardar alarma"
+        android:text="Guardar alerta"
         android:layout_gravity="bottom"/>
 
 </FrameLayout>

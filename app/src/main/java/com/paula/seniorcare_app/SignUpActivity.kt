@@ -16,7 +16,6 @@ import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
-import com.paula.seniorcare_app.model.User
 import kotlinx.android.synthetic.main.activity_auth.signUpButton
 import kotlinx.android.synthetic.main.activity_sign_up.*
 import kotlinx.coroutines.Dispatchers
@@ -92,10 +91,10 @@ class SignUpActivity : AppCompatActivity() {
             }
         }
 
-        val roles = resources.getStringArray(R.array.rol_usuario)
+        val roles = resources.getStringArray(R.array.user_role)
         val adapter = ArrayAdapter(
             this,
-            R.layout.lista_roles,
+            R.layout.lista_menu,
             roles
         )
         roleMenuTextView.setAdapter(adapter)

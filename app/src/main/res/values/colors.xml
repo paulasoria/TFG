@@ -9,4 +9,5 @@
     <color name="white">#FFFFFFFF</color>
     <color name="dark_red">#752828</color>
     <color name="dark_green">#1E6A30</color>
+    <color name="mtrl_textinput_default_box_stroke_color">#8d9fb4</color>
 </resources>

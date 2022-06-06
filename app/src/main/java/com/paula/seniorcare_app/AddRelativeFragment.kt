@@ -19,7 +19,6 @@ import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 
 class AddRelativeFragment : Fragment(), SearchView.OnQueryTextListener {
-    //private var relativesList = ArrayList<User>()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val view:View = inflater.inflate(R.layout.fragment_add_relative, container, false)

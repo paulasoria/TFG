@@ -206,7 +206,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Agregar familiar"
-                android:visibility="visible"/>
+                android:visibility="visible" />
         </RelativeLayout>
     </LinearLayout>
 

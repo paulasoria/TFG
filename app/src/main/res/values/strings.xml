@@ -6,9 +6,13 @@
     <string name="signup_error">Se ha producido un error registrando al usuario</string>
     <string name="login_error">Se ha producido un error autenticando al usuario</string>
     <string name="no_results">No hay resultados para esta búsqueda</string>
-    <string-array name="rol_usuario">
+    <string-array name="user_role">
         <item>Administrador</item>
         <item>Familiar</item>
+    </string-array>
+    <string-array name="repetition">
+        <item>Semanal</item>
+        <item>Eventual</item>
     </string-array>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
