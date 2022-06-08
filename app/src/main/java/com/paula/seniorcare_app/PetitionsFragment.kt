@@ -62,7 +62,7 @@ class PetitionsFragment : Fragment() {
     }
 
     private fun showResults(petitionsList: ArrayList<Petition>){
-        val adapter: RelativesAdapter?
+        val adapter: PetitionsAdapter?
         if(petitionsList.isEmpty()){
             noPetitionsTextView.visibility = View.VISIBLE
             noPetitionsTextView.text = getString(R.string.no_petitions)
