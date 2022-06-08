@@ -1,5 +1,6 @@
 package com.paula.seniorcare_app
 
+import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.os.Bundle
@@ -24,15 +25,17 @@ import java.util.*
 
 class AddAlertFragment : Fragment() {
 
+    @SuppressLint("SetTextI18n")
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val view:View = inflater.inflate(R.layout.fragment_add_alert, container, false)
         val setHourButton: Button = view.findViewById(R.id.setHourButton)
         val setDateButton: Button = view.findViewById(R.id.setDateButton)
         val repetitionMenuTextView : AutoCompleteTextView = view.findViewById(R.id.repetitionMenuTextView)
         val saveAlertButton : Button = view.findViewById(R.id.saveAlertButton)
-        val relativeTextInput : TextInputLayout = view.findViewById(R.id.relativeTextInput)
+        val relativeMenuTextView : AutoCompleteTextView = view.findViewById(R.id.relativeMenuTextView)
         val tagTextInput : TextInputLayout = view.findViewById(R.id.tagTextInput)
         val repetitionMenu : TextInputLayout = view.findViewById(R.id.repetitionMenu)
+        var selectedItem : String? = null
         val week = arrayOfNulls<TextView>(7)
         week[0] = view.findViewById(R.id.lunes)
         week[1] = view.findViewById(R.id.martes)
@@ -41,23 +44,32 @@ class AddAlertFragment : Fragment() {
         week[4] = view.findViewById(R.id.viernes)
         week[5] = view.findViewById(R.id.sabado)
         week[6] = view.findViewById(R.id.domingo)
-        val daysError : TextView = view.findViewById(R.id.daysError)
-        val dateError : TextView = view.findViewById(R.id.dateError)
-        var selectedItem : String? = null
 
+        val calendar = Calendar.getInstance()
+        setHourButton.text = "${calendar.get(Calendar.HOUR_OF_DAY).toString()}:${calendar.get(Calendar.MINUTE).toString()}"
         setHourButton.setOnClickListener {
-            val calendar = Calendar.getInstance()
-            TimePickerDialog(context, { picker, hour, minute ->
-                setHourButton.text = "$hour:$minute"
+            TimePickerDialog(context, { _, hour, minute ->
+                if(minute.toString().length == 1){
+                    setHourButton.text = "$hour:0$minute"
+                }else {
+                    setHourButton.text = "$hour:$minute"
+                }
             }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), true).show()
         }
 
         setDateButton.setOnClickListener {
-            val calendar = Calendar.getInstance()
             DatePickerDialog(requireContext(), { picker, year, month, day ->
                 setDateButton.text = "$day/$month/$year"
             }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show()
         }
+
+        /*val relatives = //Obtener lista de familiares
+        val adapterRel = ArrayAdapter(
+            requireContext(),
+            R.layout.lista_menu,
+            relatives
+        )
+        repetitionMenuTextView.setAdapter(adapterRel)*/
 
         val repetition = resources.getStringArray(R.array.repetition)
         val adapter = ArrayAdapter(
@@ -85,11 +97,10 @@ class AddAlertFragment : Fragment() {
 
         saveAlertButton.setOnClickListener {
             val db = FirebaseFirestore.getInstance()
-            val relative = relativeTextInput.editText?.text.toString()
+            val relative = relativeMenuTextView.text.toString()
             val tag = tagTextInput.editText?.text.toString()
             val repetition = repetitionMenuTextView.text.toString()
-            if (relative.trim().isNotEmpty() && tag.trim().isNotEmpty() && repetition.trim().isNotEmpty() && selectedItem != null) {
-                if(selectedItem == "Semanal" && !emptyDays(week)) {
+            if (relative.trim().isNotEmpty() && tag.trim().isNotEmpty() && repetition.trim().isNotEmpty() && selectedItem != null && selectedItem == "Semanal" && !emptyDays(week)) {
                     val id = UUID.randomUUID().toString()
                     val uid = FirebaseAuth.getInstance().currentUser!!.uid
                     val daysOfWeek = getSelectedDays(week)
@@ -99,30 +110,27 @@ class AddAlertFragment : Fragment() {
                         }
                     }
                     //Guardar alerta en la bbdd
-                } else {
-                    errorEmptyDays(week)
-                }
-
-                if(selectedItem == "Eventual" && !emptyDate()) {
-                    val id = UUID.randomUUID().toString()
-                    val uid = FirebaseAuth.getInstance().currentUser!!.uid
-                    val date = setDateButton.text.toString()
-                    lifecycleScope.launch {
-                        withContext(Dispatchers.IO) {
-                            createAlertInDatabase(db, id, uid, relative, tag, repetition, setHourButton.text.toString(), null, date)
-                        }
-                    }
-                    //Guardar alerta como recordatorio eventual
-                } else {
-                    errorEmptyDate()
-                }
             } else {
-                emptyEditText(relativeTextInput)
+                emptyMenu(relativeMenuTextView)
                 emptyEditText(tagTextInput)
-                if(repetitionMenuTextView.text.toString().trim().isEmpty()){
-                    repetitionMenu.error = getString(R.string.empty_field)
-                } else { repetitionMenu.error = null }
+                emptyMenu(repetitionMenuTextView)
                 errorEmptyDays(week)
+            }
+
+            if(relative.trim().isNotEmpty() && tag.trim().isNotEmpty() && repetition.trim().isNotEmpty() && selectedItem != null && selectedItem == "Eventual" && !emptyDate()) {
+                val id = UUID.randomUUID().toString()
+                val uid = FirebaseAuth.getInstance().currentUser!!.uid
+                val date = setDateButton.text.toString()
+                lifecycleScope.launch {
+                    withContext(Dispatchers.IO) {
+                        createAlertInDatabase(db, id, uid, relative, tag, repetition, setHourButton.text.toString(), null, date)
+                    }
+                }
+                //Guardar alerta como recordatorio eventual
+            } else {
+                emptyMenu(relativeMenuTextView)
+                emptyEditText(tagTextInput)
+                emptyMenu(repetitionMenuTextView)
                 errorEmptyDate()
             }
         }
@@ -143,7 +151,7 @@ class AddAlertFragment : Fragment() {
                 "date" to date
             )
         ).await()
-        //Subcolecciones para sender y receiver
+        //Subcolecciones para sender y receiver con cloud functions
     }
 
     private fun changeColorSelectedDay(day: TextView){
@@ -158,6 +166,12 @@ class AddAlertFragment : Fragment() {
 
     private fun emptyEditText(x: TextInputLayout) {
         if(x.editText?.text.toString().trim().isEmpty()){
+            x.error = getString(R.string.empty_field)
+        } else { x.error = null }
+    }
+
+    private fun emptyMenu(x: AutoCompleteTextView){
+        if(x.text.toString().trim().isEmpty()){
             x.error = getString(R.string.empty_field)
         } else { x.error = null }
     }
@@ -206,12 +220,12 @@ class AddAlertFragment : Fragment() {
     }
 
     private fun getSelectedDays(week:Array<TextView?>): HashMap<String,Int> {
-        var selectedDays: HashMap<String,Int> = hashMapOf("l" to 0, "m" to 0, "x" to 0, "j" to 0, "v" to 0, "s" to 0, "d" to 0)
+        var selectedDays: HashMap<String,Int> = hashMapOf("L" to 0, "M" to 0, "X" to 0, "J" to 0, "V" to 0, "S" to 0, "D" to 0)
 
         week.forEach {
             if (it != null) {
                 if (it.currentTextColor == resources.getColor(R.color.turquoise)) {
-                    selectedDays[it.text.toString().toLowerCase()] = 1
+                    selectedDays[it.text.toString()] = 1
                 }
             }
         }

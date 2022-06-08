@@ -28,23 +28,24 @@
             android:layout_height="20dp" />
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/relativeTextInput"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:id="@+id/relativeMenu"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="60dp"
-            android:hint="Familiar"
-            app:boxBackgroundMode="outline"
             app:helperText="*Obligatorio"
+            app:boxBackgroundColor="@color/grayish_blue"
             app:boxStrokeColor="@color/super_light_grayish_blue"
             app:hintTextColor="@color/super_light_grayish_blue">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="text" />
-
+        <AutoCompleteTextView
+            android:id="@+id/relativeMenuTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Familiar"
+            android:inputType="none" />
         </com.google.android.material.textfield.TextInputLayout>
+
 
         <View
             android:layout_width="match_parent"

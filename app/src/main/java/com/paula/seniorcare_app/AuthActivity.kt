@@ -86,7 +86,6 @@ class AuthActivity : AppCompatActivity() {
                     FirebaseAuth.getInstance().signInWithCredential(credential).addOnCompleteListener {
                         if (it.isSuccessful) {
                             val relativesNull = ArrayList<String>()
-                            val petitionsNull = ArrayList<String>()
                             db.collection("users").document(account.id.toString()).set(
                                 hashMapOf(
                                     "uid" to account.id.toString(),
@@ -95,8 +94,7 @@ class AuthActivity : AppCompatActivity() {
                                     "email" to account.email,
                                     "role" to "No se sabe",   //REVISAR
                                     "provider" to "Google",
-                                    "relatives" to relativesNull,
-                                    "petitions" to petitionsNull
+                                    "relatives" to relativesNull
                                 )
                             )
                             showHome()

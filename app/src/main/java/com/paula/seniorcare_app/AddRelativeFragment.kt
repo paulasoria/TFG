@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
@@ -23,7 +24,14 @@ class AddRelativeFragment : Fragment(), SearchView.OnQueryTextListener {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val view:View = inflater.inflate(R.layout.fragment_add_relative, container, false)
         val relativesSearchView:SearchView = view.findViewById(R.id.relativesSearchView)
+        val petitionsButton: FloatingActionButton = view.findViewById(R.id.petitionsButton)
+
         relativesSearchView.setOnQueryTextListener(this)
+
+        petitionsButton.setOnClickListener {
+            activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.wrapper,PetitionsFragment())?.commit()
+        }
+
         return view
     }
 

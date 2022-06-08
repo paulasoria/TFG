@@ -10,6 +10,9 @@ import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.*
+import com.google.firebase.functions.FirebaseFunctions
+import com.google.firebase.functions.ktx.functions
+import com.google.firebase.ktx.Firebase
 import com.paula.seniorcare_app.model.Petition
 import com.paula.seniorcare_app.model.User
 import kotlinx.android.synthetic.main.activity_auth.*
@@ -44,8 +47,10 @@ class RelativeProfileActivity : AppCompatActivity() {
                     videocallButton.visibility = View.VISIBLE
                     deleteRelativeButton.visibility = View.VISIBLE
                     addRelativeButton.visibility = View.INVISIBLE
-                } else if(petitionIsPending(relativeUid)) {
-                    addRelativeButton.isEnabled = false
+                } else if(petitionIsPending(relativeUid)?.isEmpty == false) { //Peticion pendiente
+                    withContext(Dispatchers.Main) {
+                        addRelativeButton.isEnabled = false             //Desactivar boton de añadir familiar
+                    }
                 }
                 /*else {
                     //SI EL FAMILIAR NO ESTÁ AÑADIDO:
@@ -59,9 +64,11 @@ class RelativeProfileActivity : AppCompatActivity() {
         addRelativeButton.setOnClickListener {
             val db = FirebaseFirestore.getInstance()
             val currentUid = FirebaseAuth.getInstance().currentUser!!.uid
+            var functions: FirebaseFunctions
+            functions = Firebase.functions
             lifecycleScope.launch {
                 withContext(Dispatchers.IO) {
-                    createPetitionInDatabase(db, currentUid, relativeUid)   //sender, receiver
+                    createPetitionInDatabase(db, functions, currentUid, relativeUid)   //sender, receiver
                     //Enviar notificación solicitud de familiar
 
                     //ESTO AL ACEPTAR: updateRelativesList(db, currentUid, relativeUid)
@@ -72,26 +79,16 @@ class RelativeProfileActivity : AppCompatActivity() {
         }
     }
 
-    private suspend fun createPetitionInDatabase(db: FirebaseFirestore, sender: String, receiver: String): Boolean {
+    private suspend fun createPetitionInDatabase(db: FirebaseFirestore, functions: FirebaseFunctions, sender: String, receiver: String): Boolean {
         return try {
             val id = UUID.randomUUID().toString()
-            db.collection("petitions").document(id).set(
-                hashMapOf(
-                    "id" to id,
-                    "sender" to sender,
-                    "receiver" to receiver,
-                    "state" to "pending"    //pending, accepted or rejected
-                )
-            ).await()
-
-            val senderPetitions = db.collection("users").document(sender).get().await().data?.getValue("petitions") as ArrayList<DocumentReference>
-            senderPetitions.add(db.collection("petitions").document(id))
-            db.collection("users").document(sender).update("petitions",senderPetitions)
-
-            val receiverPetitions = db.collection("users").document(receiver).get().await().data?.getValue("petitions") as ArrayList<DocumentReference>
-            receiverPetitions.add(db.collection("petitions").document(id))
-            db.collection("users").document(receiver).update("petitions",receiverPetitions)
-
+            db.collection("users").document(sender).collection("petitions").document(id).set(hashMapOf(
+                "id" to id,
+                "sender" to sender,
+                "receiver" to receiver,
+                "state" to "pending"    //pending, accepted or rejected
+            )).await()
+            //AQUÍ SE DISPARA UNA GOOGLE CLOUD FUNCTION PARA CREAR LA PETICIÓN EN EL RECEIVER
             true
         } catch (e: Exception) {
             Log.e(ContentValues.TAG, "CREATING PETITION IN DATABASE ERROR", e)
@@ -103,38 +100,28 @@ class RelativeProfileActivity : AppCompatActivity() {
         return try {
             var found = false
             val db = FirebaseFirestore.getInstance()
-            val currentUid = FirebaseAuth.getInstance().currentUser!!.uid
+            /*val currentUid = FirebaseAuth.getInstance().currentUser!!.uid
             val userData = db.collection("users").document(currentUid).get().await()
             val relativesList = userData.data?.get("relatives") as ArrayList<String>
             relativesList.iterator().forEach { relative ->
                 if(relative == uid){
                     found = true
                 }
-            }
+            }*/
             found
         } catch (e: Exception) {
             false
         }
     }
 
-    private suspend fun petitionIsPending(uid: String): Boolean {
+    private suspend fun petitionIsPending(uid: String): QuerySnapshot? {
         return try {
-            var pending = false
             val db = FirebaseFirestore.getInstance()
             val currentUid = FirebaseAuth.getInstance().currentUser!!.uid
-            val userData = db.collection("users").document(currentUid).get().await()
-            val petitionsList = userData.data?.get("petitions") as ArrayList<DocumentReference>
-            val allPetitions = db.collection("petitions").get()
-            allPetitions.result.iterator().forEach { petition ->
-                petitionsList.iterator().forEach { userPetition ->
-                    if (petition.get(uid) == uid) {
-                        pending = true
-                    }
-                }
-            }
-            pending
+            val petition = db.collectionGroup("petitions").whereEqualTo("sender",currentUid).whereEqualTo("receiver",uid).whereEqualTo("state","pending").get().await()
+            petition
         } catch (e: Exception) {
-            false
+            null
         }
     }
 
@@ -142,9 +129,9 @@ class RelativeProfileActivity : AppCompatActivity() {
     private suspend fun updateRelativesList(db: FirebaseFirestore, currentUid: String, newRelative: String): Boolean {
         return try {
             val userData = db.collection("users").document(currentUid).get().await()
-            val relativesList = userData.data?.get("relatives") as ArrayList<String>
+            /*val relativesList = userData.data?.get("relatives") as ArrayList<String>
             relativesList.add(newRelative)
-            db.collection("users").document(currentUid).update("relatives", relativesList).await()
+            db.collection("users").document(currentUid).update("relatives", relativesList).await()*/
             true
         } catch (e: Exception) {
             false

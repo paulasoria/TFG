@@ -103,7 +103,6 @@ class SignUpActivity : AppCompatActivity() {
     private suspend fun createUserInDatabase(db: FirebaseFirestore, uid: String, url: String, name: String, email: String, roleMenu: String): Boolean {
         return try {
             val relativesNull = ArrayList<String>()
-            val petitionsNull = ArrayList<DocumentReference>()
             db.collection("users").document(uid).set(
                 hashMapOf(
                     "uid" to uid,
@@ -112,8 +111,7 @@ class SignUpActivity : AppCompatActivity() {
                     "email" to email,
                     "role" to roleMenu,
                     "provider" to "SeniorCare",
-                    "relatives" to relativesNull,
-                    "petitions" to petitionsNull
+                    "relatives" to relativesNull
                 )
             ).await()
             true

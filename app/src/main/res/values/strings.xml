@@ -6,6 +6,7 @@
     <string name="signup_error">Se ha producido un error registrando al usuario</string>
     <string name="login_error">Se ha producido un error autenticando al usuario</string>
     <string name="no_results">No hay resultados para esta búsqueda</string>
+    <string name="no_petitions">No tienes solicitudes pendientes</string>
     <string-array name="user_role">
         <item>Administrador</item>
         <item>Familiar</item>
