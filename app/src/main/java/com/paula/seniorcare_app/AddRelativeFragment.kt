@@ -35,21 +35,6 @@ class AddRelativeFragment : Fragment(), SearchView.OnQueryTextListener {
         return view
     }
 
-    /*private fun getAllUsers(){
-        relativesList.clear()
-        db.collection("users").get().addOnSuccessListener { documents ->
-            //relativesList.addAll(documents.toObjects(User::class.java))
-            for (document in documents) {
-                val name : String = document.data.getValue("name").toString()
-                val email : String = document.data.getValue("email").toString()
-                val role : String = document.data.getValue("role").toString()
-                val image : String = document.data.getValue("image").toString()
-                val user = User(name, email, null, role, image, null)
-                relativesList.add(user)
-            }
-        }
-    }*/
-
     private suspend fun getSearchUsers(db: FirebaseFirestore, query:String): QuerySnapshot? {
         return try {
             //val data = db.collection("users").whereGreaterThanOrEqualTo("email",query).whereEqualTo("email",query).get().await()

@@ -7,10 +7,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
 import com.paula.seniorcare_app.model.Petition
-import kotlinx.android.synthetic.main.fragment_add_relative.*
 import kotlinx.android.synthetic.main.fragment_petitions.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -19,11 +19,9 @@ import kotlinx.coroutines.withContext
 
 class PetitionsFragment : Fragment() {
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val view:View = inflater.inflate(R.layout.fragment_petitions, container, false)
-
         getPendingPetitions()
-
         return view
     }
 
@@ -37,25 +35,40 @@ class PetitionsFragment : Fragment() {
                 if (uid != null) {
                     val petitions = getPendingPetitionsFromDB(db, uid)
                     petitions?.iterator()?.forEach { petition ->
-                        val id : String = petition.data.getValue("id").toString()
-                        val sender : String = petition.data.getValue("sender").toString()
-                        val receiver : String = petition.data.getValue("receiver").toString()
                         val state : String = petition.data.getValue("state").toString()
-                        val p = Petition(id, sender, receiver, state)
-                        if (state == "pending") {
+                        val sender : String = petition.data.getValue("sender").toString()
+                        if (state == "pending" && sender != uid) {
+                            //Obtener datos de los usuarios que enviaron esas peticiones
+                            val id : String = petition.data.getValue("id").toString()
+                            val receiver : String = petition.data.getValue("receiver").toString()
+
+                            val senderUser = getSenderOfPetition(db, sender)
+                            val senderName : String = senderUser?.data?.getValue("name").toString()
+                            val senderEmail : String = senderUser?.data?.getValue("email").toString()
+                            val senderImage : String = senderUser?.data?.getValue("image").toString()
+                            val p = Petition(id, sender, senderName, senderEmail, senderImage, receiver, state)
                             petitionsList.add(p)
                         }
                     }
                 }
             }
+            showResults(petitionsList)
         }
-        showResults(petitionsList)
     }
 
     private suspend fun getPendingPetitionsFromDB(db: FirebaseFirestore, uid: String): QuerySnapshot? {
         return try {
             val data = db.collection("users").document(uid).collection("petitions").get().await()
             data
+        } catch (e: Exception) {
+            null
+        }
+    }
+
+    private suspend fun getSenderOfPetition(db: FirebaseFirestore, uid: String): DocumentSnapshot? {
+        return try{
+            val user = db.collection("users").document(uid).get().await()
+            user
         } catch (e: Exception) {
             null
         }
