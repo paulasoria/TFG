@@ -16,6 +16,7 @@ import androidx.lifecycle.lifecycleScope
 import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.android.synthetic.main.activity_sign_up.*
 import kotlinx.android.synthetic.main.fragment_add_alert.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -109,11 +110,11 @@ class AddAlertFragment : Fragment() {
                             createAlertInDatabase(db, id, uid, relative, tag, repetition, setHourButton.text.toString(), daysOfWeek, null)
                         }
                     }
-                    //Guardar alerta en la bbdd
+                    //Guardar alerta como alarma semanal (y en el otro usuario con Google Functions)
             } else {
-                emptyMenu(relativeMenuTextView)
+                emptyMenu(relativeMenuTextView, relativeMenu)
                 emptyEditText(tagTextInput)
-                emptyMenu(repetitionMenuTextView)
+                emptyMenu(repetitionMenuTextView, repetitionMenu)
                 errorEmptyDays(week)
             }
 
@@ -126,11 +127,11 @@ class AddAlertFragment : Fragment() {
                         createAlertInDatabase(db, id, uid, relative, tag, repetition, setHourButton.text.toString(), null, date)
                     }
                 }
-                //Guardar alerta como recordatorio eventual
+                //Guardar alerta como recordatorio eventual (y en el otro usuario con Google Functions)
             } else {
-                emptyMenu(relativeMenuTextView)
+                emptyMenu(relativeMenuTextView, relativeMenu)
                 emptyEditText(tagTextInput)
-                emptyMenu(repetitionMenuTextView)
+                emptyMenu(repetitionMenuTextView, repetitionMenu)
                 errorEmptyDate()
             }
         }
@@ -151,7 +152,7 @@ class AddAlertFragment : Fragment() {
                 "date" to date
             )
         ).await()
-        //Subcolecciones para sender y receiver con cloud functions
+        //Subcolecciones para sender y receiver con cloud functions y eliminar coleccion alertas
     }
 
     private fun changeColorSelectedDay(day: TextView){
@@ -170,10 +171,10 @@ class AddAlertFragment : Fragment() {
         } else { x.error = null }
     }
 
-    private fun emptyMenu(x: AutoCompleteTextView){
+    private fun emptyMenu(x: AutoCompleteTextView, y: TextInputLayout){
         if(x.text.toString().trim().isEmpty()){
-            x.error = getString(R.string.empty_field)
-        } else { x.error = null }
+            y.error = getString(R.string.empty_field)
+        } else { y.error = null }
     }
 
     private fun emptyDays(week:Array<TextView?>): Boolean {

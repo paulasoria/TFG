@@ -21,7 +21,7 @@
             android:layout_marginTop="50dp"
             android:backgroundTint="@color/light_grayish_blue"
             android:text="00:00"
-            android:textSize="50sp" />
+            android:textSize="50sp"/>
 
         <View
             android:layout_width="match_parent"
@@ -43,7 +43,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Familiar"
-            android:inputType="none" />
+            android:inputType="none"
+            app:errorIconDrawable="@null"/>
         </com.google.android.material.textfield.TextInputLayout>
 
 
@@ -65,7 +66,8 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="text"/>
+                android:inputType="text"
+                app:errorIconDrawable="@null"/>
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -89,7 +91,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Repetición"
-                android:inputType="none" />
+                android:inputType="none"
+                app:errorIconDrawable="@null"/>
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -198,7 +201,7 @@
             android:id="@+id/daysError"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="#B00020"
+            android:textColor="#FF6363"
             android:visibility="invisible"
             android:text="El campo no puede estar vacío"/>
 
@@ -233,7 +236,7 @@
             android:id="@+id/dateError"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="#B00020"
+            android:textColor="#FF6363"
             android:visibility="invisible"
             android:text="El campo no puede estar vacío"/>
 

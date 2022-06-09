@@ -1,21 +1,19 @@
 package com.paula.seniorcare_app
 
 import android.annotation.SuppressLint
+import android.content.ClipData.Item
 import android.content.Context
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
-import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.paula.seniorcare_app.model.Petition
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
-import kotlinx.coroutines.withContext
+
 
 class PetitionsAdapter(private var petitionsList: ArrayList<Petition>, var context: Context) : BaseAdapter() {
     override fun getCount(): Int {
@@ -35,6 +33,9 @@ class PetitionsAdapter(private var petitionsList: ArrayList<Petition>, var conte
         val rootView: View = View.inflate(context, R.layout.petition_item, null)
         val db = FirebaseFirestore.getInstance()
 
+        val acceptButton : Button = rootView.findViewById(R.id.acceptButton)
+        val rejectButton : Button = rootView.findViewById(R.id.rejectButton)
+
         val image : ImageView = rootView.findViewById(R.id.relativePetitionImageView)
         val name : TextView = rootView.findViewById(R.id.namePetitionTextView)
         val email : TextView = rootView.findViewById(R.id.emailPetitionTextView)
@@ -44,15 +45,37 @@ class PetitionsAdapter(private var petitionsList: ArrayList<Petition>, var conte
         name.text = petition.senderName
         email.text = petition.senderEmail
 
+        acceptButton.setOnClickListener {
+            changePetitionState(db, petition, "accepted")
+            //Google Function que actualice peticion del sender
+            petitionsList.remove(petition)
+            addNewRelative(db, petition)
+            //Googlw Function que agregue al receiver como familiar
+            notifyDataSetChanged()
+        }
+
+        rejectButton.setOnClickListener {
+            changePetitionState(db, petition, "rejected")
+            //Google Function que actualice peticion del sender
+            petitionsList.remove(petition)
+            notifyDataSetChanged()
+        }
+
         return rootView
     }
 
-    private suspend fun getSenderOfPetition(db: FirebaseFirestore, id: String): DocumentSnapshot? {
-        return try {
-            val sender = db.collection("users").document(id).get().await()
-            sender
-        } catch (e: Exception) {
-            null
-        }
+    private fun changePetitionState(db: FirebaseFirestore, petition: Petition, state: String) {
+        db.collection("users").document(petition.receiver.toString()).collection("petitions").document(petition.id.toString()).update("state", state)
+    }
+
+    private fun addNewRelative(db: FirebaseFirestore, petition: Petition){
+        db.collection("users").document(petition.receiver.toString()).collection("relatives").document(petition.sender.toString()).set(
+            hashMapOf(
+                "uid" to petition.sender,
+                "image" to petition.senderImage,
+                "name" to petition.senderName,
+                "email" to petition.senderEmail
+            )
+        )
     }
 }

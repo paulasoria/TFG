@@ -38,5 +38,4 @@ class RelativesAdapter(private var relativesList: ArrayList<User>, var context: 
 
         return rootView
     }
-
 }

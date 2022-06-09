@@ -47,3 +47,28 @@ exports.rejectPetition = functions.firestore
       }
       return null;
     });
+
+exports.addNewRelative = functions.firestore
+    .document("/users/{uidB}/relatives/{uidA}").onCreate((snap, context) => {
+      const uidA = snap.data().uid;
+      const uidB = context.params.uidB;
+
+      admin.firestore().collection("users").doc(uidB).get().then(B => {
+        return admin.firestore().collection("users").doc(uidA)
+            .collection("relatives").doc(B.get("uid")).set({uid: B.get("uid"),
+            	name: B.get("name"), email: B.get("email"), image: B.get("image")});
+      })
+      return null;
+    });
+
+exports.deleteRelative = functions.firestore
+    .document("/users/{uidA}/relatives/{uidB}").onDelete((snap, context) => {
+      const uidA = context.params.uidA;
+      const uidB = snap.data().uid;
+
+      admin.firestore().collection("users").doc(uidA).get().then(A => {
+        return admin.firestore().collection("users").doc(uidB)
+            .collection("relatives").doc(A.get("uid")).delete();
+    	})
+        return null;
+    });

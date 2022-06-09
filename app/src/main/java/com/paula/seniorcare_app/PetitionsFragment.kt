@@ -41,7 +41,6 @@ class PetitionsFragment : Fragment() {
                             //Obtener datos de los usuarios que enviaron esas peticiones
                             val id : String = petition.data.getValue("id").toString()
                             val receiver : String = petition.data.getValue("receiver").toString()
-
                             val senderUser = getSenderOfPetition(db, sender)
                             val senderName : String = senderUser?.data?.getValue("name").toString()
                             val senderEmail : String = senderUser?.data?.getValue("email").toString()
@@ -86,11 +85,6 @@ class PetitionsFragment : Fragment() {
             noPetitionsTextView.visibility = View.INVISIBLE
             adapter = PetitionsAdapter(petitionsList, requireContext())
             petitionsListView.adapter = adapter
-            petitionsListView.setOnItemClickListener{ _,_,position,_ ->
-                /*val intent = Intent(context,RelativeProfileActivity::class.java)
-                intent.putExtra("user", petitionsList[position])
-                startActivity(intent)*/
-            }
         }
     }
 }

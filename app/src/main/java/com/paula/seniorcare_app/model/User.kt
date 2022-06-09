@@ -8,6 +8,5 @@ data class User(
     var email: String? = null,
     var password: String? = null,
     var role: String? = null,
-    var image : String? = null,
-    var relatives: ArrayList<String>? = null
+    var image : String? = null
 ) : Serializable

@@ -46,7 +46,6 @@ class AddRelativeFragment : Fragment(), SearchView.OnQueryTextListener {
     }
 
     override fun onQueryTextSubmit(query: String?): Boolean {
-        //Log.d(TAG,"Text Submit: "+p0)
         val db = FirebaseFirestore.getInstance()
         val currentUserEmail = FirebaseAuth.getInstance().currentUser?.email
         val searchList = ArrayList<User>()
@@ -62,8 +61,7 @@ class AddRelativeFragment : Fragment(), SearchView.OnQueryTextListener {
                         val email : String = document.data.getValue("email").toString()
                         val role : String = document.data.getValue("role").toString()
                         val image : String = document.data.getValue("image").toString()
-                        val relatives : ArrayList<String> = document.data.getValue("relatives") as ArrayList<String>
-                        val user = User(uid, name, email, null, role, image, relatives)
+                        val user = User(uid, name, email, null, role, image)
                         if (email != currentUserEmail) {
                             searchList.add(user)
                         }
