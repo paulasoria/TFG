@@ -16,6 +16,9 @@ import androidx.lifecycle.lifecycleScope
 import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
+import com.google.firebase.firestore.QuerySnapshot
+import com.paula.seniorcare_app.model.User
 import kotlinx.android.synthetic.main.activity_sign_up.*
 import kotlinx.android.synthetic.main.fragment_add_alert.*
 import kotlinx.coroutines.Dispatchers
@@ -59,18 +62,30 @@ class AddAlertFragment : Fragment() {
         }
 
         setDateButton.setOnClickListener {
-            DatePickerDialog(requireContext(), { picker, year, month, day ->
+            DatePickerDialog(requireContext(), { _, year, month, day ->
                 setDateButton.text = "$day/$month/$year"
             }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show()
         }
 
-        /*val relatives = //Obtener lista de familiares
-        val adapterRel = ArrayAdapter(
-            requireContext(),
-            R.layout.lista_menu,
-            relatives
-        )
-        repetitionMenuTextView.setAdapter(adapterRel)*/
+        val db = FirebaseFirestore.getInstance()
+        var relatives : QuerySnapshot?
+        val addedRelativesList = ArrayList<String>()
+        addedRelativesList.clear()
+        lifecycleScope.launch {
+            withContext(Dispatchers.IO) {
+                relatives = getAddedRelativesList(db)
+                relatives?.iterator()?.forEach { relative ->
+                    val email: String = relative.data.getValue("email").toString()
+                    addedRelativesList.add(email)
+                }
+            }
+            val adapterRel = ArrayAdapter(
+                requireContext(),
+                R.layout.lista_menu,
+                addedRelativesList
+            )
+            relativeMenuTextView.setAdapter(adapterRel)
+        }
 
         val repetition = resources.getStringArray(R.array.repetition)
         val adapter = ArrayAdapter(
@@ -102,12 +117,10 @@ class AddAlertFragment : Fragment() {
             val tag = tagTextInput.editText?.text.toString()
             val repetition = repetitionMenuTextView.text.toString()
             if (relative.trim().isNotEmpty() && tag.trim().isNotEmpty() && repetition.trim().isNotEmpty() && selectedItem != null && selectedItem == "Semanal" && !emptyDays(week)) {
-                    val id = UUID.randomUUID().toString()
-                    val uid = FirebaseAuth.getInstance().currentUser!!.uid
                     val daysOfWeek = getSelectedDays(week)
                     lifecycleScope.launch {
                         withContext(Dispatchers.IO) {
-                            createAlertInDatabase(db, id, uid, relative, tag, repetition, setHourButton.text.toString(), daysOfWeek, null)
+                            createAlertInDatabase(db, relative, tag, repetition, setHourButton.text.toString(), daysOfWeek, null)
                         }
                     }
                     //Guardar alerta como alarma semanal (y en el otro usuario con Google Functions)
@@ -119,12 +132,10 @@ class AddAlertFragment : Fragment() {
             }
 
             if(relative.trim().isNotEmpty() && tag.trim().isNotEmpty() && repetition.trim().isNotEmpty() && selectedItem != null && selectedItem == "Eventual" && !emptyDate()) {
-                val id = UUID.randomUUID().toString()
-                val uid = FirebaseAuth.getInstance().currentUser!!.uid
                 val date = setDateButton.text.toString()
                 lifecycleScope.launch {
                     withContext(Dispatchers.IO) {
-                        createAlertInDatabase(db, id, uid, relative, tag, repetition, setHourButton.text.toString(), null, date)
+                        createAlertInDatabase(db, relative, tag, repetition, setHourButton.text.toString(), null, date)
                     }
                 }
                 //Guardar alerta como recordatorio eventual (y en el otro usuario con Google Functions)
@@ -139,8 +150,20 @@ class AddAlertFragment : Fragment() {
         return view
     }
 
-    private suspend fun createAlertInDatabase(db: FirebaseFirestore, id: String, sender: String, receiver: String, tag: String, repetition: String, time: String, daysOfWeek: HashMap<String,Int>?, date: String?){
-        db.collection("alerts").document(id).set(
+    private suspend fun getAddedRelativesList(db: FirebaseFirestore) : QuerySnapshot? {
+        return try {
+            val currentUid = FirebaseAuth.getInstance().currentUser?.uid
+            val data = db.collection("users").document(currentUid.toString()).collection("relatives").get().await()
+            data
+        } catch (e: Exception) {
+            null
+        }
+    }
+
+    private suspend fun createAlertInDatabase(db: FirebaseFirestore, receiver: String, tag: String, repetition: String, time: String, daysOfWeek: HashMap<String,Int>?, date: String?){
+        val id = UUID.randomUUID().toString()
+        val sender = FirebaseAuth.getInstance().currentUser!!.uid
+        db.collection("users").document(sender).collection("alerts").document(id).set(
             hashMapOf(
                 "id" to id,
                 "sender" to sender,
@@ -152,7 +175,7 @@ class AddAlertFragment : Fragment() {
                 "date" to date
             )
         ).await()
-        //Subcolecciones para sender y receiver con cloud functions y eliminar coleccion alertas
+        //Cloud function para guardar la alerta en el otro familiar (el que recibe notificacion)
     }
 
     private fun changeColorSelectedDay(day: TextView){

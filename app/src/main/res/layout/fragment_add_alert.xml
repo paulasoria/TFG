@@ -214,7 +214,7 @@
         android:orientation="vertical"
         android:layout_marginHorizontal="80dp"
         android:layout_gravity="center_horizontal|bottom"
-        android:layout_marginBottom="150dp"
+        android:layout_marginBottom="140dp"
         android:visibility="invisible">
 
         <TextView

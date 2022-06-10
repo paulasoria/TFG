@@ -11,6 +11,6 @@ data class Alert(
     var tag: String? = null,
     var repetition: String? = null, //weekly or eventually
     var time: String? = null,       //weekly or eventually
-    var daysOfWeek: Array<Int>?, //weekly    1 on, 0 off
+    var daysOfWeek: HashMap<String,Int>?, //weekly    1 on, 0 off
     var date: String? = null                 //event     y,m,d
 ) : Serializable

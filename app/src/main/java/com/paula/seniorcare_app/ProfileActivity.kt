@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
@@ -39,14 +40,19 @@ class ProfileActivity : AppCompatActivity() {
         val db = FirebaseFirestore.getInstance()
         val uid = FirebaseAuth.getInstance().currentUser!!.uid
         var downloadImage : String?
+        var user: DocumentSnapshot?
 
-        db.collection("users").document(uid).get().addOnSuccessListener {
-            downloadImage = it.get("image") as String?
-            Glide.with(this).load(downloadImage.toString()).into(profileImageView)
-            nameTextView.text = it.get("name") as String?
-            emailTextView.text = it.get("email") as String?
-            roleTextView.text = it.get("role") as String?
-            providerTextView.text = it.get("provider") as String
+        lifecycleScope.launch {
+            withContext(Dispatchers.IO) {
+                user = getUserFromDB(db, uid)
+            }
+            nameTextView.text = user?.get("name") as String?
+            emailTextView.text = user?.get("email") as String?
+            roleTextView.text = user?.get("role") as String?
+            providerTextView.text = user?.get("provider") as String
+            downloadImage = user?.get("image") as String?
+            Glide.with(this@ProfileActivity).load(downloadImage.toString()).into(profileImageView)
+
         }
 
         editImageButton.setOnClickListener {    //SE ADELANTA (PORQUE NO GUARDA IMAGEN EN BBDD), MIRAR CORRUTINAS
@@ -66,6 +72,15 @@ class ProfileActivity : AppCompatActivity() {
             onBackPressed()
             val authIntent = Intent(this,AuthActivity::class.java)
             startActivity(authIntent)
+        }
+    }
+
+    private suspend fun getUserFromDB(db: FirebaseFirestore, uid: String): DocumentSnapshot? {
+        return try {
+            val user = db.collection("users").document(uid).get().await()
+            user
+        } catch (e: Exception) {
+            null
         }
     }
 

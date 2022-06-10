@@ -72,3 +72,21 @@ exports.deleteRelative = functions.firestore
     	})
         return null;
     });
+
+exports.addNewAlert = functions.firestore
+    .document("/users/{uidA}/alerts/{uidB}").onCreate((snap, context) => {
+      const id = snap.data().id;
+      const sender = snap.data().sender;
+      const receiver = snap.data().receiver;
+      const tag = snap.data().tag;
+      const repetition = snap.data().repetition;
+      const time = snap.data().time;
+      const daysOfWeek = snap.data().daysOfWeek;
+      const date = snap.data().date;
+
+      return admin.firestore().collection("users").doc(receiver)
+          .collection("alerts").doc(id).set({id: id, sender: sender,
+            receiver: receiver, tag: tag, repetition: repetition,
+            time: time, daysOfWeek: daysOfWeek, date: date});
+      return null;
+    });

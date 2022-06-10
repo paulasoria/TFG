@@ -7,6 +7,7 @@
     <string name="login_error">Se ha producido un error autenticando al usuario</string>
     <string name="no_results">No hay resultados para esta búsqueda</string>
     <string name="no_petitions">No tienes solicitudes pendientes</string>
+    <string name="no_config_alerts">No tienes alertas configuradas</string>
     <string name="delete_relative">¿Seguro que quieres borrar a este familiar?</string>
     <string-array name="user_role">
         <item>Administrador</item>
