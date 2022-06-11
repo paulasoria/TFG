@@ -14,6 +14,7 @@ import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.iid.FirebaseInstanceId
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import kotlinx.android.synthetic.main.activity_auth.signUpButton
@@ -102,9 +103,11 @@ class SignUpActivity : AppCompatActivity() {
 
     private suspend fun createUserInDatabase(db: FirebaseFirestore, uid: String, url: String, name: String, email: String, roleMenu: String): Boolean {
         return try {
+            val token = FirebaseInstanceId.getInstance().instanceId.result.token
             db.collection("users").document(uid).set(
                 hashMapOf(
                     "uid" to uid,
+                    "token" to token,
                     "image" to url,
                     "name" to name,
                     "email" to email,

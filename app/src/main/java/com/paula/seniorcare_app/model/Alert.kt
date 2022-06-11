@@ -8,6 +8,8 @@ data class Alert(
     var id: String? = null,
     var sender: String? = null,
     var receiver: String? = null,
+    var receiverName : String? = null,
+    var receiverEmail : String? = null,
     var tag: String? = null,
     var repetition: String? = null, //weekly or eventually
     var time: String? = null,       //weekly or eventually

@@ -12,6 +12,7 @@ import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.iid.FirebaseInstanceId
 import kotlinx.android.synthetic.main.activity_auth.*
 
 class AuthActivity : AppCompatActivity() {
@@ -85,9 +86,11 @@ class AuthActivity : AppCompatActivity() {
                     val credential = GoogleAuthProvider.getCredential(account.idToken, null)
                     FirebaseAuth.getInstance().signInWithCredential(credential).addOnCompleteListener {
                         if (it.isSuccessful) {
+                            val token = FirebaseInstanceId.getInstance().instanceId.result.token
                             db.collection("users").document(account.id.toString()).set(
                                 hashMapOf(
                                     "uid" to account.id.toString(),
+                                    "token" to token,
                                     "image" to R.drawable.no_photo_user,
                                     "name" to account.displayName,
                                     "email" to account.email,

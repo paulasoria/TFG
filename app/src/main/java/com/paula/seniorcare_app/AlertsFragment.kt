@@ -1,20 +1,21 @@
 package com.paula.seniorcare_app
 
+import android.content.ContentValues
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
 import com.paula.seniorcare_app.model.Alert
-import com.paula.seniorcare_app.model.Petition
 import kotlinx.android.synthetic.main.fragment_alerts.*
-import kotlinx.android.synthetic.main.fragment_petitions.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
@@ -39,36 +40,55 @@ class AlertsFragment : Fragment() {
 
     private fun getConfiguredAlerts(){
         val db = FirebaseFirestore.getInstance()
-        val uid = FirebaseAuth.getInstance().currentUser?.uid
         val alertsList = ArrayList<Alert>()
         alertsList.clear()
         lifecycleScope.launch {
             withContext(Dispatchers.IO) {
-                if (uid != null) {
-                    val alerts = getConfiguredAlertsFromDB(db, uid)
-                    alerts?.iterator()?.forEach { alert ->
-                        val id: String = alert.data.getValue("id").toString()
-                        val sender: String = alert.data.getValue("sender").toString()
-                        val receiver: String = alert.data.getValue("receiver").toString()
-                        var tag: String = alert.data.getValue("tag").toString()
-                        var repetition: String = alert.data.getValue("repetition").toString()
-                        var time: String = alert.data.getValue("time").toString()
-                        var daysOfWeek: HashMap<String, Int> = alert.data.getValue("daysOfWeek") as HashMap<String, Int>
-                        var date: String = alert.data.getValue("date").toString()
-                        val a = Alert(id, sender, receiver, tag, repetition, time, daysOfWeek, date)
+                val alerts = getConfiguredAlertsFromDB(db)
+                alerts?.iterator()?.forEach { alert ->
+                    val id: String = alert.data.getValue("id").toString()
+                    val sender: String = alert.data.getValue("sender").toString()
+                    val receiver: String = alert.data.getValue("receiver").toString()
+                    val receiverUser = getReceiverOfAlert(db, receiver)
+                    val receiverName : String = receiverUser?.data?.getValue("name").toString()
+                    val receiverEmail : String = receiverUser?.data?.getValue("email").toString()
+                    val tag: String = alert.data.getValue("tag").toString()
+                    val repetition: String = alert.data.getValue("repetition").toString()
+                    val time: String = alert.data.getValue("time").toString()
+                    if(repetition.equals("weekly")){
+                        val daysOfWeek: HashMap<String, Int> = alert.data.getValue("daysOfWeek") as HashMap<String, Int>
+                        val a = Alert(id, sender, receiver, receiverName, receiverEmail, tag, repetition, time, daysOfWeek, null)
+                        alertsList.add(a)
+                    } else {    //"eventually"
+                        val date: String = alert.data.getValue("date").toString()
+                        val a = Alert(id, sender, receiver, receiverName, receiverEmail, tag, repetition, time, null, date)
                         alertsList.add(a)
                     }
+                    //}
                 }
             }
             showResults(alertsList)
         }
     }
 
-    private suspend fun getConfiguredAlertsFromDB(db: FirebaseFirestore, uid: String): QuerySnapshot? {
+    private suspend fun getReceiverOfAlert(db: FirebaseFirestore, uid: String): DocumentSnapshot? {
+        return try{
+            val user = db.collection("users").document(uid).get().await()
+            user
+        } catch (e: Exception) {
+            null
+        }
+    }
+
+    private suspend fun getConfiguredAlertsFromDB(db: FirebaseFirestore): QuerySnapshot? {
         return try {
-            val data = db.collection("users").document(uid).collection("alerts").whereEqualTo("sender",uid).get().await()
+            val currentUid = FirebaseAuth.getInstance().currentUser?.uid
+            //val data = db.collection("users").document(uid).collection("alerts").get().await()
+            val data = db.collection("users").document(currentUid.toString())
+                .collection("alerts").whereEqualTo("sender",currentUid.toString()).get().await()
             data
         } catch (e: Exception) {
+            Log.e(ContentValues.TAG, "GETTING CONFIGURED ALERTS ERROR", e)
             null
         }
     }
@@ -85,6 +105,14 @@ class AlertsFragment : Fragment() {
             noAlertsTextView.visibility = View.INVISIBLE
             adapter = AlertsAdapter(alertsList, requireContext())
             alertsListView.adapter = adapter
+            //Editar alerta
+            /*alertsListView.setOnItemClickListener{ _,_,position,_ ->
+                val addAlertFragment = AddAlertFragment()
+                val data = Bundle()
+                data.putSerializable("alert", alertsList[position])
+                addAlertFragment.arguments = data
+                activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.wrapper,addAlertFragment)?.commit()
+            }*/
         }
     }
 }
