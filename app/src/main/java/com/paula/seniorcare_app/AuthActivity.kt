@@ -1,12 +1,16 @@
 package com.paula.seniorcare_app
 
+import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseAuth
@@ -14,6 +18,10 @@ import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.iid.FirebaseInstanceId
 import kotlinx.android.synthetic.main.activity_auth.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
 
 class AuthActivity : AppCompatActivity() {
 
@@ -35,7 +43,7 @@ class AuthActivity : AppCompatActivity() {
     private fun session(){
         val prefs = getSharedPreferences(getString(R.string.prefs_file), Context.MODE_PRIVATE)
         val email = prefs.getString("email", null)
-        if(email != null){
+        if(/*email != null &&*/FirebaseAuth.getInstance().currentUser != null){
             authLayout.visibility = View.INVISIBLE
             showHome()
         }
@@ -86,19 +94,12 @@ class AuthActivity : AppCompatActivity() {
                     val credential = GoogleAuthProvider.getCredential(account.idToken, null)
                     FirebaseAuth.getInstance().signInWithCredential(credential).addOnCompleteListener {
                         if (it.isSuccessful) {
-                            val token = FirebaseInstanceId.getInstance().instanceId.result.token
-                            db.collection("users").document(account.id.toString()).set(
-                                hashMapOf(
-                                    "uid" to account.id.toString(),
-                                    "token" to token,
-                                    "image" to R.drawable.no_photo_user,
-                                    "name" to account.displayName,
-                                    "email" to account.email,
-                                    "role" to "No se sabe",   //REVISAR
-                                    "provider" to "Google"
-                                )
-                            )
-                            showHome()
+                            lifecycleScope.launch {
+                                withContext(Dispatchers.IO) {
+                                    createUserFromGoogle(db, account)
+                                }
+                                showHome()
+                            }
                         } else {
                             showAlertGoogle()
                         }
@@ -107,6 +108,27 @@ class AuthActivity : AppCompatActivity() {
             } catch (e: ApiException){
                 showAlertGoogle()
             }
+        }
+    }
+
+    private suspend fun createUserFromGoogle(db: FirebaseFirestore, account: GoogleSignInAccount): Boolean {
+        return try {
+            val token = FirebaseInstanceId.getInstance().instanceId.await().token
+            db.collection("users").document(account.id.toString()).set(
+                hashMapOf(
+                    "uid" to account.id.toString(),
+                    "token" to token,
+                    "image" to R.drawable.no_photo_user,
+                    "name" to account.displayName,
+                    "email" to account.email,
+                    "role" to "No se sabe",   //REVISAR
+                    "provider" to "Google"
+                )
+            ).await()
+            true
+        }  catch (e: Exception) {
+            Log.e(ContentValues.TAG, "CREATING USER FROM GOOGLE ERROR", e)
+            false
         }
     }
 }

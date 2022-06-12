@@ -55,7 +55,7 @@ class AlertsFragment : Fragment() {
                     val tag: String = alert.data.getValue("tag").toString()
                     val repetition: String = alert.data.getValue("repetition").toString()
                     val time: String = alert.data.getValue("time").toString()
-                    if(repetition.equals("weekly")){
+                    if(repetition == "weekly") {
                         val daysOfWeek: HashMap<String, Int> = alert.data.getValue("daysOfWeek") as HashMap<String, Int>
                         val a = Alert(id, sender, receiver, receiverName, receiverEmail, tag, repetition, time, daysOfWeek, null)
                         alertsList.add(a)

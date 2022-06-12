@@ -13,11 +13,7 @@ import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.*
 import com.paula.seniorcare_app.model.User
-import kotlinx.android.synthetic.main.activity_profile.*
 import kotlinx.android.synthetic.main.activity_relative_profile.*
-import kotlinx.android.synthetic.main.activity_relative_profile.emailTextView
-import kotlinx.android.synthetic.main.activity_relative_profile.nameTextView
-import kotlinx.android.synthetic.main.activity_relative_profile.profileImageView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
@@ -38,29 +34,32 @@ class RelativeProfileActivity : AppCompatActivity() {
         val relativeUid = user.uid.toString()
         nameTextView.text = user.name.toString()
         emailTextView.text = user.email.toString()
-        //role???
+        roleTextView.text = user.role.toString()
         Glide.with(this).load(user.image.toString()).into(profileImageView)
 
         lifecycleScope.launch {
             withContext(Dispatchers.IO) {
                 val currentUid = FirebaseAuth.getInstance().currentUser!!.uid
-                if(petitionIsPending(relativeUid,currentUid)?.isEmpty == false || petitionIsPending(currentUid,relativeUid)?.isEmpty == false) { //Peticion pendiente
-                    withContext(Dispatchers.Main) {
-                        addRelativeButton.isEnabled = false             //Desactivar boton de añadir familiar
-                    }
-                } else if(relativeIsAdded(relativeUid)) {
+                if(relativeIsAdded(relativeUid)?.isEmpty == false) {
                     withContext(Dispatchers.Main) {
                         videocallButton.visibility = View.VISIBLE
                         deleteRelativeButton.visibility = View.VISIBLE
                         addRelativeButton.visibility = View.INVISIBLE
                     }
+                } else {
+                    videocallButton.visibility = View.INVISIBLE
+                    deleteRelativeButton.visibility = View.INVISIBLE
+                    addRelativeButton.visibility = View.VISIBLE
+                    if (petitionIsPendingByReceiver(relativeUid)?.isEmpty == true && petitionIsPendingBySender(relativeUid)?.isEmpty == true) { //No peticion pendiente
+                        withContext(Dispatchers.Main) {
+                            addRelativeButton.isEnabled = true
+                        }
+                    } else {    //Peticion pendiente
+                        withContext(Dispatchers.Main) {
+                            addRelativeButton.isEnabled = false
+                        }
+                    }
                 }
-                /*else {
-                    //SI EL FAMILIAR NO ESTÁ AÑADIDO:
-                    videocallButton.isEnabled = false
-                    deleteRelativeButton.isEnabled = false
-                    addRelativeButton.isEnabled = true
-                }*/
             }
         }
 
@@ -130,23 +129,31 @@ class RelativeProfileActivity : AppCompatActivity() {
         }
     }
 
-    private suspend fun relativeIsAdded(uid: String): Boolean {
+    private suspend fun relativeIsAdded(uid: String): QuerySnapshot? {
         return try {
             val db = FirebaseFirestore.getInstance()
             val currentUid = FirebaseAuth.getInstance().currentUser!!.uid
-            db.collection("users").document(currentUid).collection("relatives").whereEqualTo("uid",uid).get().await()
-            true
+            return db.collection("users").document(currentUid).collection("relatives").whereEqualTo("uid",uid).get().await()
         } catch (e: Exception) {
-            false
+            null
         }
     }
 
-    private suspend fun petitionIsPending(sender: String, receiver: String): QuerySnapshot? {
+    private suspend fun petitionIsPendingByReceiver(receiver: String): QuerySnapshot? {
         return try {
             val db = FirebaseFirestore.getInstance()
             val currentUid = FirebaseAuth.getInstance().currentUser!!.uid
-            val petition = db.collection("users").document(sender).collection("petitions").whereEqualTo("receiver",receiver).get().await()
-            petition
+            return db.collection("users").document(currentUid).collection("petitions").whereEqualTo("receiver",receiver).get().await()
+        } catch (e: Exception) {
+            null
+        }
+    }
+
+    private suspend fun petitionIsPendingBySender(sender: String): QuerySnapshot? {
+        return try {
+            val db = FirebaseFirestore.getInstance()
+            val currentUid = FirebaseAuth.getInstance().currentUser!!.uid
+            return db.collection("users").document(currentUid).collection("petitions").whereEqualTo("sender",sender).get().await()
         } catch (e: Exception) {
             null
         }

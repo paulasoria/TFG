@@ -5,6 +5,7 @@
       <map>
         <entry key="..\:/Users/paula/AndroidStudioProjects/SeniorCare_App/app/src/main/res/drawable/ic_google.xml" value="0.212" />
         <entry key="..\:/Users/paula/AndroidStudioProjects/SeniorCare_App/app/src/main/res/drawable/ic_name.xml" value="0.212" />
+        <entry key="..\:/Users/paula/AndroidStudioProjects/SeniorCare_App/app/src/main/res/drawable/ic_received_call.xml" value="0.212" />
         <entry key="..\:/Users/paula/AndroidStudioProjects/SeniorCare_App/app/src/main/res/drawable/round_button_shape.xml" value="0.1665" />
         <entry key="..\:/Users/paula/AndroidStudioProjects/SeniorCare_App/app/src/main/res/layout/activity_auth.xml" value="0.25" />
         <entry key="..\:/Users/paula/AndroidStudioProjects/SeniorCare_App/app/src/main/res/layout/activity_edit_profile.xml" value="0.2046875" />
@@ -24,6 +25,8 @@
         <entry key="..\:/Users/paula/AndroidStudioProjects/SeniorCare_App/app/src/main/res/layout/fragment_history.xml" value="0.22" />
         <entry key="..\:/Users/paula/AndroidStudioProjects/SeniorCare_App/app/src/main/res/layout/fragment_petitions.xml" value="0.2046875" />
         <entry key="..\:/Users/paula/AndroidStudioProjects/SeniorCare_App/app/src/main/res/layout/fragment_relatives.xml" value="0.2" />
+        <entry key="..\:/Users/paula/AndroidStudioProjects/SeniorCare_App/app/src/main/res/layout/history_alert_item.xml" value="0.2046875" />
+        <entry key="..\:/Users/paula/AndroidStudioProjects/SeniorCare_App/app/src/main/res/layout/history_videocall_item.xml" value="0.2046875" />
         <entry key="..\:/Users/paula/AndroidStudioProjects/SeniorCare_App/app/src/main/res/layout/lista_roles.xml" value="0.11775362318840579" />
         <entry key="..\:/Users/paula/AndroidStudioProjects/SeniorCare_App/app/src/main/res/layout/petition_item.xml" value="0.25" />
         <entry key="..\:/Users/paula/AndroidStudioProjects/SeniorCare_App/app/src/main/res/layout/relative_item.xml" value="0.22" />

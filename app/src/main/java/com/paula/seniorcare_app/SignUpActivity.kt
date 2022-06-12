@@ -76,7 +76,6 @@ class SignUpActivity : AppCompatActivity() {
                             }
                         }
                     }
-
                     showHome()
                 }.addOnFailureListener {
                     showAlertSignUp()
@@ -103,7 +102,7 @@ class SignUpActivity : AppCompatActivity() {
 
     private suspend fun createUserInDatabase(db: FirebaseFirestore, uid: String, url: String, name: String, email: String, roleMenu: String): Boolean {
         return try {
-            val token = FirebaseInstanceId.getInstance().instanceId.result.token
+            val token = FirebaseInstanceId.getInstance().instanceId.await().token
             db.collection("users").document(uid).set(
                 hashMapOf(
                     "uid" to uid,

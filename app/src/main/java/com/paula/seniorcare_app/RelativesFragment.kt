@@ -72,7 +72,7 @@ class RelativesFragment : Fragment() {
         val adapter: RelativesAdapter?
         if(addedRelativesList.isEmpty()){
             noResultsTextView.visibility = View.VISIBLE
-            noResultsTextView.text = getString(R.string.no_results)
+            noResultsTextView.text = getString(R.string.no_relatives)
             //QUITAR CONTENIDO DEL ADAPTER ???
             adapter = RelativesAdapter(addedRelativesList, requireContext())
             addedRelativesGridView.adapter = adapter

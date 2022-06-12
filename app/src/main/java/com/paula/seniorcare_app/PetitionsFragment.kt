@@ -36,13 +36,11 @@ class PetitionsFragment : Fragment() {
                     val petitions = getPendingPetitionsFromDB(db, uid)
                     petitions?.iterator()?.forEach { petition ->
                         val state : String = petition.data.getValue("state").toString()
-                        //val sender : String = petition.data.getValue("sender").toString()
-                        if (state == "pending"
-                            //&& sender != uid
-                        ) {
+                        val sender : String = petition.data.getValue("sender").toString()
+                        if (state == "pending" && sender != uid) {
                             //Obtener datos de los usuarios que enviaron esas peticiones
                             val id : String = petition.data.getValue("id").toString()
-                            val sender : String = petition.data.getValue("sender").toString()
+                            //val sender : String = petition.data.getValue("sender").toString()
                             val receiver : String = petition.data.getValue("receiver").toString()
                             val senderUser = getSenderOfPetition(db, sender)
                             val senderName : String = senderUser?.data?.getValue("name").toString()
@@ -60,8 +58,8 @@ class PetitionsFragment : Fragment() {
 
     private suspend fun getPendingPetitionsFromDB(db: FirebaseFirestore, uid: String): QuerySnapshot? {
         return try {
-            //val data = db.collection("users").document(uid).collection("petitions").get().await()
-            val data = db.collection("users").document(uid).collection("petitions").whereEqualTo("sender",uid).get().await()
+            val data = db.collection("users").document(uid).collection("petitions").get().await()
+            //val data = db.collection("users").document(uid).collection("petitions").whereEqualTo("sender",uid).get().await()
             data
         } catch (e: Exception) {
             null
