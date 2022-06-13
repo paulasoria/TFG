@@ -50,7 +50,6 @@ exports.addNewRelative = functions.firestore
     .document("/users/{uidB}/relatives/{uidA}").onCreate((snap, context) => {
       const uidA = snap.data().uid;
       const uidB = context.params.uidB;
-
       admin.firestore().collection("users").doc(uidB).get().then((B) => {
         return admin.firestore().collection("users").doc(uidA)
             .collection("relatives").doc(B.get("uid"))
@@ -64,7 +63,6 @@ exports.deleteRelative = functions.firestore
     .document("/users/{uidA}/relatives/{uidB}").onDelete((snap, context) => {
       const uidA = context.params.uidA;
       const uidB = snap.data().uid;
-
       admin.firestore().collection("users").doc(uidA).get().then((A) => {
         return admin.firestore().collection("users").doc(uidB)
             .collection("relatives").doc(A.get("uid")).delete();
@@ -82,7 +80,6 @@ exports.addNewAlert = functions.firestore
       const time = snap.data().time;
       const daysOfWeek = snap.data().daysOfWeek;
       const date = snap.data().date;
-
       return admin.firestore().collection("users").doc(receiver)
           .collection("alerts").doc(id).set({id: id, sender: sender,
             receiver: receiver, tag: tag, repetition: repetition,
@@ -93,7 +90,27 @@ exports.deleteAlert = functions.firestore
     .document("users/{uid}/alerts/{id}").onDelete((snap, context) => {
       const id = snap.data().id;
       const receiver = snap.data().receiver;
-
       return admin.firestore().collection("users").doc(receiver)
           .collection("alerts").doc(id).delete();
+    });
+
+exports.updateAlert = functions.firestore
+    .document("users/{uid}/alerts/{id}").onUpdate((change, context) => {
+      const update = change.after.data();
+      const sender = change.before.data().sender;
+      const receiver = change.before.data().receiver;
+      const tag = update.tag;
+      const repetition = update.repetition;
+      const time = update.time;
+      const daysOfWeek = update.daysOfWeek;
+      const date = update.date;
+      const uid = context.params.uid;
+      const id = context.params.id;
+      if (receiver != uid) {
+        return admin.firestore().collection("users").doc(receiver)
+            .collection("alerts").doc(id).set({id: id, sender: sender,
+              receiver: receiver, tag: tag, repetition: repetition,
+              time: time, daysOfWeek: daysOfWeek, date: date});
+      }
+      return null;
     });

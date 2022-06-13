@@ -4,10 +4,11 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.BaseAdapter
+import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.paula.seniorcare_app.model.Alert
 
@@ -27,7 +28,6 @@ class AlertsAdapter(private var alertsList: ArrayList<Alert>, var context: Conte
     @SuppressLint("ViewHolder")
     override fun getView(p0: Int, p1: View?, p2: ViewGroup?): View {
         val rootView: View = View.inflate(context, R.layout.alert_item, null)
-        val db = FirebaseFirestore.getInstance()
         val removeAlertButton : TextView = rootView.findViewById(R.id.removeAlertButton)
 
         val name : TextView = rootView.findViewById(R.id.nameAlertTextView)

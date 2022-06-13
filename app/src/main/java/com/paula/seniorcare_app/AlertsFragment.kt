@@ -1,13 +1,12 @@
 package com.paula.seniorcare_app
 
 import android.content.ContentValues
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
@@ -20,7 +19,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
-import java.util.HashMap
 
 class AlertsFragment : Fragment() {
 
@@ -106,13 +104,13 @@ class AlertsFragment : Fragment() {
             adapter = AlertsAdapter(alertsList, requireContext())
             alertsListView.adapter = adapter
             //Editar alerta
-            /*alertsListView.setOnItemClickListener{ _,_,position,_ ->
+            alertsListView.setOnItemClickListener{ _,_,position,_ ->
                 val addAlertFragment = AddAlertFragment()
                 val data = Bundle()
                 data.putSerializable("alert", alertsList[position])
                 addAlertFragment.arguments = data
                 activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.wrapper,addAlertFragment)?.commit()
-            }*/
+            }
         }
     }
 }

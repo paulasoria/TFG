@@ -2,7 +2,6 @@ package com.paula.seniorcare_app.model
 
 import java.io.Serializable
 import java.util.*
-import kotlin.collections.ArrayList
 
 data class Alert(
     var id: String? = null,
