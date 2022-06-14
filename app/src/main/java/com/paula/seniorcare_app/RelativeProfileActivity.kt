@@ -1,7 +1,6 @@
 package com.paula.seniorcare_app
 
 import android.content.ContentValues
-import android.content.DialogInterface
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -19,7 +18,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import java.util.*
-
 
 class RelativeProfileActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -81,7 +79,15 @@ class RelativeProfileActivity : AppCompatActivity() {
         }
 
         videocallButton.setOnClickListener {
-            //Susto
+            //LLAMADA SERVICIO WEB
+            /*val url = ""
+            val stringRequest = StringRequest(Request.Method.GET, url, {
+                val jsonObject = JSONObject(it)
+                //jsonObject.get()
+            }, {
+                Log.d(ContentValues.TAG, "ERROR")
+            })
+            Volley.newRequestQueue(this).add(stringRequest)*/
         }
     }
 
