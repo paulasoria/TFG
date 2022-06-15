@@ -42,7 +42,7 @@ class MessagingService: FirebaseMessagingService() {
         db.collection("users").document(currentUid).update("token",token)
     }
 
-    private fun sendNotification(message: String){
+    /*private fun sendNotification(message: String){
         val intent = Intent(this, ::class.java) //Pantalla de alertas o de llamada
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         val pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT)
@@ -69,5 +69,5 @@ class MessagingService: FirebaseMessagingService() {
         }
         /*id de la notificacion, que hay que guardar para después actualizarla o quitarla*/
         notificationManager.notify(0, builder.build())
-    }
+    }*/
 }
