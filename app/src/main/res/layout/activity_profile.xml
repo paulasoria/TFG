@@ -9,8 +9,7 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_margin="20dp">
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -21,39 +20,30 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent">
 
-            <TextView
-                android:id="@+id/Titulo"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/pacifico"
-                android:text="Perfil"
-                android:textColor="@color/white"
-                android:textSize="40sp" />
-
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="400dp"
                 android:orientation="horizontal"
                 android:layout_gravity="center">
 
                 <ImageView
                     android:id="@+id/profileImageView"
-                    android:layout_width="150dp"
-                    android:layout_height="150dp"
-                    android:maxWidth="150dp"
-                    android:maxHeight="150dp"
+                    android:layout_width="400dp"
+                    android:layout_height="400dp"
                     android:layout_gravity="center"
                     android:src="@drawable/no_photo_user" />
 
-                <ImageButton
+                <TextView
                     android:id="@+id/editImageButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_edit"
-                    android:backgroundTint="@color/dark_blue"
-                    android:layout_gravity="bottom"/>
+                    android:drawableStart="@drawable/ic_edit"
+                    android:clickable="true"
+                    android:padding="20dp"
+                    android:backgroundTintMode="src_over"
+                    android:layout_alignParentRight="true" />
 
-            </LinearLayout>
+            </RelativeLayout>
 
             <View
                 android:layout_width="match_parent"
@@ -63,6 +53,8 @@
                 android:id="@+id/NameLinearLayout"
                 android:layout_width="match_parent"
                 android:layout_height="30dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
                 android:orientation="horizontal">
 
                 <TextView
@@ -103,6 +95,8 @@
                 android:id="@+id/EmailLinearLayout"
                 android:layout_width="match_parent"
                 android:layout_height="30dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
                 android:orientation="horizontal">
 
                 <TextView
@@ -134,6 +128,8 @@
                 android:id="@+id/roleLinearLayout"
                 android:layout_width="match_parent"
                 android:layout_height="30dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
                 android:orientation="horizontal">
 
                 <TextView
@@ -165,6 +161,8 @@
                 android:id="@+id/providerLinearLayout"
                 android:layout_width="match_parent"
                 android:layout_height="30dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
                 android:orientation="horizontal">
 
                 <TextView
@@ -194,6 +192,7 @@
             android:id="@+id/logOutButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="16dp"
             android:text="Cerrar sesión"
             android:layout_gravity="bottom"/>
     </FrameLayout>

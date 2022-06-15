@@ -32,7 +32,7 @@ class RelativesAdapter(private var relativesList: ArrayList<User>, var context: 
         val email : TextView = rootView.findViewById(R.id.relativeItemEmail)
         val relative : User = getItem(p0) as User
 
-        Glide.with(context).load(relative.image).into(image)
+        Glide.with(context).load(relative.image).centerCrop().into(image)
         name.text = relative.name
         email.text = relative.email
 

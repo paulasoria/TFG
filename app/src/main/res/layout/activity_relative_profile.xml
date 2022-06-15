@@ -19,8 +19,8 @@
 
         <ImageView
             android:id="@+id/profileImageView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_width="400dp"
+            android:layout_height="400dp"
             android:layout_gravity="center"
             android:maxWidth="150dp"
             android:maxHeight="150dp"

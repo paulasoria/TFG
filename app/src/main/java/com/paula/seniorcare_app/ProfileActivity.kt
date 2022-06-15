@@ -51,7 +51,7 @@ class ProfileActivity : AppCompatActivity() {
             roleTextView.text = user?.get("role") as String?
             providerTextView.text = user?.get("provider") as String
             downloadImage = user?.get("image") as String?
-            Glide.with(this@ProfileActivity).load(downloadImage.toString()).into(profileImageView)
+            Glide.with(this@ProfileActivity).load(downloadImage.toString()).centerCrop().into(profileImageView)
 
         }
 

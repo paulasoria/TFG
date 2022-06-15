@@ -10,6 +10,7 @@ import android.widget.ArrayAdapter
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import com.bumptech.glide.Glide
 import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentReference
@@ -144,16 +145,6 @@ class SignUpActivity : AppCompatActivity() {
         }
     }
 
-    private suspend fun updatePhotoURLForUser(db: FirebaseFirestore, uid: String, url: String): Boolean? {
-        return try {
-            db.collection("users").document(uid).update("image", url).await()
-            true
-        } catch (e: Exception) {
-            Log.e(TAG, "UPDATING PHOTO URL ERROR", e)
-            false
-        }
-    }
-
     private fun showAlertSignUp(){
         val builder = AlertDialog.Builder(this)
         builder.setTitle("Error")
@@ -184,7 +175,7 @@ class SignUpActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         if(requestCode == GALLERY_INTENT && resultCode == RESULT_OK){
             uri = data!!.data!!
-            userImageView.setImageURI(uri)
+            Glide.with(this).load(uri.toString()).centerCrop().into(userImageView)
         }
     }
 }

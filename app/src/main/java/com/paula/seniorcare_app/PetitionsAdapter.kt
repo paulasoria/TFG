@@ -41,7 +41,7 @@ class PetitionsAdapter(private var petitionsList: ArrayList<Petition>, var conte
         val email : TextView = rootView.findViewById(R.id.emailPetitionTextView)
         val petition : Petition = getItem(p0) as Petition
 
-        Glide.with(context).load(petition.senderImage).into(image)
+        Glide.with(context).load(petition.senderImage).centerCrop().into(image)
         name.text = petition.senderName
         email.text = petition.senderEmail
 

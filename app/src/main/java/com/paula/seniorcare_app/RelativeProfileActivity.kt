@@ -33,7 +33,7 @@ class RelativeProfileActivity : AppCompatActivity() {
         nameTextView.text = user.name.toString()
         emailTextView.text = user.email.toString()
         roleTextView.text = user.role.toString()
-        Glide.with(this).load(user.image.toString()).into(profileImageView)
+        Glide.with(this).load(user.image.toString()).centerCrop().into(profileImageView)
 
         lifecycleScope.launch {
             withContext(Dispatchers.IO) {
