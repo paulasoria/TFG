@@ -1,22 +1,32 @@
 package com.paula.seniorcare_app
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
+import android.content.Context
 import android.content.Intent
+import android.media.RingtoneManager
+import android.os.Build
+import android.util.Log
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationCompat.VISIBILITY_PUBLIC
+import androidx.core.app.NotificationManagerCompat
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 
 
-const val channelId = "DEFAULT_CHANNEL_ID"
+const val channelId = 0
+const val channelName = "CHANNEL_NAME"
+
 class MessagingService: FirebaseMessagingService() {
     override fun onMessageReceived(message: RemoteMessage) {
         super.onMessageReceived(message)
         if(message.data.isNotEmpty()){
             val data: Map<String,String> = message.data
             if(data.get("type") == "alert") {
-                println("SE HA RECIBIDO UN MENSAJE DE TIPO ALERT :)")
-                println("MSG: "+data.get("msg")+" TIME: "+data.get("time")+" DATE: "+data.get("date"))
-                //Crear activity alerta tipo alarma
+                sendNotificationAlert("Alerta", data)
                 val intent = Intent(baseContext, ShowAlertActivity::class.java)
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 intent.putExtra("msg", data.get("msg"))
@@ -44,32 +54,34 @@ class MessagingService: FirebaseMessagingService() {
         db.collection("users").document(currentUid).update("token",token)
     }
 
-    /*private fun sendNotification(message: String){
-        val intent = Intent(this, ::class.java) //Pantalla de alertas o de llamada
+    private fun sendNotificationAlert(title: String, data: Map<String, String>){
+        val intent = Intent(this, ShowAlertActivity::class.java) //Pantalla de alertas o de llamada
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        intent.putExtra("msg", data.get("msg"))
+        intent.putExtra("time", data.get("time"))   //Se pone una hora que no es
+        intent.putExtra("date", data.get("date"))
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        val pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT)
+        val pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_MUTABLE)
 
-        val builder : NotificationCompat.Builder = NotificationCompat.Builder(this, channelId)
-            .setSmallIcon(R.drawable.icono_logo_transparent)
-            .setContentTitle(TITULO)    //Crear titulo en funcion del tipo de mensaje en data
-            .setContentText(MENSAJE)    //Crear mensaje en funcion del tipo de mensaje en data + valores
-            .setAutoCancel(true)
-            .setVisibility(VISIBILITY_PUBLIC)
-            .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
-            .setVibrate(longArrayOf(1000,1000,1000,1000))
-            //.setCategory(NotificationCompat.CATEGORY_ALARM)
-            //.setCategory(NotificationCompat.CATEGORY_CALL)
-            .setContentIntent(pendingIntent)
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel = NotificationChannel(channelName, "Channel human readable title", NotificationManager.IMPORTANCE_HIGH)
+            val manager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            manager.createNotificationChannel(channel)
 
-        val notificationManager: NotificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
-            val channel = NotificationChannel(channelId, "Channel human readable title", NotificationManager.IMPORTANCE_HIGH)
-                //.apply {
-                //      description?
-                // }
-            notificationManager.createNotificationChannel(channel)
+            val builder: NotificationCompat.Builder = NotificationCompat.Builder(applicationContext, channelName)
+                .setSmallIcon(R.drawable.icono_logo_transparent)
+                .setContentTitle(title)    //Crear titulo en funcion del tipo de mensaje en data
+                .setContentText(data.get("msg"))    //Crear mensaje en funcion del tipo de mensaje en data + valores
+                .setAutoCancel(true)
+                //.setVisibility(VISIBILITY_PUBLIC)
+                //.setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
+                //.setVibrate(longArrayOf(1000, 1000, 1000, 1000))
+                //.setCategory(NotificationCompat.CATEGORY_ALARM)
+                //.setCategory(NotificationCompat.CATEGORY_CALL)
+                .setContentIntent(pendingIntent)
+
+            val notificationManager = NotificationManagerCompat.from(applicationContext)
+            notificationManager.notify(channelId, builder.build())
         }
-        /*id de la notificacion, que hay que guardar para después actualizarla o quitarla*/
-        notificationManager.notify(0, builder.build())
-    }*/
+    }
 }

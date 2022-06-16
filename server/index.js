@@ -10,7 +10,6 @@ admin.initializeApp({
 
 
 const db = admin.firestore();
-let usersArray = [];
 const CronJob = require("cron").CronJob;
 //const job = new CronJob("*/10 * * * * *", function() {
 const job = new CronJob("* * * * *", function() {
@@ -25,6 +24,7 @@ async function getActualAlarms(){
     const actualTime = today.getHours()+":"+today.getMinutes();
     const actualDate =  today.getDate()+"/"+(today.getMonth()+1)+"/"+today.getFullYear();
 
+    let usersArray = [];
     db.collection('users').get().then(users => {
         users.forEach( user => {
             const userInfo = user.data();
