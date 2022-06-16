@@ -63,7 +63,7 @@ class AddAlertFragment : Fragment() {
 
         setDateButton.setOnClickListener {
             DatePickerDialog(requireContext(), { _, year, month, day ->
-                setDateButton.text = "$day/$month/$year"
+                setDateButton.text = "$day/${month+1}/$year"
             }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show()
         }
 
@@ -126,12 +126,26 @@ class AddAlertFragment : Fragment() {
                 weeklyLayout.visibility = View.VISIBLE
                 calendarLayout.visibility = View.INVISIBLE
                 setSelectedDays(week, alert.daysOfWeek!!)
+                val repetition = resources.getStringArray(R.array.repetition)
+                val adapter = ArrayAdapter(
+                    requireContext(),
+                    R.layout.lista_menu,
+                    repetition
+                )
+                repetitionMenuTextView.setAdapter(adapter)
             } else {    //"eventually"
                 selectedItem = "Eventual"
                 repetitionMenuTextView.setText("Eventual")
                 weeklyLayout.visibility = View.INVISIBLE
                 calendarLayout.visibility = View.VISIBLE
                 setDateButton.text = alert.date.toString()
+                val repetition = resources.getStringArray(R.array.repetition)
+                val adapter = ArrayAdapter(
+                    requireContext(),
+                    R.layout.lista_menu,
+                    repetition
+                )
+                repetitionMenuTextView.setAdapter(adapter)
             }
         }
 
@@ -203,7 +217,7 @@ class AddAlertFragment : Fragment() {
 
     private suspend fun getReceiverOfAlert(db: FirebaseFirestore, email: String): QuerySnapshot? {
         return try {
-            val user = db.collection("users").whereEqualTo("email", email).get().await()    //No saca ningun resultado???
+            val user = db.collection("users").whereEqualTo("email", email).get().await()
             user
         } catch (e: Exception){
             Log.e(ContentValues.TAG, "GETTING RECEIVER OF ALERT ERROR", e)
@@ -227,7 +241,6 @@ class AddAlertFragment : Fragment() {
     private suspend fun updateAlertInDatabase(db: FirebaseFirestore, id: String, receiver: String, tag: String, repetition: String, time: String, daysOfWeek: HashMap<String,Int>?, date: String?): Boolean {
         return try {
             val sender = FirebaseAuth.getInstance().currentUser!!.uid
-
             db.collection("users").document(sender).collection("alerts").document(id).set(hashMapOf("id" to id, "sender" to sender, "receiver" to receiver, "tag" to tag, "repetition" to repetition, "time" to time, "daysOfWeek" to daysOfWeek, "date" to date)).await()
             //Cloud function para actualizar la alerta en el otro familiar (el que recibe notificacion)
             true
