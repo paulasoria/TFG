@@ -11,7 +11,10 @@ import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.*
+import com.google.gson.Gson
+import com.paula.seniorcare_app.model.Alert
 import com.paula.seniorcare_app.model.User
+import com.paula.seniorcare_app.model.Videocall
 import kotlinx.android.synthetic.main.activity_relative_profile.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -79,15 +82,34 @@ class RelativeProfileActivity : AppCompatActivity() {
         }
 
         videocallButton.setOnClickListener {
+            //Notificacion al receiver
+            //Receiver envía notificación al sender
+            // - Accepted: Abrir reunión jitsi
+            // - Refussed: Guardar en el historial
+
+            val id = UUID.randomUUID().toString()
+            val sender = FirebaseAuth.getInstance().currentUser!!.uid
+            val receiver = user.uid.toString()
+            val calendar = Calendar.getInstance()
+            val time = "${calendar.get(Calendar.HOUR_OF_DAY)}:${calendar.get(Calendar.MINUTE)}"
+            val date = "${calendar.get(Calendar.DAY_OF_MONTH)}/${calendar.get(Calendar.MONTH)}/${calendar.get(Calendar.YEAR)}"
+            val state = "waiting"
+            val v = Videocall(id, sender, receiver, date, time, state)
+
+            val gson: Gson? = null
+            val json = gson?.toJson(v)
+
             //LLAMADA SERVICIO WEB
-            /*val url = ""
-            val stringRequest = StringRequest(Request.Method.GET, url, {
+            /*val url = ""  //URL SERVIDOR
+
+            val outputJson = Gson()
+            val request = StringRequest(Request.Method.GET, url, {
                 val jsonObject = JSONObject(it)
                 //jsonObject.get()
             }, {
                 Log.d(ContentValues.TAG, "ERROR")
             })
-            Volley.newRequestQueue(this).add(stringRequest)*/
+            Volley.newRequestQueue(this).add(request)*/
         }
     }
 

@@ -70,8 +70,8 @@ class MessagingService: FirebaseMessagingService() {
 
             val builder: NotificationCompat.Builder = NotificationCompat.Builder(applicationContext, channelName)
                 .setSmallIcon(R.drawable.icono_logo_transparent)
-                .setContentTitle(title)    //Crear titulo en funcion del tipo de mensaje en data
-                .setContentText(data.get("msg"))    //Crear mensaje en funcion del tipo de mensaje en data + valores
+                .setContentTitle(title)
+                .setContentText(data.get("msg"))
                 .setAutoCancel(true)
                 //.setVisibility(VISIBILITY_PUBLIC)
                 //.setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))

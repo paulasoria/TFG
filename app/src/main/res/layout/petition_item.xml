@@ -15,7 +15,7 @@
         <ImageView
             android:id="@+id/relativePetitionImageView"
             android:layout_width="110dp"
-            android:layout_height="wrap_content"
+            android:layout_height="110dp"
             android:src="@drawable/no_photo_user"/>
 
         <LinearLayout

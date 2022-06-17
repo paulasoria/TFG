@@ -6,8 +6,7 @@ data class Videocall(
     var id: String? = null,
     var sender: String? = null,
     var receiver: String? = null,
-    var duration: String? = null,
     var date: String? = null,
-    var hour: String? = null,
-    var state: String? = null //in progress, accepted, rejected or lost
+    var time: String? = null,
+    var state: String? = null //waiting, accepted, rejected or lost
 ) : Serializable

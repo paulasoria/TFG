@@ -19,7 +19,6 @@ job.start();
 
 
 async function getActualAlarms(){
-    console.log("BUSCANDO ALARMAS :)");
     const today = new Date();
     const actualTime = today.getHours()+":"+today.getMinutes();
     const actualDate =  today.getDate()+"/"+(today.getMonth()+1)+"/"+today.getFullYear();
@@ -40,7 +39,7 @@ async function getActualAlarms(){
                             if(usersArray[i].uid == alertInfo.receiver){
                                 sendMessage(usersArray[i].token, alertInfo.tag, actualTime, actualDate, "alert");
                             } else if(usersArray[i].uid == alertInfo.sender){
-                                putAlertOnHistory(alertInfo.sender, alertInfo, actualTime, actualDate);
+                                putAlertOnHistory(alertInfo.sender, usersArray[i].name, alertInfo, actualTime, actualDate);
                             }
                         }
                     } else {    //eventually
@@ -48,7 +47,7 @@ async function getActualAlarms(){
                             if(usersArray[i].uid == alertInfo.receiver){
                                 sendMessage(usersArray[i].token, alertInfo.tag, actualTime, actualDate, "alert");
                             } else if(usersArray[i].uid == alertInfo.sender){
-                                putAlertOnHistory(alertInfo.sender, alertInfo, actualTime, actualDate);
+                                putAlertOnHistory(alertInfo.sender, usersArray[i].name, alertInfo, actualTime, actualDate);
                             }
                         }
                     }
@@ -63,9 +62,9 @@ async function getActualAlarms(){
 }
 
  
-async function putAlertOnHistory(idSender, alert, actualTime, actualDate){
+async function putAlertOnHistory(idSender, receiverName, alert, actualTime, actualDate){
     db.collection("users").doc(idSender).collection("historyAlerts").doc(alert.id)
-    .set({id: alert.id, tag: alert.tag, receiver: alert.receiver, time: actualTime, date: actualDate})
+    .set({id: alert.id, tag: alert.tag, receiver: receiverName, time: actualTime, date: actualDate})
     .then(snapshot => {
         console.log("Successfully write alert on history: ", snapshot);
     }).catch((error) => {
