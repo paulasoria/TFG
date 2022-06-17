@@ -73,6 +73,7 @@ class PetitionsAdapter(private var petitionsList: ArrayList<Petition>, var conte
             hashMapOf(
                 "uid" to petition.sender,
                 "image" to petition.senderImage,
+                "role" to petition.senderRole,
                 "name" to petition.senderName,
                 "email" to petition.senderEmail
             )

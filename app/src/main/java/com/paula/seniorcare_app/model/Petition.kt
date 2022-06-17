@@ -8,6 +8,7 @@ data class Petition (
     var senderName : String? = null,
     var senderEmail : String? = null,
     var senderImage : String? = null,
+    var senderRole : String? = null,
     var receiver: String? = null,
     var state: String? = null   //pending, accepted or rejected
 ) : Serializable

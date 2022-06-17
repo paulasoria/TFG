@@ -111,8 +111,7 @@ class SignUpActivity : AppCompatActivity() {
                     "image" to url,
                     "name" to name,
                     "email" to email,
-                    "role" to roleMenu,
-                    "provider" to "SeniorCare"
+                    "role" to roleMenu
                 )
             ).await()
             true

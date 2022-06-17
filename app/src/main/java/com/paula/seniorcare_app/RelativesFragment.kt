@@ -47,7 +47,8 @@ class RelativesFragment : Fragment() {
                     val name: String = document.data.getValue("name").toString()
                     val email: String = document.data.getValue("email").toString()
                     val image: String = document.data.getValue("image").toString()
-                    val user = User(uid, name, email, null, null, image)
+                    val role: String = document.data.getValue("role").toString()
+                    val user = User(uid, null, image, name, email, role)
                     addedRelativesList.add(user)
                 }
             }

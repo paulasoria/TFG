@@ -46,7 +46,8 @@ class PetitionsFragment : Fragment() {
                             val senderName : String = senderUser?.data?.getValue("name").toString()
                             val senderEmail : String = senderUser?.data?.getValue("email").toString()
                             val senderImage : String = senderUser?.data?.getValue("image").toString()
-                            val p = Petition(id, sender, senderName, senderEmail, senderImage, receiver, state)
+                            val senderRole : String = senderUser?.data?.getValue("role").toString()
+                            val p = Petition(id, sender, senderName, senderEmail, senderImage, senderRole, receiver, state)
                             petitionsList.add(p)
                         }
                     }

@@ -57,6 +57,7 @@ class RelativeProfileActivity : AppCompatActivity() {
                         }
                     } else {    //Peticion pendiente
                         withContext(Dispatchers.Main) {
+                            Toast.makeText(applicationContext, "Solicitud de familiar pendiente", Toast.LENGTH_SHORT).show()
                             addRelativeButton.isEnabled = false
                         }
                     }
@@ -87,7 +88,7 @@ class RelativeProfileActivity : AppCompatActivity() {
             // - Accepted: Abrir reunión jitsi
             // - Refussed: Guardar en el historial
 
-            val id = UUID.randomUUID().toString()
+            /*val id = UUID.randomUUID().toString()
             val sender = FirebaseAuth.getInstance().currentUser!!.uid
             val receiver = user.uid.toString()
             val calendar = Calendar.getInstance()
@@ -97,7 +98,7 @@ class RelativeProfileActivity : AppCompatActivity() {
             val v = Videocall(id, sender, receiver, date, time, state)
 
             val gson: Gson? = null
-            val json = gson?.toJson(v)
+            val json = gson?.toJson(v)*/
 
             //LLAMADA SERVICIO WEB
             /*val url = ""  //URL SERVIDOR

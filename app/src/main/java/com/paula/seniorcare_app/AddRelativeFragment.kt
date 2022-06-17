@@ -57,11 +57,12 @@ class AddRelativeFragment : Fragment(), SearchView.OnQueryTextListener {
                     val documents = getSearchUsers(db, query)
                     documents?.iterator()?.forEach { document ->
                         val uid : String = document.data.getValue("uid").toString()
+                        val token : String = document.data.getValue("token").toString()
                         val name : String = document.data.getValue("name").toString()
                         val email : String = document.data.getValue("email").toString()
                         val role : String = document.data.getValue("role").toString()
                         val image : String = document.data.getValue("image").toString()
-                        val user = User(uid, name, email, null, role, image)
+                        val user = User(uid, token, image ,name, email, role)
                         if (email != currentUserEmail) {
                             searchList.add(user)
                         }
