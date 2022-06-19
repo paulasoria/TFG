@@ -1,6 +1,7 @@
 package com.paula.seniorcare_app
 
 import android.content.ContentValues
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -87,6 +88,14 @@ class RelativeProfileActivity : AppCompatActivity() {
             //Receiver envía notificación al sender
             // - Accepted: Abrir reunión jitsi
             // - Refussed: Guardar en el historial
+
+            val intent = Intent(baseContext, VideocallActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            intent.putExtra("uid", user.uid.toString())     //PASAR DATOS DEL FAMILIAR
+            intent.putExtra("name", user.name.toString())
+            intent.putExtra("email", user.email.toString())
+            intent.putExtra("image", user.image.toString())
+            startActivity(intent)
 
             /*val id = UUID.randomUUID().toString()
             val sender = FirebaseAuth.getInstance().currentUser!!.uid
