@@ -52,11 +52,6 @@ class SignUpActivity : AppCompatActivity() {
             val roleMenu = roleMenuTextView.text.toString()
             if (name.trim().isNotEmpty() && email.trim().isNotEmpty() && password.trim().isNotEmpty() && roleMenu.trim().isNotEmpty()) {
                 FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password).addOnSuccessListener {
-                    //Guardado de datos
-                    val prefs = getSharedPreferences(getString(R.string.prefs_file), Context.MODE_PRIVATE).edit()
-                    prefs.putString("email", email)
-                    prefs.apply()
-
                     val uid = FirebaseAuth.getInstance().currentUser!!.uid
 
                     //Imagen

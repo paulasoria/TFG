@@ -34,9 +34,6 @@ class ProfileActivity : AppCompatActivity() {
     }
 
     private fun setup(){
-        //val prefs = getSharedPreferences(getString(R.string.prefs_file), Context.MODE_PRIVATE)
-        //val email = prefs.getString("email", null)
-
         val db = FirebaseFirestore.getInstance()
         val uid = FirebaseAuth.getInstance().currentUser!!.uid
         var downloadImage : String?
@@ -65,9 +62,6 @@ class ProfileActivity : AppCompatActivity() {
 
         logOutButton.setOnClickListener{
             //Borrado de datos
-            //val prefs = getSharedPreferences(getString(R.string.prefs_file), Context.MODE_PRIVATE).edit()
-            //prefs.clear()
-            //prefs.apply()
             FirebaseAuth.getInstance().signOut()
             onBackPressed()
             val authIntent = Intent(this,AuthActivity::class.java)

@@ -41,9 +41,7 @@ class AuthActivity : AppCompatActivity() {
     }
 
     private fun session(){
-        //val prefs = getSharedPreferences(getString(R.string.prefs_file), Context.MODE_PRIVATE)
-        //val email = prefs.getString("email", null)
-        if(/*email != null &&*/FirebaseAuth.getInstance().currentUser != null){
+        if(FirebaseAuth.getInstance().currentUser != null){
             authLayout.visibility = View.INVISIBLE
             showHome()
         }
