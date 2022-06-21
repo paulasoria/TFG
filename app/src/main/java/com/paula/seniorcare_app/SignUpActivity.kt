@@ -66,13 +66,18 @@ class SignUpActivity : AppCompatActivity() {
                                 url?.let {
                                     createUserInDatabase(db, uid, url, name, email, roleMenu)
                                 }
-                            } else {
-                                //TODO: Show the error to the user... something goes wrong...
-                                // give feedback to the user if necessary.
                             }
                         }
                     }
-                    showHome()
+                    lifecycleScope.launch {
+                        withContext(Dispatchers.IO) {
+                            if(roleMenu == "Administrador"){
+                                showHome()
+                            } else {    //Familiar
+                                //ANDROID TV
+                            }
+                        }
+                    }
                 }.addOnFailureListener {
                     showAlertSignUp()
                 }

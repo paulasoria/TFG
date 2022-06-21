@@ -1,32 +1,63 @@
 package com.paula.seniorcare_app
 
+import android.content.ContentValues
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
+import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.activity_relative_profile.*
 import kotlinx.android.synthetic.main.activity_show_alert.*
 import kotlinx.android.synthetic.main.activity_videocall.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
+import java.util.*
 
 class VideocallActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_videocall)
 
-        val uid = intent.getStringExtra("uid").toString()
-        val name = intent.getStringExtra("name").toString()
-        val email = intent.getStringExtra("email").toString()
-        val image = intent.getStringExtra("image").toString()
+        val receiverUid = intent.getStringExtra("uid").toString()
+        val receiverName = intent.getStringExtra("name").toString()
+        val receiverEmail = intent.getStringExtra("email").toString()
+        val receiverImage = intent.getStringExtra("image").toString()
 
-        nameVideocallTextView.text = name
-        Glide.with(this).load(image).centerCrop().into(imageVideocallImageView)
+        nameVideocallTextView.text = receiverName
+        Glide.with(this).load(receiverImage).centerCrop().into(imageVideocallImageView)
 
-        //Crear videollamada en firestore con estado "waiting"
-        //Google Cloud Function para poner llamada como "waiting" en el otro usuario
+        val db = FirebaseFirestore.getInstance()
+        val calendar = Calendar.getInstance()
+        val date = "${calendar.get(Calendar.DAY_OF_MONTH)}/${calendar.get(Calendar.MONTH)+1}/${calendar.get(Calendar.YEAR)}"
+        val time = "${calendar.get(Calendar.HOUR)}:${calendar.get(Calendar.MINUTE)}"
+        lifecycleScope.launch {
+            withContext(Dispatchers.IO) {
+                createVideocallInDatabase(db, receiverUid, date, time, "waiting")
+            }
+        }
 
         endCallButton.setOnClickListener{
             finish()
             //Modificar videollamada en firestore con estado "lost"
             //Google Cloud Function para poner llamada como "lost" en el otro usuario
+        }
+    }
+
+    private suspend fun createVideocallInDatabase(db: FirebaseFirestore, receiver: String, date: String?, time: String?, state: String): Boolean {
+        return try {
+            val id = UUID.randomUUID().toString()
+            val sender = FirebaseAuth.getInstance().currentUser!!.uid
+            db.collection("users").document(sender).collection("videocalls").document(id).set(hashMapOf("id" to id, "sender" to sender, "receiver" to receiver, "date" to date, "time" to time, "state" to state)).await()
+            //Cloud function para guardar la videollamada en el otro familiar (el que recibe notificacion)
+            //Enviar notificacion
+            true
+        } catch (e: Exception){
+            Log.e(ContentValues.TAG, "CREATING VIDEOCALL IN DATABASE ERROR", e)
+            false
         }
     }
 }

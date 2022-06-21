@@ -114,3 +114,20 @@ exports.updateAlert = functions.firestore
       }
       return null;
     });
+
+exports.createVideocall = functions.firestore
+    .document("users/{uid}/videocalls/{id}").onCreate((snap, context) => {
+      const uid = context.params.uid;
+      const id = snap.data().id;
+      const sender = snap.data().sender;
+      const receiver = snap.data().receiver;
+      const date = snap.data().date;
+      const time = snap.data().time;
+      const state = snap.data().state;
+      if(receiver != uid){
+        return admin.firestore().collection("users").doc(receiver)
+            .collection("videocalls").doc(id).set({id: id, sender: sender,
+              receiver: receiver, date: date, time: time, state: state});
+      }
+      return null;
+    });

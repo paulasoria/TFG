@@ -6,13 +6,21 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.QuerySnapshot
 import kotlinx.android.synthetic.main.activity_auth.logInButton
 import kotlinx.android.synthetic.main.activity_log_in.*
 import kotlinx.android.synthetic.main.activity_log_in.emailTextInput
 import kotlinx.android.synthetic.main.activity_log_in.passwordTextInput
 import kotlinx.android.synthetic.main.activity_reset_password.view.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
 
 class LogInActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -24,11 +32,22 @@ class LogInActivity : AppCompatActivity() {
 
     private fun setup() {
         logInButton.setOnClickListener {
+            val db = FirebaseFirestore.getInstance()
             val email = emailTextInput.editText?.text.toString()
             val password = passwordTextInput.editText?.text.toString()
             if (email.trim().isNotEmpty() && password.trim().isNotEmpty()) {
                 FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password).addOnSuccessListener {
-                        showHome()
+                    val uid = FirebaseAuth.getInstance().currentUser!!.uid
+                    lifecycleScope.launch {
+                        withContext(Dispatchers.IO) {
+                            val user = getUser(db, uid)
+                            if(user?.get("role") == "Administrador"){
+                                showHome()
+                            } else {    //Familiar
+                                showTv()
+                            }
+                        }
+                    }
                 }.addOnFailureListener {
                     showAlertLogIn()
                 }
@@ -59,6 +78,15 @@ class LogInActivity : AppCompatActivity() {
         }
     }
 
+    private suspend fun getUser(db: FirebaseFirestore, uid: String): DocumentSnapshot? {
+        return try {
+            val user = db.collection("users").document(uid).get().await()
+            user
+        } catch (e: Exception) {
+            null
+        }
+    }
+
     private fun emptyEditText(x: TextInputLayout) {
         if(x.editText?.text.toString().trim().isEmpty()){
             x.error = getString(R.string.empty_field)
@@ -77,5 +105,10 @@ class LogInActivity : AppCompatActivity() {
     private fun showHome() {
         val homeIntent = Intent(this,HomeActivity::class.java)
         startActivity(homeIntent)
+    }
+
+    private fun showTv(){
+        val intent = Intent(this,TvActivity::class.java)
+        startActivity(intent)
     }
 }

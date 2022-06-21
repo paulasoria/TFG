@@ -15,6 +15,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.iid.FirebaseInstanceId
 import kotlinx.android.synthetic.main.activity_auth.*
@@ -41,9 +42,29 @@ class AuthActivity : AppCompatActivity() {
     }
 
     private fun session(){
+        val db = FirebaseFirestore.getInstance()
         if(FirebaseAuth.getInstance().currentUser != null){
             authLayout.visibility = View.INVISIBLE
-            showHome()
+            val uid = FirebaseAuth.getInstance().currentUser!!.uid
+            lifecycleScope.launch {
+                withContext(Dispatchers.IO) {
+                    val user = getUser(db, uid)
+                    if(user?.get("role") == "Administrador"){
+                        showHome()
+                    } else {    //Familiar
+                        showTv()
+                    }
+                }
+            }
+        }
+    }
+
+    private suspend fun getUser(db: FirebaseFirestore, uid: String): DocumentSnapshot? {
+        return try {
+            val user = db.collection("users").document(uid).get().await()
+            user
+        } catch (e: Exception) {
+            null
         }
     }
 
@@ -79,6 +100,11 @@ class AuthActivity : AppCompatActivity() {
     private fun showHome(){
         val homeIntent = Intent(this,HomeActivity::class.java)
         startActivity(homeIntent)
+    }
+
+    private fun showTv(){
+        val intent = Intent(this,TvActivity::class.java)
+        startActivity(intent)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
