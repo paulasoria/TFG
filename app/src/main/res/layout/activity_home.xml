@@ -10,16 +10,16 @@
         android:id="@+id/top_navigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
         android:background="@color/dark_blue"
-        android:orientation="vertical"
-        android:layout_alignParentTop="true">
+        android:orientation="vertical">
 
         <ImageButton
             android:id="@+id/profileButton"
             android:layout_width="59sp"
             android:layout_height="59sp"
-            android:background="@drawable/round_button_shape"
             android:layout_margin="4dp"
+            android:background="@drawable/round_button_shape"
             android:scrollbarSize="4dp"
             app:srcCompat="@drawable/ic_person" />
     </LinearLayout>
@@ -39,8 +39,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:background="@color/dark_blue"
-        app:itemTextColor="@color/super_light_grayish_blue"
         app:itemIconTint="@color/super_light_grayish_blue"
+        app:itemTextColor="@color/super_light_grayish_blue"
         app:labelVisibilityMode="selected"
         app:menu="@menu/menu" />
 </RelativeLayout>

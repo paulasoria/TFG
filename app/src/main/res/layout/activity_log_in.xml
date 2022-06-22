@@ -74,6 +74,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="right"
             android:minHeight="0dip"
+            android:textColor="@color/super_light_grayish_blue"
             android:text="¿Has olvidado tu contraseña?"
             android:textAllCaps="false" />
 

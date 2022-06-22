@@ -5,7 +5,9 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.Surface
 import android.view.View
+import android.view.WindowManager
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
@@ -23,6 +25,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
+
 
 class AuthActivity : AppCompatActivity() {
 
@@ -68,7 +71,21 @@ class AuthActivity : AppCompatActivity() {
         }
     }
 
+    fun getRotation(context: Context): String {
+        return when ((context.getSystemService(WINDOW_SERVICE) as WindowManager).defaultDisplay.orientation) {
+            Surface.ROTATION_0, Surface.ROTATION_180 -> "vertical"
+            Surface.ROTATION_90 -> "horizontal"
+            else -> "horizontal"
+        }
+    }
+
     private fun setup(){
+
+        if(getRotation(applicationContext) == "horizontal"){
+            signUpButton.isEnabled = false
+            googleButton.isEnabled = false
+        }
+
         logInButton.setOnClickListener {
             val logInIntent = Intent(this,LogInActivity::class.java)
             startActivity(logInIntent)
