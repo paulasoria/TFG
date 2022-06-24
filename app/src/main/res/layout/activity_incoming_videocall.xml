@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".VideocallActivity"
+    tools:context=".IncomingVideocallActivity"
     android:background="@color/dark_blue">
 
     <LinearLayout
@@ -12,46 +12,48 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:orientation="vertical"
-        android:gravity="center"
-        android:layout_marginTop="50dp">
+        android:layout_marginTop="100dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:text="Llamada entrante de " />
 
         <TextView
             android:id="@+id/nameVideocallTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/white"
-            android:textSize="18sp"
-            android:text="Nombre familiar"/>
-
-        <TextView
-            android:id="@+id/emailVideocallTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/super_light_grayish_blue"
-            android:text="Correo electrónico familiar"/>
+            android:text="FAMILIAR"/>
     </LinearLayout>
 
     <ImageView
-        android:id="@+id/relativeVideoImageView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:src="@drawable/no_photo_user" />
-
-    <ImageView
-        android:id="@+id/meVideoImageView"
-        android:layout_width="200dp"
-        android:layout_height="300dp"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
+        android:id="@+id/imageVideocallImageView"
+        android:layout_width="400dp"
+        android:layout_height="400dp"
+        android:layout_below="@+id/nameLinearLayout"
+        android:layout_marginTop="50dp"
         android:src="@drawable/no_photo_user" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/endCallButton"
+        android:id="@+id/acceptCallButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
+        android:layout_marginStart="130dp"
+        android:layout_marginBottom="50dp"
+        android:backgroundTint="@color/dark_green"
+        android:src="@drawable/ic_call" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/rejectCallButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="130dp"
         android:layout_marginBottom="50dp"
         android:backgroundTint="@color/dark_red"
         android:src="@drawable/ic_call_end" />

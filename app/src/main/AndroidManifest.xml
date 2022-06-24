@@ -16,10 +16,16 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SeniorCare_App">
         <activity
+            android:name=".VideocallActivity"
+            android:exported="false" />
+        <activity
+            android:name=".IncomingVideocallActivity"
+            android:exported="false" />
+        <activity
             android:name=".TvActivity"
             android:exported="false" />
         <activity
-            android:name=".VideocallActivity"
+            android:name=".OutgoingVideocallActivity"
             android:exported="false" />
 
         <meta-data
@@ -49,6 +55,7 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

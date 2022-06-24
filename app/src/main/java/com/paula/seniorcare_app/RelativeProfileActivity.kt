@@ -12,10 +12,7 @@ import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.*
-import com.google.gson.Gson
-import com.paula.seniorcare_app.model.Alert
 import com.paula.seniorcare_app.model.User
-import com.paula.seniorcare_app.model.Videocall
 import kotlinx.android.synthetic.main.activity_relative_profile.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -89,7 +86,7 @@ class RelativeProfileActivity : AppCompatActivity() {
             // - Accepted: Abrir reunión jitsi
             // - Refussed: Guardar en el historial
 
-            val intent = Intent(baseContext, VideocallActivity::class.java)
+            val intent = Intent(baseContext, OutgoingVideocallActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             intent.putExtra("uid", user.uid.toString())     //PASAR DATOS DEL FAMILIAR
             intent.putExtra("name", user.name.toString())
