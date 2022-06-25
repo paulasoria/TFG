@@ -1,6 +1,8 @@
 const functions = require("firebase-functions");
 const admin = require("firebase-admin");
 admin.initializeApp();
+const jwt = require("jsonwebtoken");
+const JWT_SECRET = "21D40CD42CCA9BE6B8932855781FC84A";
 
 exports.sendPetition = functions.firestore
     .document("/users/{uid}/petitions/{id}").onCreate((snap, context) => {
@@ -116,18 +118,62 @@ exports.updateAlert = functions.firestore
     });
 
 exports.createVideocall = functions.firestore
-    .document("users/{uid}/videocalls/{id}").onCreate((snap, context) => {
-      const uid = context.params.uid;
-      const id = snap.data().id;
+    .document("videocalls/{id}").onCreate((snap, context) => {
       const sender = snap.data().sender;
       const receiver = snap.data().receiver;
-      const date = snap.data().date;
-      const time = snap.data().time;
-      const state = snap.data().state;
-      if(receiver != uid){
-        return admin.firestore().collection("users").doc(receiver)
-            .collection("videocalls").doc(id).set({id: id, sender: sender,
-              receiver: receiver, date: date, time: time, state: state});
-      }
-      return null;
+      const callId = context.params.id;
+      admin.firestore().collection("users").doc(sender).get().then((s) => {
+        const senderTjw = generateJwtForUser(s.get("uid"), callId);
+        const senderName = s.get("name");
+        const senderEmail = s.get("email");
+        const senderImage = s.get("image");
+        admin.firestore().collection("users").doc(receiver).get().then((r) => {
+          const receiverTjw = generateJwtForUser(r.get("uid"), callId);
+          const receiverToken = r.get("token");
+          // Enviar mensaje FCM llamada + jwt
+          sendMessage(receiverToken, receiverTjw, senderName, senderEmail,
+              senderImage, "incomingCall");
+        });
+        // Devolver llamada + jwt
+        return senderTjw;
+      });
     });
+
+function generateJwtForUser(user, callId) {
+  const obj = {
+    "aud": "paulasoria",
+    "iss": "paulasoria",
+    "sub": "jitsi.paulasoria.tk",
+    "room": callId,
+    "exp": 1932477254,
+    "moderator": true,
+    "contex": {
+      "user": {
+        "image": user.image,
+        "name": user.name,
+        "email": user.email,
+        "uid": user.uid,
+      },
+    },
+  };
+  return jwt.sign(obj, JWT_SECRET);
+}
+
+function sendMessage(token, tjw, senderName, senderEmail, senderImage, type) {
+  const message = {
+    data: {
+      tjw: tjw,
+      senderName: senderName,
+      senderEmail: senderEmail,
+      senderImage: senderImage,
+      type: type,
+    },
+    token: token,
+  };
+  console.log(message);
+  admin.messaging().send(message).then((response) => {
+    console.log("Successfully sent message: ", response);
+  }).catch((error) => {
+    console.log("Error sending message: ", error);
+  });
+}
