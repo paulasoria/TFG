@@ -12,28 +12,42 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="100dp">
+        android:orientation="vertical"
+        android:layout_marginTop="50dp"
+        android:gravity="center">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:text="Llamada entrante de " />
+
+            <TextView
+                android:id="@+id/nameVideocallTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:text="FAMILIAR"/>
+        </LinearLayout>
 
         <TextView
+            android:id="@+id/emailVideocallTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/white"
-            android:text="Llamada entrante de " />
-
-        <TextView
-            android:id="@+id/nameVideocallTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/white"
-            android:text="FAMILIAR"/>
+            android:textColor="@color/super_light_grayish_blue"
+            android:text="Correo electrónico familiar"/>
     </LinearLayout>
 
     <ImageView
         android:id="@+id/imageVideocallImageView"
         android:layout_width="400dp"
         android:layout_height="400dp"
-        android:layout_below="@+id/nameLinearLayout"
-        android:layout_marginTop="50dp"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
         android:src="@drawable/no_photo_user" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton

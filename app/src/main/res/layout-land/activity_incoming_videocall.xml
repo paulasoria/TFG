@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".OutgoingVideocallActivity"
+    tools:context=".IncomingVideocallActivity"
     android:background="@color/dark_blue">
 
     <LinearLayout
@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:orientation="vertical"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="30dp"
         android:gravity="center">
 
         <LinearLayout
@@ -24,7 +24,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/white"
-                android:text="Llamando a  " />
+                android:text="Llamada entrante de " />
 
             <TextView
                 android:id="@+id/nameVideocallTextView"
@@ -44,19 +44,30 @@
 
     <ImageView
         android:id="@+id/imageVideocallImageView"
-        android:layout_width="400dp"
-        android:layout_height="400dp"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:layout_centerInParent="true"
         android:src="@drawable/no_photo_user" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/endCallButton"
+        android:id="@+id/acceptCallButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="50dp"
+        android:layout_marginStart="280dp"
+        android:layout_marginBottom="30dp"
+        android:backgroundTint="@color/dark_green"
+        android:src="@drawable/ic_call" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/rejectCallButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="280dp"
+        android:layout_marginBottom="30dp"
         android:backgroundTint="@color/dark_red"
         android:src="@drawable/ic_call_end" />
 

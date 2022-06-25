@@ -25,21 +25,28 @@ class MessagingService: FirebaseMessagingService() {
         super.onMessageReceived(message)
         if(message.data.isNotEmpty()){
             val data: Map<String,String> = message.data
-            if(data.get("type") == "alert") {
+            if(data["type"] == "alert") {
                 sendNotificationAlert("Alerta", data)
                 val intent = Intent(baseContext, ShowAlertActivity::class.java)
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                intent.putExtra("msg", data.get("msg"))
-                intent.putExtra("time", data.get("time"))
-                intent.putExtra("date", data.get("date"))
+                intent.putExtra("msg", data["msg"])
+                intent.putExtra("time", data["time"])
+                intent.putExtra("date", data["date"])
                 startActivity(intent)
+            } else if(data["type"] == "incomingCall"){
+                //Llamada entrante
+                //sendNotificationIncomingCall();
+                val intent = Intent(baseContext, IncomingVideocallActivity::class.java)
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                intent.putExtra("senderName", data["senderName"])
+                intent.putExtra("senderEmail", data["senderEmail"])
+                intent.putExtra("senderImage", data["senderImage"])
+                startActivity(intent)
+            } else if(data["type"] == "acceptedCall"){
+                //Llamada aceptada
+            }  else if(data["type"] == "rejectedCall"){
+                //Llamada rechazada
             }
-            //if tipo de mensaje de data == LLAMADA ACEPTADA
-            //  FCM LLAMADA ACEPTADA
-            //if tipo de mensaje de data == LLAMADA RECHAZADA
-            //  FCM LLAMADA RECHAZADA
-            //if tipo de mensaje de data == LLAMADA PENDIENTE
-            //  FCM LLAMADA PENDIENTE
         }
     }
 
