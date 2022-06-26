@@ -66,7 +66,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:text="Nombre"
-                android:textColor="@color/light_grayish_blue"
+                android:textColor="@color/super_light_grayish_blue"
                 android:textSize="18sp" />
 
         </LinearLayout>
@@ -98,7 +98,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:text="Email"
-                android:textColor="@color/light_grayish_blue"
+                android:textColor="@color/super_light_grayish_blue"
                 android:textSize="18sp" />
         </LinearLayout>
 
@@ -129,7 +129,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:text="Rol"
-                android:textColor="@color/light_grayish_blue"
+                android:textColor="@color/super_light_grayish_blue"
                 android:textSize="18sp" />
         </LinearLayout>
 
@@ -139,11 +139,19 @@
 
     </LinearLayout>
 
+    <CheckBox
+        android:id="@+id/gestorCheckBox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:buttonTint="@color/super_light_grayish_blue"
+        android:text="Gestor de alertas"
+        android:textColor="@color/white"
+        android:textSize="18sp" />
+
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_margin="10dp">
+        android:orientation="vertical">
 
         <Button
             android:id="@+id/videocallButton"

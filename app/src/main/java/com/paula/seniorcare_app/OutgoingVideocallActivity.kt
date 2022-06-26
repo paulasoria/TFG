@@ -7,6 +7,7 @@ import android.util.Log
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.activity_outgoing_videocall.*
 import kotlinx.coroutines.Dispatchers
@@ -20,12 +21,14 @@ class OutgoingVideocallActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_outgoing_videocall)
 
+        var videocallId: String? = null
+
         val receiverUid = intent.getStringExtra("uid").toString()
-        val receiverName = intent.getStringExtra("name").toString()
-        val receiverEmail = intent.getStringExtra("email").toString()
         val receiverImage = intent.getStringExtra("image").toString()
+        val receiverName = intent.getStringExtra("name").toString()
 
         nameVideocallTextView.text = receiverName
+        emailVideocallTextView.text = intent.getStringExtra("email").toString()
         Glide.with(this).load(receiverImage).centerCrop().into(imageVideocallImageView)
 
         val db = FirebaseFirestore.getInstance()
@@ -34,26 +37,49 @@ class OutgoingVideocallActivity : AppCompatActivity() {
         val time = "${calendar.get(Calendar.HOUR)}:${calendar.get(Calendar.MINUTE)}"
         lifecycleScope.launch {
             withContext(Dispatchers.IO) {
-                createVideocallInDatabase(db, receiverUid, date, time, "waiting")
+                val senderName = getUser(db, FirebaseAuth.getInstance().currentUser!!.uid)?.get("name") as String?
+                videocallId = createVideocallInDatabase(db, receiverUid, receiverName, senderName, date, time, "waiting")
             }
         }
 
         endCallButton.setOnClickListener{
             finish()
-            //Modificar videollamada en firestore con estado "lost"
-            //Google Cloud Function para poner llamada como "lost" en el otro usuario
+            lifecycleScope.launch {
+                withContext(Dispatchers.IO) {
+                    modifyVideocallInDatabase(db, videocallId!!, "lost")
+                }
+            }
         }
     }
 
-    private suspend fun createVideocallInDatabase(db: FirebaseFirestore, receiver: String, date: String?, time: String?, state: String): Boolean {
+    private suspend fun createVideocallInDatabase(db: FirebaseFirestore, receiver: String, receiverName: String, senderName: String?, date: String?, time: String?, state: String): String? {
         return try {
             val id = UUID.randomUUID().toString()
             val sender = FirebaseAuth.getInstance().currentUser!!.uid
-            db.collection("videocalls").document(id).set(hashMapOf("id" to id, "sender" to sender, "receiver" to receiver, "date" to date, "time" to time, "state" to state)).await()
-            //Enviar notificacion
-            true
+            db.collection("videocalls").document(id).set(hashMapOf("id" to id, "sender" to sender, "receiver" to receiver, "receiverName" to receiverName, "senderName" to senderName, "date" to date, "time" to time, "state" to state)).await()
+            id
         } catch (e: Exception){
             Log.e(ContentValues.TAG, "CREATING VIDEOCALL IN DATABASE ERROR", e)
+            null
+        }
+    }
+
+    private suspend fun getUser(db: FirebaseFirestore, uid: String): DocumentSnapshot? {
+        return try {
+            val user = db.collection("users").document(uid).get().await()
+            user
+        } catch (e: Exception){
+            Log.e(ContentValues.TAG, "GETTING USER NAME ERROR", e)
+            null
+        }
+    }
+
+    private suspend fun modifyVideocallInDatabase(db: FirebaseFirestore, id: String, state: String): Boolean {
+        return try {
+            db.collection("videocalls").document(id).update("state", state).await()
+            true
+        } catch (e: Exception){
+            Log.e(ContentValues.TAG, "UPDATING VIDEOCALL IN DATABASE ERROR", e)
             false
         }
     }

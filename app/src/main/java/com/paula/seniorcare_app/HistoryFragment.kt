@@ -2,6 +2,7 @@ package com.paula.seniorcare_app
 
 import android.content.ContentValues
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -13,6 +14,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
 import com.paula.seniorcare_app.model.History
+import com.paula.seniorcare_app.model.Videocall
 import kotlinx.android.synthetic.main.fragment_history.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -37,22 +39,28 @@ class HistoryFragment : Fragment() {
             historyAlertButton.setBackgroundColor(resources.getColor(R.color.dark_blue))
             //Mostrar historial de videollamadas recibidas, rechazadas y realizadas en listview
             val db = FirebaseFirestore.getInstance()
-            val videocallsList = ArrayList<History>()
+            val videocallsList = ArrayList<Videocall>()
             videocallsList.clear()
             lifecycleScope.launch {
                 withContext(Dispatchers.IO) {
-                    val videocalls = getHistoryOfVideocalls(db)
+                    val videocalls = getVideocalls(db)
                     videocalls?.iterator()?.forEach { videocall ->
-                        val id: String = videocall.data.getValue("id").toString()
-                        val receiver: String = videocall.data.getValue("receiver").toString()
-                        val tag: String = videocall.data.getValue("tag").toString() //Llamada perdida, llamada recibida, etc.
-                        val time: String = videocall.data.getValue("time").toString()
-                        val date : String = videocall.data.getValue("date").toString()
-                        val v = History(id, receiver, time, date, tag)
-                        videocallsList.add(v)
+                        val currentUid = FirebaseAuth.getInstance().currentUser?.uid
+                        if(videocall.data.getValue("sender").toString() == currentUid || videocall.data.getValue("receiver").toString() == currentUid){
+                            val id: String = videocall.data.getValue("id").toString()
+                            val sender: String = videocall.data.getValue("sender").toString()
+                            val senderName: String = videocall.data.getValue("senderName").toString()
+                            val receiver: String = videocall.data.getValue("receiver").toString()
+                            val receiverName: String = videocall.data.getValue("receiverName").toString()
+                            val time: String = videocall.data.getValue("time").toString()
+                            val date: String = videocall.data.getValue("date").toString()
+                            val state: String = videocall.data.getValue("state").toString()
+                            val v = Videocall(id, sender, senderName, receiver, receiverName, date, time, state);
+                            videocallsList.add(v)
+                        }
                     }
                 }
-                showResults(videocallsList)
+                showResultsVideocalls(videocallsList)
             }
         }
 
@@ -75,19 +83,15 @@ class HistoryFragment : Fragment() {
                         alertsList.add(a)
                     }
                 }
-                showResults(alertsList)
+                showResultsAlerts(alertsList)
             }
         }
         return view
     }
 
-    private suspend fun getHistoryOfVideocalls(db: FirebaseFirestore): QuerySnapshot? {
+    private suspend fun getVideocalls(db: FirebaseFirestore): QuerySnapshot? {
         return try {
-            val currentUid = FirebaseAuth.getInstance().currentUser?.uid
-            //Cuando se reciba una videollamada se tiene que crear una entrada aquí
-            //Se necesita otra función para actualizar el estado cuando se cuelgue o se finalice
-            val data = db.collection("users").document(currentUid.toString()).collection("historyOfVideocalls").get().await()
-            //val data = db.collection("historyOfVideocalls").get().await()
+            val data = db.collection("videocalls").get().await()
             data
         } catch (e: Exception) {
             Log.e(ContentValues.TAG, "GETTING HISTORY OF VIDEOCALLS ERROR", e)
@@ -98,7 +102,6 @@ class HistoryFragment : Fragment() {
     private suspend fun getHistoryOfAlerts(db: FirebaseFirestore): QuerySnapshot? {
         return try {
             val currentUid = FirebaseAuth.getInstance().currentUser?.uid
-            //Cuando se reciba una alerta se tiene que crear una entrada aquí
             val data = db.collection("users").document(currentUid.toString()).collection("historyAlerts").get().await()
             data
         } catch (e: Exception) {
@@ -107,19 +110,35 @@ class HistoryFragment : Fragment() {
         }
     }
 
-    private fun showResults(historyList: ArrayList<History>){
-        val adapter: HistoryAdapter?
+    private fun showResultsVideocalls(videocallList: ArrayList<Videocall>){
+        val videocallAdapter: VideocallAdapter?
+        if(videocallList.isEmpty()){
+            noHistoryTextView.visibility = View.VISIBLE
+            //noAlertsTextView.text = getString(R.string.no_config_alerts)
+            noHistoryTextView.text = "No tienes nada en el historial"
+            //QUITAR CONTENIDO DEL ADAPTER ???
+            videocallAdapter = VideocallAdapter(videocallList, requireContext())
+            historyListView.adapter = videocallAdapter
+        } else {
+            noHistoryTextView.visibility = View.INVISIBLE
+            videocallAdapter = VideocallAdapter(videocallList, requireContext())
+            historyListView.adapter = videocallAdapter
+        }
+    }
+
+    private fun showResultsAlerts(historyList: ArrayList<History>){
+        val alertAdapter: HistoryAlertAdapter?
         if(historyList.isEmpty()){
             noHistoryTextView.visibility = View.VISIBLE
             //noAlertsTextView.text = getString(R.string.no_config_alerts)
             noHistoryTextView.text = "No tienes nada en el historial"
             //QUITAR CONTENIDO DEL ADAPTER ???
-            adapter = HistoryAdapter(historyList, requireContext())     //CREAR ADAPTER
-            historyListView.adapter = adapter
+            alertAdapter = HistoryAlertAdapter(historyList, requireContext())
+            historyListView.adapter = alertAdapter
         } else {
             noHistoryTextView.visibility = View.INVISIBLE
-            adapter = HistoryAdapter(historyList, requireContext())
-            historyListView.adapter = adapter
+            alertAdapter = HistoryAlertAdapter(historyList, requireContext())
+            historyListView.adapter = alertAdapter
         }
     }
 }

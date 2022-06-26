@@ -40,10 +40,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/layoutImage">
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="20dp" />
-
         <LinearLayout
             android:id="@+id/NameLinearLayout"
             android:layout_width="match_parent"
@@ -67,7 +63,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:text="Nombre"
-                android:textColor="@color/light_grayish_blue"
+                android:textColor="@color/super_light_grayish_blue"
                 android:textSize="18sp" />
 
         </LinearLayout>
@@ -99,7 +95,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:text="Email"
-                android:textColor="@color/light_grayish_blue"
+                android:textColor="@color/super_light_grayish_blue"
                 android:textSize="18sp" />
         </LinearLayout>
 
@@ -130,13 +126,18 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:text="Rol"
-                android:textColor="@color/light_grayish_blue"
+                android:textColor="@color/super_light_grayish_blue"
                 android:textSize="18sp" />
         </LinearLayout>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="8dp" />
+        <CheckBox
+            android:id="@+id/gestorCheckBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:buttonTint="@color/super_light_grayish_blue"
+            android:text="Gestor de alertas"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
 
     </LinearLayout>
 

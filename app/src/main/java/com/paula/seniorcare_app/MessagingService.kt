@@ -34,7 +34,6 @@ class MessagingService: FirebaseMessagingService() {
                 intent.putExtra("date", data["date"])
                 startActivity(intent)
             } else if(data["type"] == "incomingCall"){
-                //Llamada entrante
                 //sendNotificationIncomingCall();
                 val intent = Intent(baseContext, IncomingVideocallActivity::class.java)
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -44,8 +43,12 @@ class MessagingService: FirebaseMessagingService() {
                 startActivity(intent)
             } else if(data["type"] == "acceptedCall"){
                 //Llamada aceptada
+                val intent = Intent(baseContext, VideocallActivity::class.java)
+                //intent.putExtra() //Datos de los usuarios de la videollamada
+                startActivity(intent)
             }  else if(data["type"] == "rejectedCall"){
-                //Llamada rechazada
+                val intent = Intent(baseContext, HomeActivity::class.java)
+                startActivity(intent)
             }
         }
     }

@@ -10,6 +10,7 @@ import android.widget.Button
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
 import com.paula.seniorcare_app.model.User
@@ -29,7 +30,18 @@ class RelativesFragment : Fragment() {
         val petitionsButton:FloatingActionButton = view.findViewById(R.id.petitionsButton)
 
         addRelativeButton.setOnClickListener {
-            activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.wrapper,AddRelativeFragment())?.commit()
+            val uid = FirebaseAuth.getInstance().currentUser!!.uid
+            val db = FirebaseFirestore.getInstance()
+            lifecycleScope.launch {
+                withContext(Dispatchers.IO) {
+                    val user = getUser(db, uid)
+                    if(user?.get("role") == "Administrador"){
+                        activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.wrapper,AddRelativeFragment())?.commit()
+                    } else {    //Familiar
+                        activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.wrapper_tv,AddRelativeFragment())?.commit()
+                    }
+                }
+            }
         }
 
         petitionsButton.setOnClickListener {
@@ -86,6 +98,15 @@ class RelativesFragment : Fragment() {
                 intent.putExtra("user", addedRelativesList[position])
                 startActivity(intent)
             }
+        }
+    }
+
+    private suspend fun getUser(db: FirebaseFirestore, uid: String): DocumentSnapshot? {
+        return try {
+            val user = db.collection("users").document(uid).get().await()
+            user
+        } catch (e: Exception) {
+            null
         }
     }
 }
