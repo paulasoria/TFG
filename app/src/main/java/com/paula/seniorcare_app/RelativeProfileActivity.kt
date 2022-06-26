@@ -38,17 +38,31 @@ class RelativeProfileActivity : AppCompatActivity() {
 
         lifecycleScope.launch {
             withContext(Dispatchers.IO) {
-                val currentUid = FirebaseAuth.getInstance().currentUser!!.uid
-                if(relativeIsAdded(relativeUid)?.isEmpty == false) {
+                if(relativeIsAdded(relativeUid)?.isEmpty == false) {    //ESTÁ AÑADIDO
+                    val uid = FirebaseAuth.getInstance().currentUser!!.uid
+                    val db = FirebaseFirestore.getInstance()
+                    val currentUser = getUser(db, uid)
                     withContext(Dispatchers.Main) {
                         videocallButton.visibility = View.VISIBLE
                         deleteRelativeButton.visibility = View.VISIBLE
                         addRelativeButton.visibility = View.INVISIBLE
+                        if(currentUser?.get("role") == "Familiar"){
+                            if(user.role == "Administrador") {
+                                gestorCheckBox.visibility = View.VISIBLE
+                            } else {
+                                gestorCheckBox.visibility = View.INVISIBLE
+                            }
+                        } else {
+                            gestorCheckBox.visibility = View.INVISIBLE
+                        }
                     }
-                } else {
-                    videocallButton.visibility = View.INVISIBLE
-                    deleteRelativeButton.visibility = View.INVISIBLE
-                    addRelativeButton.visibility = View.VISIBLE
+                } else {                                                //NO ESTÁ AÑADIDO
+                    withContext(Dispatchers.Main) {
+                        videocallButton.visibility = View.INVISIBLE
+                        deleteRelativeButton.visibility = View.INVISIBLE
+                        addRelativeButton.visibility = View.VISIBLE
+                        gestorCheckBox.visibility = View.INVISIBLE
+                    }
                     if (petitionIsPendingByReceiver(relativeUid)?.isEmpty == true && petitionIsPendingBySender(relativeUid)?.isEmpty == true) { //No peticion pendiente
                         withContext(Dispatchers.Main) {
                             addRelativeButton.isEnabled = true
@@ -81,42 +95,55 @@ class RelativeProfileActivity : AppCompatActivity() {
         }
 
         videocallButton.setOnClickListener {
-            //Notificacion al receiver
-            //Receiver envía notificación al sender
-            // - Accepted: Abrir reunión jitsi
-            // - Refussed: Guardar en el historial
-
             val intent = Intent(baseContext, OutgoingVideocallActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            intent.putExtra("uid", user.uid.toString())     //PASAR DATOS DEL FAMILIAR
+            intent.putExtra("uid", user.uid.toString())
             intent.putExtra("name", user.name.toString())
             intent.putExtra("email", user.email.toString())
             intent.putExtra("image", user.image.toString())
             startActivity(intent)
+        }
+    }
 
-            /*val id = UUID.randomUUID().toString()
-            val sender = FirebaseAuth.getInstance().currentUser!!.uid
-            val receiver = user.uid.toString()
-            val calendar = Calendar.getInstance()
-            val time = "${calendar.get(Calendar.HOUR_OF_DAY)}:${calendar.get(Calendar.MINUTE)}"
-            val date = "${calendar.get(Calendar.DAY_OF_MONTH)}/${calendar.get(Calendar.MONTH)}/${calendar.get(Calendar.YEAR)}"
-            val state = "waiting"
-            val v = Videocall(id, sender, receiver, date, time, state)
+    override fun onPause() {
+        super.onPause()
+        val user = intent.getSerializableExtra("user") as User
+        val relativeUid = user.uid.toString()
+        val db = FirebaseFirestore.getInstance()
+        if(gestorCheckBox.isChecked){
+            lifecycleScope.launch {
+                withContext(Dispatchers.IO) {
+                    setManagerOnDatabase(db, relativeUid)
+                }
+            }
+        } else {
+            lifecycleScope.launch {
+                withContext(Dispatchers.IO) {
+                    deleteManagerOnDatabase(db, relativeUid)
+                }
+            }
+        }
+    }
 
-            val gson: Gson? = null
-            val json = gson?.toJson(v)*/
+    private suspend fun setManagerOnDatabase(db: FirebaseFirestore, relativeUid: String): Boolean {
+        return try {
+            val currentUid = FirebaseAuth.getInstance().currentUser!!.uid
+            db.collection("users").document(currentUid).collection("managers").document(relativeUid).set(hashMapOf("uid" to relativeUid)).await()
+            true
+        } catch (e: Exception) {
+            Log.e(ContentValues.TAG, "SETTING MANAGER IN DATABASE ERROR", e)
+            false
+        }
+    }
 
-            //LLAMADA SERVICIO WEB
-            /*val url = ""  //URL SERVIDOR
-
-            val outputJson = Gson()
-            val request = StringRequest(Request.Method.GET, url, {
-                val jsonObject = JSONObject(it)
-                //jsonObject.get()
-            }, {
-                Log.d(ContentValues.TAG, "ERROR")
-            })
-            Volley.newRequestQueue(this).add(request)*/
+    private suspend fun deleteManagerOnDatabase(db: FirebaseFirestore, relativeUid: String): Boolean {
+        return try {
+            val currentUid = FirebaseAuth.getInstance().currentUser!!.uid
+            db.collection("users").document(currentUid).collection("managers").document(relativeUid).delete().await()
+            true
+        } catch (e: Exception) {
+            Log.e(ContentValues.TAG, "DELETING MANAGER IN DATABASE ERROR", e)
+            false
         }
     }
 
@@ -189,6 +216,15 @@ class RelativeProfileActivity : AppCompatActivity() {
             val db = FirebaseFirestore.getInstance()
             val currentUid = FirebaseAuth.getInstance().currentUser!!.uid
             return db.collection("users").document(currentUid).collection("petitions").whereEqualTo("sender",sender).get().await()
+        } catch (e: Exception) {
+            null
+        }
+    }
+
+    private suspend fun getUser(db: FirebaseFirestore, uid: String): DocumentSnapshot? {
+        return try {
+            val user = db.collection("users").document(uid).get().await()
+            user
         } catch (e: Exception) {
             null
         }
