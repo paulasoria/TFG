@@ -35,10 +35,23 @@ class RelativeProfileActivity : AppCompatActivity() {
         emailTextView.text = user.email.toString()
         roleTextView.text = user.role.toString()
         Glide.with(this).load(user.image.toString()).centerCrop().into(profileImageView)
+        lifecycleScope.launch{
+            withContext(Dispatchers.IO){
+                if(relativeIsManager(relativeUid)){
+                    withContext(Dispatchers.Main){
+                        gestorCheckBox.isChecked = true
+                    }
+                } else {
+                    withContext(Dispatchers.Main){
+                        gestorCheckBox.isChecked = false
+                    }
+                }
+            }
+        }
 
         lifecycleScope.launch {
             withContext(Dispatchers.IO) {
-                if(relativeIsAdded(relativeUid)?.isEmpty == false) {    //ESTÁ AÑADIDO
+                if(relativeIsAdded(relativeUid)) {
                     val uid = FirebaseAuth.getInstance().currentUser!!.uid
                     val db = FirebaseFirestore.getInstance()
                     val currentUser = getUser(db, uid)
@@ -56,7 +69,7 @@ class RelativeProfileActivity : AppCompatActivity() {
                             gestorCheckBox.visibility = View.INVISIBLE
                         }
                     }
-                } else {                                                //NO ESTÁ AÑADIDO
+                } else {
                     withContext(Dispatchers.Main) {
                         videocallButton.visibility = View.INVISIBLE
                         deleteRelativeButton.visibility = View.INVISIBLE
@@ -191,13 +204,23 @@ class RelativeProfileActivity : AppCompatActivity() {
         }
     }
 
-    private suspend fun relativeIsAdded(uid: String): QuerySnapshot? {
+    private suspend fun relativeIsManager(uid: String): Boolean {
         return try {
             val db = FirebaseFirestore.getInstance()
             val currentUid = FirebaseAuth.getInstance().currentUser!!.uid
-            return db.collection("users").document(currentUid).collection("relatives").whereEqualTo("uid",uid).get().await()
+            return db.collection("users").document(currentUid).collection("managers").document(uid).get().await().exists()
         } catch (e: Exception) {
-            null
+            false
+        }
+    }
+
+    private suspend fun relativeIsAdded(uid: String): Boolean {
+        return try {
+            val db = FirebaseFirestore.getInstance()
+            val currentUid = FirebaseAuth.getInstance().currentUser!!.uid
+            return db.collection("users").document(currentUid).collection("relatives").document(uid).get().await().exists()
+        } catch (e: Exception) {
+            false
         }
     }
 
