@@ -32,61 +32,69 @@ class HistoryFragment : Fragment() {
 
         //Poner por defecto el historial de videollamadas:
         historyVideocallButton.setBackgroundColor(resources.getColor(R.color.turquoise))
-        //ListView
+        setHistoryOfVideocalls()
 
         historyVideocallButton.setOnClickListener {
             historyVideocallButton.setBackgroundColor(resources.getColor(R.color.turquoise))
             historyAlertButton.setBackgroundColor(resources.getColor(R.color.dark_blue))
-            //Mostrar historial de videollamadas recibidas, rechazadas y realizadas en listview
-            val db = FirebaseFirestore.getInstance()
-            val videocallsList = ArrayList<Videocall>()
-            videocallsList.clear()
-            lifecycleScope.launch {
-                withContext(Dispatchers.IO) {
-                    val videocalls = getVideocalls(db)
-                    videocalls?.iterator()?.forEach { videocall ->
-                        val currentUid = FirebaseAuth.getInstance().currentUser?.uid
-                        if(videocall.data.getValue("sender").toString() == currentUid || videocall.data.getValue("receiver").toString() == currentUid){
-                            val id: String = videocall.data.getValue("id").toString()
-                            val sender: String = videocall.data.getValue("sender").toString()
-                            val senderName: String = videocall.data.getValue("senderName").toString()
-                            val receiver: String = videocall.data.getValue("receiver").toString()
-                            val receiverName: String = videocall.data.getValue("receiverName").toString()
-                            val time: String = videocall.data.getValue("time").toString()
-                            val date: String = videocall.data.getValue("date").toString()
-                            val state: String = videocall.data.getValue("state").toString()
-                            val v = Videocall(id, sender, senderName, receiver, receiverName, date, time, state);
-                            videocallsList.add(v)
-                        }
-                    }
-                }
-                showResultsVideocalls(videocallsList)
-            }
+            setHistoryOfVideocalls()
         }
 
         historyAlertButton.setOnClickListener {
             historyVideocallButton.setBackgroundColor(resources.getColor(R.color.dark_blue))
             historyAlertButton.setBackgroundColor(resources.getColor(R.color.turquoise))
-            val db = FirebaseFirestore.getInstance()
-            val alertsList = ArrayList<History>()
-            alertsList.clear()
-            lifecycleScope.launch {
-                withContext(Dispatchers.IO) {
-                    val alerts = getHistoryOfAlerts(db)
-                    alerts?.iterator()?.forEach { alert ->
-                        val id: String = alert.data.getValue("id").toString()
-                        val receiver: String = alert.data.getValue("receiver").toString()
-                        val tag: String = alert.data.getValue("tag").toString() //Etiqueta alerta
-                        val time: String = alert.data.getValue("time").toString()
-                        val date : String = alert.data.getValue("date").toString()
-                        val a = History(id, receiver, time, date, tag)
-                        alertsList.add(a)
+            setHistoryOfAlerts()
+        }
+
+        return view
+    }
+
+    private fun setHistoryOfVideocalls() {
+        val db = FirebaseFirestore.getInstance()
+        val videocallsList = ArrayList<Videocall>()
+        videocallsList.clear()
+        lifecycleScope.launch {
+            withContext(Dispatchers.IO) {
+                val videocalls = getVideocalls(db)
+                videocalls?.iterator()?.forEach { videocall ->
+                    val currentUid = FirebaseAuth.getInstance().currentUser?.uid
+                    if(videocall.data.getValue("sender").toString() == currentUid || videocall.data.getValue("receiver").toString() == currentUid){
+                        val id: String = videocall.data.getValue("id").toString()
+                        val sender: String = videocall.data.getValue("sender").toString()
+                        val senderName: String = videocall.data.getValue("senderName").toString()
+                        val receiver: String = videocall.data.getValue("receiver").toString()
+                        val receiverName: String = videocall.data.getValue("receiverName").toString()
+                        val time: String = videocall.data.getValue("time").toString()
+                        val date: String = videocall.data.getValue("date").toString()
+                        val state: String = videocall.data.getValue("state").toString()
+                        val v = Videocall(id, sender, senderName, receiver, receiverName, date, time, state);
+                        videocallsList.add(v)
                     }
                 }
-                showResultsAlerts(alertsList)
             }
+            showResultsVideocalls(videocallsList)
         }
-        return view
+    }
+
+    private fun setHistoryOfAlerts(){
+        val db = FirebaseFirestore.getInstance()
+        val alertsList = ArrayList<History>()
+        alertsList.clear()
+        lifecycleScope.launch {
+            withContext(Dispatchers.IO) {
+                val alerts = getHistoryOfAlerts(db)
+                alerts?.iterator()?.forEach { alert ->
+                    val id: String = alert.data.getValue("id").toString()
+                    val receiver: String = alert.data.getValue("receiver").toString()
+                    val tag: String = alert.data.getValue("tag").toString() //Etiqueta alerta
+                    val time: String = alert.data.getValue("time").toString()
+                    val date : String = alert.data.getValue("date").toString()
+                    val a = History(id, receiver, time, date, tag)
+                    alertsList.add(a)
+                }
+            }
+            showResultsAlerts(alertsList)
+        }
     }
 
     private suspend fun getVideocalls(db: FirebaseFirestore): QuerySnapshot? {
