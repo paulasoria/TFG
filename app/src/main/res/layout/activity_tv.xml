@@ -2,13 +2,13 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="match_parent"
     tools:context=".TvActivity">
 
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/left_navigation"
-        android:layout_width="160dp"
+        android:layout_width="111dp"
         android:layout_height="match_parent"
         android:background="@color/dark_blue"
         app:itemIconTint="@color/super_light_grayish_blue"

@@ -43,14 +43,14 @@
                 android:textSize="18sp"/>
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
                 <Button
                     android:id="@+id/acceptButton"
                     android:text="Aceptar"
-                    android:layout_width="120dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:backgroundTint="@color/dark_green"/>
 
@@ -61,7 +61,7 @@
                 <Button
                     android:id="@+id/rejectButton"
                     android:text="Rechazar"
-                    android:layout_width="120dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:backgroundTint="@color/dark_red"/>
 
