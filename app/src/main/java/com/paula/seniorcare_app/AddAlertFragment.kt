@@ -75,8 +75,11 @@ class AddAlertFragment : Fragment() {
             withContext(Dispatchers.IO) {
                 relatives = getAddedRelativesList(db)
                 relatives?.iterator()?.forEach { relative ->
-                    val email: String = relative.data.getValue("email").toString()
-                    addedRelativesList.add(email)
+                    val relativeUid: String = relative.data.getValue("uid").toString()
+                    if(isManagerOfRelative(db, relativeUid)) {
+                        val email: String = relative.data.getValue("email").toString()
+                        addedRelativesList.add(email)
+                    }
                 }
             }
             val adapterRel = ArrayAdapter(
@@ -212,6 +215,15 @@ class AddAlertFragment : Fragment() {
             data
         } catch (e: Exception) {
             null
+        }
+    }
+
+    private suspend fun isManagerOfRelative(db: FirebaseFirestore, relativeUid: String): Boolean {
+        return try {
+            val currentUid = FirebaseAuth.getInstance().currentUser?.uid
+            return db.collection("users").document(relativeUid).collection("managers").document(currentUid.toString()).get().await().exists()
+        } catch (e: Exception) {
+            false
         }
     }
 
