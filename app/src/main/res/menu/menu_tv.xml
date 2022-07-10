@@ -2,10 +2,8 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/relativesTvFragment"
-        android:icon="@drawable/ic_person"
         android:title="Familiares"/>
     <item
         android:id="@+id/profileTvFragment"
-        android:icon="@drawable/ic_face"
         android:title="Perfil"/>
 </menu>

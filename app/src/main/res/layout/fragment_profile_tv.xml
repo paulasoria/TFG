@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/dark_blue"
-    tools:context=".ProfileActivity">
+    tools:context=".ProfileTvFragment">
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -37,11 +37,11 @@
                     android:id="@+id/editImageButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:drawableStart="@drawable/ic_edit"
-                    android:clickable="true"
-                    android:padding="20dp"
+                    android:layout_alignParentRight="true"
                     android:backgroundTintMode="src_over"
-                    android:layout_alignParentRight="true" />
+                    android:clickable="true"
+                    android:drawableStart="@drawable/ic_edit"
+                    android:padding="20dp" />
 
             </RelativeLayout>
 
@@ -74,7 +74,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:text="Nombre"
-                    android:textColor="@color/super_light_grayish_blue"
+                    android:textColor="@color/light_grayish_blue"
                     android:textSize="18sp" />
 
                 <ImageButton
@@ -116,7 +116,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:text="Email"
-                    android:textColor="@color/super_light_grayish_blue"
+                    android:textColor="@color/light_grayish_blue"
                     android:textSize="18sp" />
             </LinearLayout>
 
@@ -149,7 +149,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:text="Rol"
-                    android:textColor="@color/super_light_grayish_blue"
+                    android:textColor="@color/light_grayish_blue"
                     android:textSize="18sp" />
             </LinearLayout>
 
@@ -182,7 +182,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:text="Proveedor"
-                    android:textColor="@color/super_light_grayish_blue"
+                    android:textColor="@color/light_grayish_blue"
                     android:textSize="18sp" />
 
             </LinearLayout>
