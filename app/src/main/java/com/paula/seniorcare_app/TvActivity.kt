@@ -14,14 +14,14 @@ class TvActivity : AppCompatActivity() {
         //USAR RELATIVESFRAGMENT EN HORIZONTAL O HACER NUEVO FRAGMENT???
         //val relativesTvFragment = RelativesTvFragment()
         val relativesTvFragment = RelativesFragment()
-        //val profileTvFragment = profileTvFragment()
+        val profileTvFragment = ProfileTvFragment()
 
 
         makeCurrentFragment(relativesTvFragment)
         left_navigation.setNavigationItemSelectedListener {
             when (it.itemId) {
                 R.id.relativesTvFragment -> makeCurrentFragment(relativesTvFragment)
-                //R.id.profileTvFragment -> makeCurrentFragment(profileTvFragment)
+                R.id.profileTvFragment -> makeCurrentFragment(profileTvFragment)
             }
             true
         }
