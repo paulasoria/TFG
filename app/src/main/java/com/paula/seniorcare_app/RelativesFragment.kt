@@ -45,7 +45,18 @@ class RelativesFragment : Fragment() {
         }
 
         petitionsButton.setOnClickListener {
-            activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.wrapper,PetitionsFragment())?.commit()
+            val uid = FirebaseAuth.getInstance().currentUser!!.uid
+            val db = FirebaseFirestore.getInstance()
+            lifecycleScope.launch {
+                withContext(Dispatchers.IO) {
+                    val user = getUser(db, uid)
+                    if(user?.get("role") == "Administrador") {
+                        activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.wrapper,PetitionsFragment())?.commit()
+                    } else {    //Familiar
+                        activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.wrapper_tv,PetitionsFragment())?.commit()
+                    }
+                }
+            }
         }
 
         val db = FirebaseFirestore.getInstance()
