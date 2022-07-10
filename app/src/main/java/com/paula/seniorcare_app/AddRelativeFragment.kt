@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
 import com.paula.seniorcare_app.model.User
@@ -24,15 +25,35 @@ class AddRelativeFragment : Fragment(), SearchView.OnQueryTextListener {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val view:View = inflater.inflate(R.layout.fragment_add_relative, container, false)
         val relativesSearchView:SearchView = view.findViewById(R.id.relativesSearchView)
-        val petitionsButton: FloatingActionButton = view.findViewById(R.id.petitionsButton)
+        val petitionsButton:FloatingActionButton = view.findViewById(R.id.petitionsButton)
 
         relativesSearchView.setOnQueryTextListener(this)
 
         petitionsButton.setOnClickListener {
-            activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.wrapper,PetitionsFragment())?.commit()
+            val uid = FirebaseAuth.getInstance().currentUser!!.uid
+            val db = FirebaseFirestore.getInstance()
+            lifecycleScope.launch {
+                withContext(Dispatchers.IO) {
+                    val user = getUser(db, uid)
+                    if(user?.get("role") == "Administrador") {
+                        activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.wrapper,PetitionsFragment())?.commit()
+                    } else {    //Familiar
+                        activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.wrapper_tv,PetitionsFragment())?.commit()
+                    }
+                }
+            }
         }
 
         return view
+    }
+
+    private suspend fun getUser(db: FirebaseFirestore, uid: String): DocumentSnapshot? {
+        return try {
+            val user = db.collection("users").document(uid).get().await()
+            user
+        } catch (e: Exception) {
+            null
+        }
     }
 
     private suspend fun getSearchUsers(db: FirebaseFirestore, query:String): QuerySnapshot? {
