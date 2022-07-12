@@ -67,9 +67,9 @@ class MessagingService: FirebaseMessagingService() {
     private fun sendNotificationAlert(title: String, data: Map<String, String>){
         val intent = Intent(this, ShowAlertActivity::class.java) //Pantalla de alertas o de llamada
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        intent.putExtra("msg", data.get("msg"))
-        intent.putExtra("time", data.get("time"))   //Se pone una hora que no es
-        intent.putExtra("date", data.get("date"))
+        intent.putExtra("msg", data["msg"])
+        intent.putExtra("time", data["time"])   //Se pone una hora que no es
+        intent.putExtra("date", data["date"])
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         val pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_MUTABLE)
 
@@ -81,7 +81,7 @@ class MessagingService: FirebaseMessagingService() {
             val builder: NotificationCompat.Builder = NotificationCompat.Builder(applicationContext, channelName)
                 .setSmallIcon(R.drawable.icono_logo_transparent)
                 .setContentTitle(title)
-                .setContentText(data.get("msg"))
+                .setContentText(data["msg"])
                 .setAutoCancel(true)
                 //.setVisibility(VISIBILITY_PUBLIC)
                 //.setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))

@@ -51,6 +51,9 @@
             android:name=".LogInActivity"
             android:exported="false" />
         <activity
+            android:name=".ShowAlertActivity"
+            android:exported="false" />
+        <activity
             android:name=".AuthActivity"
             android:exported="true">
             <intent-filter>

@@ -48,7 +48,7 @@ exports.rejectPetition = functions.firestore
       return null;
     });
 
-exports.addNewRelative = functions.firestore
+exports.createRelative = functions.firestore
     .document("/users/{uidB}/relatives/{uidA}").onCreate((snap, context) => {
       const uidA = snap.data().uid;
       const uidB = context.params.uidB;
@@ -72,7 +72,7 @@ exports.deleteRelative = functions.firestore
       return null;
     });
 
-exports.addNewAlert = functions.firestore
+exports.createAlert = functions.firestore
     .document("/users/{uid}/alerts/{id}").onCreate((snap, context) => {
       const id = snap.data().id;
       const sender = snap.data().sender;
@@ -123,57 +123,64 @@ exports.createVideocall = functions.firestore
       const receiver = snap.data().receiver;
       const callId = context.params.id;
       admin.firestore().collection("users").doc(sender).get().then((s) => {
-        const senderTjw = generateJwtForUser(s.get("uid"), callId);
+        const senderTjw = {
+          "aud": "paulasoria",
+          "iss": "paulasoria",
+          "sub": "jitsi.paulasoria.tk",
+          "room": callId,
+          "exp": 1932477254,
+          "moderator": true,
+          "contex": {
+            "user": {
+              "image": s.get("uid").image,
+              "name": s.get("uid").name,
+              "email": s.get("uid").email,
+              "uid": s.get("uid").uid,
+            },
+          },
+        };
+        jwt.sign(senderTjw, JWT_SECRET);
         const senderName = s.get("name");
         const senderEmail = s.get("email");
         const senderImage = s.get("image");
         admin.firestore().collection("users").doc(receiver).get().then((r) => {
-          const receiverTjw = generateJwtForUser(r.get("uid"), callId);
+          const receiverTjw = {
+            "aud": "paulasoria",
+            "iss": "paulasoria",
+            "sub": "jitsi.paulasoria.tk",
+            "room": callId,
+            "exp": 1932477254,
+            "moderator": true,
+            "contex": {
+              "user": {
+                "image": r.get("uid").image,
+                "name": r.get("uid").name,
+                "email": r.get("uid").email,
+                "uid": r.get("uid").uid,
+              },
+            },
+          };
+          jwt.sign(receiverTjw, JWT_SECRET);
           const receiverToken = r.get("token");
           // Enviar mensaje FCM llamada + jwt
-          sendMessage(receiverToken, receiverTjw, senderName, senderEmail,
-              senderImage, "incomingCall");
+          const message = {
+            data: {
+              tjw: receiverTjw,
+              senderName: senderName,
+              senderEmail: senderEmail,
+              senderImage: senderImage,
+              type: "incomingCall",
+            },
+            token: receiverToken,
+          };
+          console.log(message);
+          admin.messaging().send(message).then((response) => {
+            console.log("Successfully sent message: ", response);
+          }).catch((error) => {
+            console.log("Error sending message: ", error);
+          });
         });
         // Devolver llamada + jwt
         return senderTjw;
       });
     });
-
-function generateJwtForUser(user, callId) {
-  const obj = {
-    "aud": "paulasoria",
-    "iss": "paulasoria",
-    "sub": "jitsi.paulasoria.tk",
-    "room": callId,
-    "exp": 1932477254,
-    "moderator": true,
-    "contex": {
-      "user": {
-        "image": user.image,
-        "name": user.name,
-        "email": user.email,
-        "uid": user.uid,
-      },
-    },
-  };
-  return jwt.sign(obj, JWT_SECRET);
-}
-
-function sendMessage(token, tjw, senderName, senderEmail, senderImage, type) {
-  const message = {
-    data: {
-      tjw: tjw,
-      senderName: senderName,
-      senderEmail: senderEmail,
-      senderImage: senderImage,
-      type: type,
-    },
-    token: token,
-  };
-  console.log(message);
-  admin.messaging().send(message).then((response) => {
-    console.log("Successfully sent message: ", response);
-  }).catch((error) => {
-    console.log("Error sending message: ", error);
-  });
-}

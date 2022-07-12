@@ -1,5 +1,3 @@
-//const firebase = require("firebase-admin/app");
-//require("firebase/firestore");
 const admin = require("firebase-admin");
 
 const serviceAccount = require("./seniorcare-tfg-firebase-adminsdk-j0gbh-3e97499306.json");
@@ -11,7 +9,6 @@ admin.initializeApp({
 
 const db = admin.firestore();
 const CronJob = require("cron").CronJob;
-//const job = new CronJob("*/10 * * * * *", function() {
 const job = new CronJob("* * * * *", function() {
     getActualAlarms();
 }, null, true, "America/Los_Angeles");
@@ -38,7 +35,6 @@ async function getActualAlarms(){
                         if(alertInfo.time == actualTime && valueActualDayOfWeek == 1){
                             if(usersArray[i].uid == alertInfo.receiver){
                                 sendMessage(usersArray[i].token, alertInfo.tag, actualTime, actualDate, "alert");
-                            } else if(usersArray[i].uid == alertInfo.sender){
                                 putAlertOnHistory(alertInfo.sender, usersArray[i].name, alertInfo, actualTime, actualDate);
                             }
                         }
@@ -46,7 +42,6 @@ async function getActualAlarms(){
                         if(alertInfo.time == actualTime && alertInfo.date == actualDate){
                             if(usersArray[i].uid == alertInfo.receiver){
                                 sendMessage(usersArray[i].token, alertInfo.tag, actualTime, actualDate, "alert");
-                            } else if(usersArray[i].uid == alertInfo.sender){
                                 putAlertOnHistory(alertInfo.sender, usersArray[i].name, alertInfo, actualTime, actualDate);
                             }
                         }
@@ -63,7 +58,7 @@ async function getActualAlarms(){
 
  
 async function putAlertOnHistory(idSender, receiverName, alert, actualTime, actualDate){
-    db.collection("users").doc(idSender).collection("historyAlerts").doc(alert.id)
+    db.collection("users").doc(idSender).collection("historyAlerts").doc()
     .set({id: alert.id, tag: alert.tag, receiver: receiverName, time: actualTime, date: actualDate})
     .then(snapshot => {
         console.log("Successfully write alert on history: ", snapshot);
