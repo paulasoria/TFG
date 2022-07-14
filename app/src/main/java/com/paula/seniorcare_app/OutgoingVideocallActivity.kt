@@ -8,6 +8,7 @@ import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.activity_outgoing_videocall.*
 import kotlinx.coroutines.Dispatchers
@@ -21,7 +22,7 @@ class OutgoingVideocallActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_outgoing_videocall)
 
-        var videocallId: String? = null
+        var callId: String? = null
 
         val receiverUid = intent.getStringExtra("uid").toString()
         val receiverImage = intent.getStringExtra("image").toString()
@@ -34,11 +35,18 @@ class OutgoingVideocallActivity : AppCompatActivity() {
         val db = FirebaseFirestore.getInstance()
         val calendar = Calendar.getInstance()
         val date = "${calendar.get(Calendar.DAY_OF_MONTH)}/${calendar.get(Calendar.MONTH)+1}/${calendar.get(Calendar.YEAR)}"
-        val time = "${calendar.get(Calendar.HOUR)}:${calendar.get(Calendar.MINUTE)}"
+        val hour = calendar.get(Calendar.HOUR)
+        val minute = calendar.get(Calendar.MINUTE)
+        val time = if(minute.toString().length == 1){
+            "$hour:0$minute"
+        }else {
+            "$hour:$minute"
+        }
+        val timestamp = FieldValue.serverTimestamp()
         lifecycleScope.launch {
             withContext(Dispatchers.IO) {
                 val senderName = getUser(db, FirebaseAuth.getInstance().currentUser!!.uid)?.get("name") as String?
-                videocallId = createVideocallInDatabase(db, receiverUid, receiverName, senderName, date, time, "waiting")
+                callId = createCall(db, receiverUid, receiverName, senderName, date, time, "waiting", timestamp)
             }
         }
 
@@ -46,17 +54,18 @@ class OutgoingVideocallActivity : AppCompatActivity() {
             finish()
             lifecycleScope.launch {
                 withContext(Dispatchers.IO) {
-                    modifyVideocallInDatabase(db, videocallId!!, "lost")
+                    changeStateCall(db, callId!!, "lost")
                 }
             }
+            //Llamada perdida ¿notificacion?
         }
     }
 
-    private suspend fun createVideocallInDatabase(db: FirebaseFirestore, receiver: String, receiverName: String, senderName: String?, date: String?, time: String?, state: String): String? {
+    private suspend fun createCall(db: FirebaseFirestore, receiver: String, receiverName: String, senderName: String?, date: String?, time: String?, state: String, timestamp: FieldValue): String? {
         return try {
             val id = UUID.randomUUID().toString()
             val sender = FirebaseAuth.getInstance().currentUser!!.uid
-            db.collection("videocalls").document(id).set(hashMapOf("id" to id, "sender" to sender, "receiver" to receiver, "receiverName" to receiverName, "senderName" to senderName, "date" to date, "time" to time, "state" to state)).await()
+            db.collection("videocalls").document(id).set(hashMapOf("id" to id, "sender" to sender, "receiver" to receiver, "receiverName" to receiverName, "senderName" to senderName, "date" to date, "time" to time, "state" to state, "timestamp" to timestamp)).await()
             id
         } catch (e: Exception){
             Log.e(ContentValues.TAG, "CREATING VIDEOCALL IN DATABASE ERROR", e)
@@ -74,9 +83,9 @@ class OutgoingVideocallActivity : AppCompatActivity() {
         }
     }
 
-    private suspend fun modifyVideocallInDatabase(db: FirebaseFirestore, id: String, state: String): Boolean {
+    private suspend fun changeStateCall(db: FirebaseFirestore, callId: String, state: String): Boolean {
         return try {
-            db.collection("videocalls").document(id).update("state", state).await()
+            db.collection("videocalls").document(callId).update("state", state).await()
             true
         } catch (e: Exception){
             Log.e(ContentValues.TAG, "UPDATING VIDEOCALL IN DATABASE ERROR", e)
