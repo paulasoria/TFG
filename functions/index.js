@@ -122,6 +122,7 @@ exports.createVideocall = functions.firestore
       const sender = snap.data().sender;
       const receiver = snap.data().receiver;
       const callId = context.params.id;
+
       admin.firestore().collection("users").doc(sender).get().then((s) => {
         const senderTjw = {
           "aud": "paulasoria",
@@ -143,6 +144,7 @@ exports.createVideocall = functions.firestore
         const senderName = s.get("name");
         const senderEmail = s.get("email");
         const senderImage = s.get("image");
+
         admin.firestore().collection("users").doc(receiver).get().then((r) => {
           const receiverTjw = {
             "aud": "paulasoria",
@@ -162,18 +164,19 @@ exports.createVideocall = functions.firestore
           };
           jwt.sign(receiverTjw, JWT_SECRET);
           const receiverToken = r.get("token");
-          // Enviar mensaje FCM llamada + jwt
+
           const message = {
             data: {
               tjw: receiverTjw,
               senderName: senderName,
               senderEmail: senderEmail,
               senderImage: senderImage,
+              callId: callId,
               type: "incomingCall",
             },
             token: receiverToken,
           };
-          console.log(message);
+          // console.log(message);
           admin.messaging().send(message).then((response) => {
             console.log("Successfully sent message: ", response);
           }).catch((error) => {
@@ -183,4 +186,62 @@ exports.createVideocall = functions.firestore
         // Devolver llamada + jwt
         return senderTjw;
       });
+    });
+
+exports.rejectVideocall = functions.firestore
+    .document("videocalls/{id}").onUpdate((change, context) => {
+      const reject = change.after.data();
+      const newState = reject.state;
+      const sender = reject.sender;
+      const previousState = change.before.data().state;
+      const callId = context.params.id;
+
+      admin.firestore().collection("users").doc(sender).get().then((s) => {
+        const senderToken = s.get("uid").token;
+        if (previousState == "waiting" && newState == "rejected") {
+          const message = {
+            data: {
+              callId: callId,
+              type: "rejectedCall",
+            },
+            token: senderToken,
+          };
+          // console.log(message);
+          admin.messaging().send(message).then((response) => {
+            console.log("Successfully sent message: ", response);
+          }).catch((error) => {
+            console.log("Error sending message: ", error);
+          });
+        }
+      });
+      return "ok";
+    });
+
+exports.acceptVideocall = functions.firestore
+    .document("videocalls/{id}").onUpdate((change, context) => {
+      const accept = change.after.data();
+      const newState = accept.state;
+      const sender = accept.sender;
+      const previousState = change.before.data().state;
+      const callId = context.params.id;
+
+      admin.firestore().collection("users").doc(sender).get().then((s) => {
+        const senderToken = s.get("uid").token;
+        if (previousState == "waiting" && newState == "accepted") {
+          const message = {
+            data: {
+              callId: callId,
+              type: "acceptedCall",
+            },
+            token: senderToken,
+          };
+          // console.log(message);
+          admin.messaging().send(message).then((response) => {
+            console.log("Successfully sent message: ", response);
+          }).catch((error) => {
+            console.log("Error sending message: ", error);
+          });
+        }
+      });
+      return "ok";
     });
