@@ -194,9 +194,8 @@ class RelativeProfileActivity : AppCompatActivity() {
                 "id" to id,
                 "sender" to sender,
                 "receiver" to receiver,
-                "state" to "pending"    //pending, accepted or rejected
+                "state" to "pending"
             )).await()
-            //AQUÍ SE DISPARA UNA GOOGLE CLOUD FUNCTION PARA CREAR LA PETICIÓN EN EL RECEIVER
             true
         } catch (e: Exception) {
             Log.e(ContentValues.TAG, "CREATING PETITION IN DATABASE ERROR", e)
