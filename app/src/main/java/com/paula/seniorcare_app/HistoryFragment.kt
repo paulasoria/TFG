@@ -12,6 +12,7 @@ import android.widget.Button
 import androidx.lifecycle.lifecycleScope
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.QuerySnapshot
 import com.paula.seniorcare_app.model.History
 import com.paula.seniorcare_app.model.Videocall
@@ -99,7 +100,7 @@ class HistoryFragment : Fragment() {
 
     private suspend fun getVideocalls(db: FirebaseFirestore): QuerySnapshot? {
         return try {
-            val data = db.collection("videocalls").get().await()
+            val data = db.collection("videocalls").orderBy("timestamp", Query.Direction.DESCENDING).get().await()
             data
         } catch (e: Exception) {
             Log.e(ContentValues.TAG, "GETTING HISTORY OF VIDEOCALLS ERROR", e)
@@ -110,7 +111,7 @@ class HistoryFragment : Fragment() {
     private suspend fun getHistoryOfAlerts(db: FirebaseFirestore): QuerySnapshot? {
         return try {
             val currentUid = FirebaseAuth.getInstance().currentUser?.uid
-            val data = db.collection("users").document(currentUid.toString()).collection("historyAlerts").get().await()
+            val data = db.collection("users").document(currentUid.toString()).collection("historyAlerts").orderBy("timestamp", Query.Direction.DESCENDING).get().await()
             data
         } catch (e: Exception) {
             Log.e(ContentValues.TAG, "GETTING HISTORY OF ALERTS ERROR", e)
