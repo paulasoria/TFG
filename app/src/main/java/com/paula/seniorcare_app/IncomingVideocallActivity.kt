@@ -25,11 +25,11 @@ class IncomingVideocallActivity : AppCompatActivity() {
         val callId = intent.getStringExtra("callId").toString()
 
         rejectCallButton.setOnClickListener{
-            finish()
             lifecycleScope.launch {
                 withContext(Dispatchers.IO) {
                     changeStateCall(db, callId, "rejected")
                 }
+                finish()
             }
             //Notificar al otro usuario que se ha finalizado la llamada
         }

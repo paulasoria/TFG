@@ -51,11 +51,11 @@ class OutgoingVideocallActivity : AppCompatActivity() {
         }
 
         endCallButton.setOnClickListener{
-            finish()
             lifecycleScope.launch {
                 withContext(Dispatchers.IO) {
                     changeStateCall(db, callId!!, "lost")
                 }
+                finish()
             }
             //Llamada perdida ¿notificacion?
         }
