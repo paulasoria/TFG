@@ -12,6 +12,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
+import com.google.firebase.iid.FirebaseInstanceId
 import kotlinx.android.synthetic.main.activity_auth.logInButton
 import kotlinx.android.synthetic.main.activity_log_in.*
 import kotlinx.android.synthetic.main.activity_log_in.emailTextInput
@@ -41,6 +42,9 @@ class LogInActivity : AppCompatActivity() {
                     lifecycleScope.launch {
                         withContext(Dispatchers.IO) {
                             val user = getUser(db, uid)
+                            if(user?.get("token") != FirebaseInstanceId.getInstance().instanceId.await().token) {
+                                changeUserToken(db, uid)
+                            }
                             if(user?.get("role") == "Administrador"){
                                 showHome()
                             } else {    //Familiar
@@ -84,6 +88,16 @@ class LogInActivity : AppCompatActivity() {
             user
         } catch (e: Exception) {
             null
+        }
+    }
+
+    private suspend fun changeUserToken(db: FirebaseFirestore, uid: String): Boolean {
+        return try {
+            val token = FirebaseInstanceId.getInstance().instanceId.await().token
+            db.collection("users").document(uid).update("token", token).await()
+            true
+        } catch (e: Exception) {
+            false
         }
     }
 
