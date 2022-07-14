@@ -42,7 +42,7 @@
                 android:id="@+id/infoHistoryTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Etiquetadescriptiva/Estadollamada"
+                android:text="Etiqueta"
                 android:textColor="@color/white"
                 android:textSize="20sp"/>
         </LinearLayout>
