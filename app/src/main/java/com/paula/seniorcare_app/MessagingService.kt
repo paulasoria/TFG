@@ -5,11 +5,8 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.media.RingtoneManager
 import android.os.Build
-import android.util.Log
 import androidx.core.app.NotificationCompat
-import androidx.core.app.NotificationCompat.VISIBILITY_PUBLIC
 import androidx.core.app.NotificationManagerCompat
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -40,6 +37,7 @@ class MessagingService: FirebaseMessagingService() {
                 intent.putExtra("senderName", data["senderName"])
                 intent.putExtra("senderEmail", data["senderEmail"])
                 intent.putExtra("senderImage", data["senderImage"])
+                intent.putExtra("callId", data["callId"])
                 startActivity(intent)
             } else if(data["type"] == "acceptedCall"){
                 //Llamada aceptada
