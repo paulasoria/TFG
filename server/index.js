@@ -59,7 +59,6 @@ async function getActualAlarms(){
 
  
 async function putAlertOnHistory(idSender, receiverName, alert, actualTime, actualDate, timestamp){
-    console.log(timestamp);
     db.collection("users").doc(idSender).collection("historyAlerts").doc()
     .set({id: alert.id, tag: alert.tag, receiver: receiverName, time: actualTime, date: actualDate, timestamp: timestamp})
     .then(snapshot => {

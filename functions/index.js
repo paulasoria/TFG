@@ -1,8 +1,8 @@
 const functions = require("firebase-functions");
 const admin = require("firebase-admin");
 admin.initializeApp();
-const jwt = require("jsonwebtoken");
-const JWT_SECRET = "21D40CD42CCA9BE6B8932855781FC84A";
+// const jwt = require("jsonwebtoken");
+// const JWT_SECRET = "21D40CD42CCA9BE6B8932855781FC84A";
 
 exports.sendPetition = functions.firestore
     .document("/users/{uid}/petitions/{id}").onCreate((snap, context) => {
@@ -122,6 +122,34 @@ exports.createVideocall = functions.firestore
       const sender = snap.data().sender;
       const receiver = snap.data().receiver;
       const callId = context.params.id;
+      admin.firestore().collection("users").doc(sender).get().then((s) => {
+        const senderName = s.data().name;
+        const senderEmail = s.data().email;
+        const senderImage = s.data().image;
+        admin.firestore().collection("users").doc(receiver).get().then((r) => {
+          const message = {
+            data: {
+              senderName: senderName,
+              senderEmail: senderEmail,
+              senderImage: senderImage,
+              callId: callId,
+              type: "incomingCall",
+            },
+            token: r.data().token,
+          };
+          // console.log(message);
+          admin.messaging().send(message).then((response) => {
+            console.log("Successfully sent message: ", response);
+          }).catch((error) => {
+            console.log("Error sending message: ", error);
+          });
+        });
+      });
+    });
+
+/* const sender = snap.data().sender;
+      const receiver = snap.data().receiver;
+      const callId = context.params.id;
 
       admin.firestore().collection("users").doc(sender).get().then((s) => {
         const senderTjw = {
@@ -133,17 +161,17 @@ exports.createVideocall = functions.firestore
           "moderator": true,
           "contex": {
             "user": {
-              "image": s.get("uid").image,
-              "name": s.get("uid").name,
-              "email": s.get("uid").email,
-              "uid": s.get("uid").uid,
+              "image": s.data().image,
+              "name": s.data().name,
+              "email": s.data().email,
+              "uid": s.data().uid,
             },
           },
         };
         jwt.sign(senderTjw, JWT_SECRET);
-        const senderName = s.get("name");
-        const senderEmail = s.get("email");
-        const senderImage = s.get("image");
+        const senderName = s.data().name;
+        const senderEmail = s.data().email;
+        const senderImage = s.data().image;
 
         admin.firestore().collection("users").doc(receiver).get().then((r) => {
           const receiverTjw = {
@@ -155,15 +183,15 @@ exports.createVideocall = functions.firestore
             "moderator": true,
             "contex": {
               "user": {
-                "image": r.get("uid").image,
-                "name": r.get("uid").name,
-                "email": r.get("uid").email,
-                "uid": r.get("uid").uid,
+                "image": r.data().image,
+                "name": r.data().name,
+                "email": r.data().email,
+                "uid": r.data().uid,
               },
             },
           };
           jwt.sign(receiverTjw, JWT_SECRET);
-          const receiverToken = r.get("token");
+          const receiverToken = r.data().token;
 
           const message = {
             data: {
@@ -186,7 +214,7 @@ exports.createVideocall = functions.firestore
         // Devolver llamada + jwt
         return senderTjw;
       });
-    });
+    });*/
 
 exports.rejectVideocall = functions.firestore
     .document("videocalls/{id}").onUpdate((change, context) => {
