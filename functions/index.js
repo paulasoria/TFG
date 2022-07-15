@@ -1,8 +1,8 @@
 const functions = require("firebase-functions");
 const admin = require("firebase-admin");
 admin.initializeApp();
-// const jwt = require("jsonwebtoken");
-// const JWT_SECRET = "21D40CD42CCA9BE6B8932855781FC84A";
+const jwt = require("jsonwebtoken");
+const JWT_SECRET = "21D40CD42CCA9BE6B8932855781FC84A";
 
 exports.sendPetition = functions.firestore
     .document("/users/{uid}/petitions/{id}").onCreate((snap, context) => {
@@ -123,35 +123,6 @@ exports.createVideocall = functions.firestore
       const receiver = snap.data().receiver;
       const callId = context.params.id;
       admin.firestore().collection("users").doc(sender).get().then((s) => {
-        const senderName = s.data().name;
-        const senderEmail = s.data().email;
-        const senderImage = s.data().image;
-        admin.firestore().collection("users").doc(receiver).get().then((r) => {
-          const message = {
-            data: {
-              senderName: senderName,
-              senderEmail: senderEmail,
-              senderImage: senderImage,
-              callId: callId,
-              type: "incomingCall",
-            },
-            token: r.data().token,
-          };
-          // console.log(message);
-          admin.messaging().send(message).then((response) => {
-            console.log("Successfully sent message: ", response);
-          }).catch((error) => {
-            console.log("Error sending message: ", error);
-          });
-        });
-      });
-    });
-
-/* const sender = snap.data().sender;
-      const receiver = snap.data().receiver;
-      const callId = context.params.id;
-
-      admin.firestore().collection("users").doc(sender).get().then((s) => {
         const senderTjw = {
           "aud": "paulasoria",
           "iss": "paulasoria",
@@ -161,18 +132,17 @@ exports.createVideocall = functions.firestore
           "moderator": true,
           "contex": {
             "user": {
-              "image": s.data().image,
-              "name": s.data().name,
-              "email": s.data().email,
-              "uid": s.data().uid,
+              "image": s.get("image"),
+              "name": s.get("name"),
+              "email": s.get("email"),
+              "uid": s.get("uid"),
             },
           },
         };
         jwt.sign(senderTjw, JWT_SECRET);
-        const senderName = s.data().name;
-        const senderEmail = s.data().email;
-        const senderImage = s.data().image;
-
+        const senderName = s.get("name");
+        const senderEmail = s.get("email");
+        const senderImage = s.get("image");
         admin.firestore().collection("users").doc(receiver).get().then((r) => {
           const receiverTjw = {
             "aud": "paulasoria",
@@ -183,19 +153,17 @@ exports.createVideocall = functions.firestore
             "moderator": true,
             "contex": {
               "user": {
-                "image": r.data().image,
-                "name": r.data().name,
-                "email": r.data().email,
-                "uid": r.data().uid,
+                "image": r.get("image"),
+                "name": r.get("name"),
+                "email": r.get("email"),
+                "uid": r.get("uid"),
               },
             },
           };
           jwt.sign(receiverTjw, JWT_SECRET);
-          const receiverToken = r.data().token;
-
+          const receiverToken = r.get("token");
           const message = {
             data: {
-              tjw: receiverTjw,
               senderName: senderName,
               senderEmail: senderEmail,
               senderImage: senderImage,
@@ -204,17 +172,15 @@ exports.createVideocall = functions.firestore
             },
             token: receiverToken,
           };
-          // console.log(message);
           admin.messaging().send(message).then((response) => {
             console.log("Successfully sent message: ", response);
           }).catch((error) => {
             console.log("Error sending message: ", error);
           });
+          return senderTjw;
         });
-        // Devolver llamada + jwt
-        return senderTjw;
       });
-    });*/
+    });
 
 exports.rejectVideocall = functions.firestore
     .document("videocalls/{id}").onUpdate((change, context) => {

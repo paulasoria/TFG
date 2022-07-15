@@ -37,9 +37,9 @@ class OutgoingVideocallActivity : AppCompatActivity() {
         val date = "${calendar.get(Calendar.DAY_OF_MONTH)}/${calendar.get(Calendar.MONTH)+1}/${calendar.get(Calendar.YEAR)}"
         val hour = calendar.get(Calendar.HOUR)
         val minute = calendar.get(Calendar.MINUTE)
-        val time = if(minute.toString().length == 1){
+        val time = if(minute.toString().length == 1 || minute.toString() == "00"){
             "$hour:0$minute"
-        }else {
+        } else {
             "$hour:$minute"
         }
         val timestamp = FieldValue.serverTimestamp()

@@ -13,7 +13,6 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 
-
 const val channelId = 0
 const val channelName = "CHANNEL_NAME"
 
