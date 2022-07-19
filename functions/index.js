@@ -191,24 +191,28 @@ exports.rejectVideocall = functions.firestore
       const callId = context.params.id;
 
       admin.firestore().collection("users").doc(sender).get().then((s) => {
-        const senderToken = s.get("uid").token;
+        const senderName = s.get("name");
+        const senderEmail = s.get("email");
+        const senderToken = s.get("token");
         if (previousState == "waiting" && newState == "rejected") {
           const message = {
             data: {
+              senderName: senderName,
+              senderEmail: senderEmail,
               callId: callId,
               type: "rejectedCall",
             },
             token: senderToken,
           };
-          // console.log(message);
           admin.messaging().send(message).then((response) => {
             console.log("Successfully sent message: ", response);
           }).catch((error) => {
             console.log("Error sending message: ", error);
           });
+          return "ok";
         }
+        return null;
       });
-      return "ok";
     });
 
 exports.acceptVideocall = functions.firestore
@@ -220,7 +224,7 @@ exports.acceptVideocall = functions.firestore
       const callId = context.params.id;
 
       admin.firestore().collection("users").doc(sender).get().then((s) => {
-        const senderToken = s.get("uid").token;
+        const senderToken = s.get("token");
         if (previousState == "waiting" && newState == "accepted") {
           const message = {
             data: {
@@ -229,13 +233,13 @@ exports.acceptVideocall = functions.firestore
             },
             token: senderToken,
           };
-          // console.log(message);
           admin.messaging().send(message).then((response) => {
             console.log("Successfully sent message: ", response);
           }).catch((error) => {
             console.log("Error sending message: ", error);
           });
+          return "ok";
         }
+        return null;
       });
-      return "ok";
     });
