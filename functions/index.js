@@ -117,129 +117,109 @@ exports.updateAlert = functions.firestore
       return null;
     });
 
-exports.createVideocall = functions.firestore
-    .document("videocalls/{id}").onCreate((snap, context) => {
-      const sender = snap.data().sender;
-      const receiver = snap.data().receiver;
-      const callId = context.params.id;
-      admin.firestore().collection("users").doc(sender).get().then((s) => {
-        const senderTjw = {
-          "aud": "paulasoria",
-          "iss": "paulasoria",
-          "sub": "jitsi.paulasoria.tk",
-          "room": callId,
-          "exp": 1932477254,
-          "moderator": true,
-          "contex": {
-            "user": {
-              "image": s.get("image"),
-              "name": s.get("name"),
-              "email": s.get("email"),
-              "uid": s.get("uid"),
-            },
-          },
-        };
-        jwt.sign(senderTjw, JWT_SECRET);
-        const senderName = s.get("name");
-        const senderEmail = s.get("email");
-        const senderImage = s.get("image");
-        admin.firestore().collection("users").doc(receiver).get().then((r) => {
-          const receiverTjw = {
-            "aud": "paulasoria",
-            "iss": "paulasoria",
-            "sub": "jitsi.paulasoria.tk",
-            "room": callId,
-            "exp": 1932477254,
-            "moderator": true,
-            "contex": {
-              "user": {
-                "image": r.get("image"),
-                "name": r.get("name"),
-                "email": r.get("email"),
-                "uid": r.get("uid"),
-              },
-            },
-          };
-          jwt.sign(receiverTjw, JWT_SECRET);
-          const receiverToken = r.get("token");
-          const message = {
-            data: {
-              senderName: senderName,
-              senderEmail: senderEmail,
-              senderImage: senderImage,
-              callId: callId,
-              type: "incomingCall",
-            },
-            token: receiverToken,
-          };
-          admin.messaging().send(message).then((response) => {
-            console.log("Successfully sent message: ", response);
-          }).catch((error) => {
-            console.log("Error sending message: ", error);
-          });
-          return senderTjw;
-        });
-      });
-    });
+exports.createVideocall = functions.https.onCall((data, context) => {
+  const senderUid = data.senderUid;
+  const senderName = data.senderName;
+  const senderEmail = data.senderEmail;
+  const senderImage = data.senderImage;
+  const receiverUid = data.receiver;
+  const receiverName = data.receiverName;
+  const receiverEmail = data.receiverEmail;
+  const receiverImage = data.receiverImage;
+  const receiverToken = data.receiverToken;
+  const callId = data.callId;
 
-exports.rejectVideocall = functions.firestore
-    .document("videocalls/{id}").onUpdate((change, context) => {
-      const reject = change.after.data();
-      const newState = reject.state;
-      const sender = reject.sender;
-      const previousState = change.before.data().state;
-      const callId = context.params.id;
+  const senderTjw = {
+    "aud": "paulasoria",
+    "iss": "paulasoria",
+    "sub": "jitsi.paulasoria.tk",
+    "room": callId,
+    "exp": 1932477254,
+    "moderator": true,
+    "contex": {
+      "user": {
+        "image": senderImage,
+        "name": senderName,
+        "email": senderEmail,
+        "uid": senderUid,
+      },
+    },
+  };
+  const senderTjwSigned = jwt.sign(senderTjw, JWT_SECRET);
 
-      admin.firestore().collection("users").doc(sender).get().then((s) => {
-        const senderName = s.get("name");
-        const senderEmail = s.get("email");
-        const senderToken = s.get("token");
-        if (previousState == "waiting" && newState == "rejected") {
-          const message = {
-            data: {
-              senderName: senderName,
-              senderEmail: senderEmail,
-              callId: callId,
-              type: "rejectedCall",
-            },
-            token: senderToken,
-          };
-          admin.messaging().send(message).then((response) => {
-            console.log("Successfully sent message: ", response);
-          }).catch((error) => {
-            console.log("Error sending message: ", error);
-          });
-          return "ok";
-        }
-        return null;
-      });
-    });
+  const receiverTjw = {
+    "aud": "paulasoria",
+    "iss": "paulasoria",
+    "sub": "jitsi.paulasoria.tk",
+    "room": callId,
+    "exp": 1932477254,
+    "moderator": true,
+    "contex": {
+      "user": {
+        "image": receiverImage,
+        "name": receiverName,
+        "email": receiverEmail,
+        "uid": receiverUid,
+      },
+    },
+  };
+  const receiverTjwSigned = jwt.sign(receiverTjw, JWT_SECRET);
 
-exports.acceptVideocall = functions.firestore
-    .document("videocalls/{id}").onUpdate((change, context) => {
-      const accept = change.after.data();
-      const newState = accept.state;
-      const sender = accept.sender;
-      const previousState = change.before.data().state;
-      const callId = context.params.id;
+  const message = {
+    data: {
+      senderUid: senderUid,
+      senderName: senderName,
+      senderEmail: senderEmail,
+      senderImage: senderImage,
+      callId: callId,
+      receiverTjw: receiverTjwSigned,
+      type: "incomingCall",
+    },
+    token: receiverToken,
+  };
+  admin.messaging().send(message).then((response) => {
+    console.log("Successfully sent message: ", response);
+  }).catch((error) => {
+    console.log("Error sending message: ", error);
+  });
 
-      admin.firestore().collection("users").doc(sender).get().then((s) => {
-        const senderToken = s.get("token");
-        if (previousState == "waiting" && newState == "accepted") {
-          const message = {
-            data: {
-              callId: callId,
-              type: "acceptedCall",
-            },
-            token: senderToken,
-          };
-          admin.messaging().send(message).then((response) => {
-            console.log("Successfully sent message: ", response);
-          }).catch((error) => {
-            console.log("Error sending message: ", error);
-          });
-          return "ok";
-        }
-        return null;
-      });
-    });
+  return senderTjwSigned;
+});
+
+exports.rejectVideocall = functions.https.onCall((data, context) => {
+  const token = data.token;
+  const callId = data.callId;
+
+  const message = {
+    data: {
+      callId: callId,
+      type: "rejectedCall",
+    },
+    token: token,
+  };
+  admin.messaging().send(message).then((response) => {
+    console.log("Successfully sent message: ", response);
+  }).catch((error) => {
+    console.log("Error sending message: ", error);
+  });
+  return "ok";
+});
+
+exports.acceptVideocall = functions.https.onCall((data, context) => {
+  const token = data.token;
+  const callId = data.callId;
+
+  const message = {
+    data: {
+      callId: callId,
+      type: "acceptedCall",
+    },
+    token: token,
+  };
+  admin.messaging().send(message).then((response) => {
+    console.log("Successfully sent message: ", response);
+  }).catch((error) => {
+    console.log("Error sending message: ", error);
+  });
+  return "ok";
+});

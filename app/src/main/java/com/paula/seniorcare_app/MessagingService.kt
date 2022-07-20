@@ -9,9 +9,11 @@ import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
+import kotlinx.coroutines.tasks.await
 
 const val channelId = 0
 const val channelName = "CHANNEL_NAME"
@@ -29,29 +31,47 @@ class MessagingService: FirebaseMessagingService() {
                 intent.putExtra("time", data["time"])
                 intent.putExtra("date", data["date"])
                 startActivity(intent)
-            } else if(data["type"] == "incomingCall") {
+            }
+            else if(data["type"] == "incomingCall") {
                 //sendNotificationIncomingCall();
                 val intent = Intent(baseContext, IncomingVideocallActivity::class.java)
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                intent.putExtra("senderUid", data["senderUid"])
                 intent.putExtra("senderName", data["senderName"])
                 intent.putExtra("senderEmail", data["senderEmail"])
                 intent.putExtra("senderImage", data["senderImage"])
                 intent.putExtra("callId", data["callId"])
-                startActivity(intent)
-            } else if(data["type"] == "acceptedCall") {
-                //Llamada aceptada
-                val intent = Intent(baseContext, VideocallActivity::class.java)
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                intent.putExtra("senderName", data["senderName"])
-                intent.putExtra("senderEmail", data["senderEmail"])
-                intent.putExtra("callId", data["callId"])
-                //intent.putExtra() //Datos de los usuarios de la videollamada
-                startActivity(intent)
-            }  else if(data["type"] == "rejectedCall"){
-                val intent = Intent(baseContext, HomeActivity::class.java)
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                intent.putExtra("receiverTjw", data["receiverTjw"])
                 startActivity(intent)
             }
+            else if(data["type"] == "acceptedCall") {
+                val intent = Intent(baseContext, VideocallActivity::class.java)
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                intent.putExtra("callId", data["callId"])
+                startActivity(intent)
+            }
+            else if(data["type"] == "rejectedCall"){
+                val db = FirebaseFirestore.getInstance()
+                val uid = FirebaseAuth.getInstance().currentUser!!.uid
+                if(getUser(db, uid)?.data?.get("role") == "Administrador"){
+                    val intent = Intent(baseContext, HomeActivity::class.java)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    startActivity(intent)
+                } else {    //Familiar
+                    val intent = Intent(baseContext, TvActivity::class.java)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    startActivity(intent)
+                }
+            }
+        }
+    }
+
+    private fun getUser(db: FirebaseFirestore, uid: String): DocumentSnapshot? {
+        return try {
+            val user = db.collection("users").document(uid).get().result
+            user
+        } catch (e: Exception) {
+            null
         }
     }
 
