@@ -3,6 +3,7 @@ package com.paula.seniorcare_app
 import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import org.jitsi.meet.sdk.JitsiMeet
 import org.jitsi.meet.sdk.JitsiMeetActivity
 import org.jitsi.meet.sdk.JitsiMeetConferenceOptions
 import java.net.MalformedURLException
@@ -85,6 +86,10 @@ class VideocallActivity() : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_videocall)
 
+        val callId = intent.getStringExtra("callId").toString()
+        val sp: SharedPreferences = getSharedPreferences("JWT_FILE", MODE_PRIVATE)
+        val jwt = sp.getString("JWT", null)
+
         val serverURL: URL = try {
             // When using JaaS, replace "https://meet.jit.si" with the proper serverURL
             URL("https://jitsi.paulasoria.tk")
@@ -92,10 +97,6 @@ class VideocallActivity() : AppCompatActivity() {
             e.printStackTrace()
             throw RuntimeException("Invalid server URL!")
         }
-
-        val callId = intent.getStringExtra("callId").toString()
-        val sp: SharedPreferences = getSharedPreferences("JWT_FILE", MODE_PRIVATE)
-        val jwt = sp.getString("JWT", null)
 
         val options = JitsiMeetConferenceOptions.Builder()
             .setServerURL(serverURL)
