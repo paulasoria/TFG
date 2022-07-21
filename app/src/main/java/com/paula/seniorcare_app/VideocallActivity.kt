@@ -98,6 +98,12 @@ class VideocallActivity() : AppCompatActivity() {
             throw RuntimeException("Invalid server URL!")
         }
 
+        val defaultOptions = JitsiMeetConferenceOptions.Builder()
+            .setServerURL(serverURL)
+            .setToken(jwt)
+            .build()
+        JitsiMeet.setDefaultConferenceOptions(defaultOptions)
+
         val options = JitsiMeetConferenceOptions.Builder()
             .setServerURL(serverURL)
             .setToken(jwt)              //HE PROBADO CON LA URL DIRECTAMENTE EN EL NAVEGADOR Y DICE QUE NO TENGO PERMISOS

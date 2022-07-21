@@ -122,7 +122,7 @@ exports.createVideocall = functions.https.onCall((data, context) => {
   const senderName = data.senderName;
   const senderEmail = data.senderEmail;
   const senderImage = data.senderImage;
-  const receiverUid = data.receiver;
+  const receiverUid = data.receiverUid;
   const receiverName = data.receiverName;
   const receiverEmail = data.receiverEmail;
   const receiverImage = data.receiverImage;
@@ -138,10 +138,10 @@ exports.createVideocall = functions.https.onCall((data, context) => {
     "moderator": true,
     "contex": {
       "user": {
-        "image": senderImage,
+        "avatar": senderImage,
         "name": senderName,
         "email": senderEmail,
-        "uid": senderUid,
+        "id": senderUid,
       },
     },
   };
@@ -156,10 +156,10 @@ exports.createVideocall = functions.https.onCall((data, context) => {
     "moderator": true,
     "contex": {
       "user": {
-        "image": receiverImage,
+        "avatar": receiverImage,
         "name": receiverName,
         "email": receiverEmail,
-        "uid": receiverUid,
+        "id": receiverUid,
       },
     },
   };

@@ -72,7 +72,7 @@ class IncomingVideocallActivity : AppCompatActivity() {
         }
     }
 
-    private fun rejectCallHttp(token: String, callId: String): Task<String?> {
+    private fun rejectCallHttp(token: String, callId: String): Task<String> {
         val data = hashMapOf(
             "token" to token,
             "callId" to callId
@@ -82,12 +82,12 @@ class IncomingVideocallActivity : AppCompatActivity() {
             .getHttpsCallable("rejectVideocall")
             .call(data)
             .continueWith { task ->
-                val result = task.result?.data as String?
+                val result = task.result?.data as String
                 result
             }
     }
 
-    private fun acceptCallHttp(token: String, callId: String): Task<String?> {
+    private fun acceptCallHttp(token: String, callId: String): Task<String> {
         val data = hashMapOf(
             "token" to token,
             "callId" to callId
@@ -97,7 +97,7 @@ class IncomingVideocallActivity : AppCompatActivity() {
             .getHttpsCallable("acceptVideocall")
             .call(data)
             .continueWith { task ->
-                val result = task.result?.data as String?
+                val result = task.result?.data as String
                 result
             }
     }
