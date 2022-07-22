@@ -62,6 +62,7 @@ class OutgoingVideocallActivity : AppCompatActivity() {
                 val receiverToken = receiver?.get("token") as String
                 callId = createCall(db, receiverUid, receiverName, senderName, date, time, "waiting", timestamp)
                 val senderTjw = createCallHttp(senderUid, senderName, senderEmail, senderImage, receiverUid, receiverName, receiverEmail, receiverImage, receiverToken, callId!!).await()
+                Log.e("OUTGOING COSA",senderTjw)
                 val sp: SharedPreferences = getSharedPreferences("TJW_FILE", MODE_PRIVATE)
                 val edit: SharedPreferences.Editor = sp.edit()
                 edit.putString("TJW",senderTjw)
