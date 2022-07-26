@@ -41,7 +41,7 @@ class MessagingService: FirebaseMessagingService() {
                 intent.putExtra("senderEmail", data["senderEmail"])
                 intent.putExtra("senderImage", data["senderImage"])
                 intent.putExtra("callId", data["callId"])
-                intent.putExtra("receiverTjw", data["receiverTjw"])
+                intent.putExtra("receiverJwt", data["receiverJwtSigned"])
                 startActivity(intent)
             }
             else if(data["type"] == "acceptedCall") {

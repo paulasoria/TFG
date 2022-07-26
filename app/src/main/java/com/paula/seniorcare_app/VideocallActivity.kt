@@ -106,7 +106,7 @@ class VideocallActivity() : AppCompatActivity() {
 
         val options = JitsiMeetConferenceOptions.Builder()
             .setServerURL(serverURL)
-            .setToken(jwt)              //HE PROBADO CON LA URL DIRECTAMENTE EN EL NAVEGADOR Y DICE QUE NO TENGO PERMISOS
+            .setToken(jwt)
             .setRoom(callId)
             .setVideoMuted(false)
             .setAudioMuted(false)

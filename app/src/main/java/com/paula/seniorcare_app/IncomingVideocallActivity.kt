@@ -34,7 +34,7 @@ class IncomingVideocallActivity : AppCompatActivity() {
         Glide.with(this).load(senderImage).centerCrop().into(imageVideocallImageView)
         val senderUid = intent.getStringExtra("senderUid").toString()
         val callId = intent.getStringExtra("callId").toString()
-        val receiverTjw = intent.getStringExtra("receiverTjw").toString()
+        val receiverJwt = intent.getStringExtra("receiverJwt").toString()
 
         rejectCallButton.setOnClickListener{
             lifecycleScope.launch {
@@ -61,9 +61,9 @@ class IncomingVideocallActivity : AppCompatActivity() {
                 }
                 val intent = Intent(baseContext, VideocallActivity::class.java)
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                val sp: SharedPreferences = getSharedPreferences("TJW_FILE", MODE_PRIVATE)
+                val sp: SharedPreferences = getSharedPreferences("JWT_FILE", MODE_PRIVATE)
                 val edit: SharedPreferences.Editor = sp.edit()
-                edit.putString("TJW",receiverTjw)
+                edit.putString("JWT",receiverJwt)
                 edit.apply()
                 intent.putExtra("callId",callId)
                 startActivity(intent)
