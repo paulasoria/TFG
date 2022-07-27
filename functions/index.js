@@ -129,16 +129,12 @@ exports.createVideocall = functions.https.onCall((data, context) => {
   const receiverToken = data.receiverToken;
   const callId = data.callId;
 
-  const header = {
-    "alg": "HS256",
-    "typ": "JWT",
-  };
-
   const senderJwt = {
     "aud": "paulasoria",
     "iss": "paulasoria",
     "sub": "jitsi.paulasoria.tk",
     "room": callId,
+    "iat": 1932477254,
     "exp": 1932477254,
     "moderator": true,
     "contex": {
@@ -150,14 +146,13 @@ exports.createVideocall = functions.https.onCall((data, context) => {
       },
     },
   };
-  const senderJwtSigned = jwt.sign(JSON.stringify(header)+
-      "."+JSON.stringify(senderJwt), JWT_SECRET);
 
   const receiverJwt = {
     "aud": "paulasoria",
     "iss": "paulasoria",
     "sub": "jitsi.paulasoria.tk",
     "room": callId,
+    "iat": 1932477254,
     "exp": 1932477254,
     "moderator": true,
     "contex": {
@@ -169,8 +164,6 @@ exports.createVideocall = functions.https.onCall((data, context) => {
       },
     },
   };
-  const receiverJwtSigned = jwt.sign(JSON.stringify(header)+
-    "."+JSON.stringify(receiverJwt), JWT_SECRET);
 
   const message = {
     data: {
@@ -179,7 +172,7 @@ exports.createVideocall = functions.https.onCall((data, context) => {
       senderEmail: senderEmail,
       senderImage: senderImage,
       callId: callId,
-      receiverJwt: receiverJwtSigned,
+      receiverJwt: jwt.sign(receiverJwt, JWT_SECRET),
       type: "incomingCall",
     },
     token: receiverToken,
@@ -190,7 +183,7 @@ exports.createVideocall = functions.https.onCall((data, context) => {
     console.log("Error sending message: ", error);
   });
 
-  return senderJwtSigned;
+  return jwt.sign(senderJwt, JWT_SECRET);
 });
 
 exports.rejectVideocall = functions.https.onCall((data, context) => {

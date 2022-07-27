@@ -6,6 +6,7 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.google.firebase.auth.FirebaseAuth
@@ -41,7 +42,7 @@ class MessagingService: FirebaseMessagingService() {
                 intent.putExtra("senderEmail", data["senderEmail"])
                 intent.putExtra("senderImage", data["senderImage"])
                 intent.putExtra("callId", data["callId"])
-                intent.putExtra("receiverJwt", data["receiverJwtSigned"])
+                intent.putExtra("receiverJwt", data["receiverJwt"])
                 startActivity(intent)
             }
             else if(data["type"] == "acceptedCall") {
