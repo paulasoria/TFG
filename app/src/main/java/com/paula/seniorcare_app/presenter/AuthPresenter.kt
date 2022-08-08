@@ -9,7 +9,7 @@ class AuthPresenter(private val authView: AuthContract.View, private val authInt
         return authInteractor.getUser(uid)
     }
 
-    override suspend fun createUserFromGoogle(account: GoogleSignInAccount): Boolean {
-        return authInteractor.createUserFromGoogle(account)
+    override suspend fun createUserFromGoogle(account: GoogleSignInAccount, googleRole: String): Boolean {
+        return authInteractor.createUserFromGoogle(account, googleRole)
     }
 }

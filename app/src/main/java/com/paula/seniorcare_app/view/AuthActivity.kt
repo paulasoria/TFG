@@ -1,20 +1,19 @@
 package com.paula.seniorcare_app.view
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.view.Surface
 import android.view.View
-import android.view.WindowManager
+import android.widget.EditText
+import android.widget.RadioButton
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
-import com.google.firebase.firestore.FirebaseFirestore
 import com.paula.seniorcare_app.R
 import com.paula.seniorcare_app.contract.AuthContract
 import com.paula.seniorcare_app.interactor.AuthInteractor
@@ -51,11 +50,6 @@ class AuthActivity : AppCompatActivity(), AuthContract.View {
             }
         }
 
-        if(getRotation(applicationContext) == "horizontal"){
-            signUpButton.isEnabled = false
-            googleButton.isEnabled = false
-        }
-
         logInButton.setOnClickListener {
             val logInIntent = Intent(this, LogInActivity::class.java)
             startActivity(logInIntent)
@@ -80,14 +74,6 @@ class AuthActivity : AppCompatActivity(), AuthContract.View {
         authLayout.visibility = View.VISIBLE
     }
 
-    override fun getRotation(context: Context): String {
-        return when ((context.getSystemService(WINDOW_SERVICE) as WindowManager).defaultDisplay.orientation) {
-            Surface.ROTATION_0, Surface.ROTATION_180 -> "vertical"
-            Surface.ROTATION_90 -> "horizontal"
-            else -> "horizontal"
-        }
-    }
-
     override fun showAlertGoogle(){
         val builder = AlertDialog.Builder(this)
         builder.setTitle("Error")
@@ -95,6 +81,39 @@ class AuthActivity : AppCompatActivity(), AuthContract.View {
         builder.setPositiveButton("Aceptar",null)
         val dialog: AlertDialog = builder.create()
         dialog.show()
+    }
+
+    override fun showChooseRoleDialog(account: GoogleSignInAccount){
+        val builder = AlertDialog.Builder(this)
+        val inflater = layoutInflater
+        val dialogLayout = inflater.inflate(R.layout.choose_role_layout, null)
+        val familiarRadioButton = dialogLayout.findViewById<RadioButton>(R.id.familiarRadioButton)
+        val adminRadioButton = dialogLayout.findViewById<RadioButton>(R.id.adminRadioButton)
+
+        builder.setTitle("Escoge tu rol de usuario")
+        builder.setPositiveButton("Aceptar") { _, _ ->
+            if(familiarRadioButton.isChecked) {
+                lifecycleScope.launch {
+                    withContext(Dispatchers.IO) {
+                        authPresenter.createUserFromGoogle(account, "Familiar")
+                        val tvIntent = Intent(baseContext, TvActivity::class.java)
+                        startActivity(tvIntent)
+                    }
+                }
+            } else if(adminRadioButton.isChecked) {
+                lifecycleScope.launch {
+                    withContext(Dispatchers.IO) {
+                        authPresenter.createUserFromGoogle(account, "Administrador")
+                        val homeIntent = Intent(baseContext, HomeActivity::class.java)
+                        startActivity(homeIntent)
+                    }
+                }
+            }
+
+        }
+        builder.setNegativeButton("Cancelar", null)
+        builder.setView(dialogLayout)
+        builder.show()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -107,13 +126,7 @@ class AuthActivity : AppCompatActivity(), AuthContract.View {
                     val credential = GoogleAuthProvider.getCredential(account.idToken, null)
                     FirebaseAuth.getInstance().signInWithCredential(credential).addOnCompleteListener {
                         if (it.isSuccessful) {
-                            lifecycleScope.launch {
-                                withContext(Dispatchers.IO) {
-                                    authPresenter.createUserFromGoogle(account)
-                                }
-                                val homeIntent = Intent(baseContext, HomeActivity::class.java)
-                                startActivity(homeIntent)
-                            }
+                            showChooseRoleDialog(account)
                         } else {
                             showAlertGoogle()
                         }

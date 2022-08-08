@@ -9,8 +9,8 @@
     <string name="no_relatives">No tienes familiares agregados</string>
     <string name="no_petitions">No tienes solicitudes pendientes</string>
     <string name="no_videocalls_history">No tienes videollamadas registradas en el historial</string>
-    <string name="no_alerts_history">No tienes alertas registradas en el historial</string>
-    <string name="no_config_alerts">No tienes alertas configuradas</string>
+    <string name="no_alerts_history">"No tienes nada en el historial"</string>
+    <string name="no_config_alerts">"No tienes nada en el historial"</string>
     <string name="delete_relative">¿Seguro que quieres borrar a este familiar?</string>
     <string name="delete_alert">¿Seguro que quieres borrar esta alerta?</string>
     <string-array name="user_role">

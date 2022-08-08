@@ -20,7 +20,7 @@
         <ImageView
             android:id="@+id/mainImage"
             android:layout_width="match_parent"
-            android:layout_height="390dp"
+            android:layout_height="410dp"
             android:layout_weight="1"
             app:srcCompat="@drawable/foto_principal" />
 

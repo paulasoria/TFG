@@ -107,9 +107,7 @@ class HistoryFragment : Fragment(), HistoryContract.View {
         val videocallAdapter: VideocallAdapter?
         if(videocallList.isEmpty()){
             noHistoryTextView.visibility = View.VISIBLE
-            //noAlertsTextView.text = getString(R.string.no_config_alerts)
-            noHistoryTextView.text = "No tienes nada en el historial"
-            //QUITAR CONTENIDO DEL ADAPTER ???
+            noHistoryTextView.text = getString(R.string.no_config_alerts)
             videocallAdapter = VideocallAdapter(videocallList, requireContext())
             historyListView.adapter = videocallAdapter
         } else {
@@ -123,9 +121,7 @@ class HistoryFragment : Fragment(), HistoryContract.View {
         val alertAdapter: HistoryAlertAdapter?
         if(historyList.isEmpty()){
             noHistoryTextView.visibility = View.VISIBLE
-            //noAlertsTextView.text = getString(R.string.no_config_alerts)
-            noHistoryTextView.text = "No tienes nada en el historial"
-            //QUITAR CONTENIDO DEL ADAPTER ???
+            noHistoryTextView.text = getString(R.string.no_config_alerts)
             alertAdapter = HistoryAlertAdapter(historyList, requireContext())
             historyListView.adapter = alertAdapter
         } else {

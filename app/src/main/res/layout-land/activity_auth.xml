@@ -10,9 +10,10 @@
 
     <ImageView
         android:id="@+id/mainImage"
-        android:layout_width="330dp"
+        android:layout_width="400dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
+        android:layout_margin="50dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -37,25 +38,27 @@
             android:text="SeniorCare"
             android:textAlignment="center"
             android:textColor="@color/white"
-            android:textSize="60sp" />
+            android:textSize="60sp"/>
 
         <Button
             android:id="@+id/logInButton"
-            android:layout_width="match_parent"
+            android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
             android:layout_weight="1"
-            android:text="Iniciar sesión" />
+            android:text="Iniciar sesión"
+            android:layout_gravity="center_horizontal"/>
 
         <Button
             android:id="@+id/signUpButton"
-            android:layout_width="match_parent"
+            android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
             android:layout_weight="1"
-            android:text="Registrarse" />
+            android:text="Registrarse"
+            android:layout_gravity="center_horizontal"/>
 
         <View
             android:layout_width="match_parent"
@@ -75,14 +78,15 @@
 
         <Button
             android:id="@+id/googleButton"
-            android:layout_width="match_parent"
+            android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
             android:text="Accede con Google"
             app:icon="@drawable/ic_google"
             app:iconGravity="textStart"
-            app:iconSize="25dp" />
+            app:iconSize="25dp"
+            android:layout_gravity="center_horizontal"/>
 
     </LinearLayout>
 

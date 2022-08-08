@@ -55,10 +55,8 @@ class ProfileTvFragment : Fragment(), ProfileTvContract.View {
             nameTextView.text = user?.get("name") as String?
             emailTextView.text = user?.get("email") as String?
             roleTextView.text = user?.get("role") as String?
-            providerTextView.text = user?.get("provider") as String
             downloadImage = user?.get("image") as String?
             Glide.with(this@ProfileTvFragment).load(downloadImage.toString()).centerCrop().into(profileImageView)
-
         }
 
         editImageButton.setOnClickListener {
@@ -74,7 +72,6 @@ class ProfileTvFragment : Fragment(), ProfileTvContract.View {
             val authIntent = Intent(context, AuthActivity::class.java)
             startActivity(authIntent)
         }
-
         return view
     }
 

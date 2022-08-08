@@ -5,6 +5,7 @@
     android:layout_height="500dp"
     android:orientation="vertical"
     android:backgroundTint="@color/light_grayish_blue"
+    android:focusable="true"
     android:layout_margin="10dp">
 
     <LinearLayout
