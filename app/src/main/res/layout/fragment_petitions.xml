@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:background="@color/grayish_blue"
     android:padding="10dp"
-    tools:context=".PetitionsFragment">
+    tools:context=".view.PetitionsFragment">
 
     <LinearLayout
         android:layout_width="match_parent"

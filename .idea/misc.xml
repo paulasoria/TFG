@@ -7,7 +7,7 @@
         <entry key="..\:/Users/paula/AndroidStudioProjects/SeniorCare_App/app/src/main/res/layout-land/activity_auth.xml" value="0.22" />
         <entry key="..\:/Users/paula/AndroidStudioProjects/SeniorCare_App/app/src/main/res/layout-land/activity_incoming_videocall.xml" value="0.17328042328042328" />
         <entry key="..\:/Users/paula/AndroidStudioProjects/SeniorCare_App/app/src/main/res/layout-land/activity_outgoing_videocall.xml" value="0.33" />
-        <entry key="..\:/Users/paula/AndroidStudioProjects/SeniorCare_App/app/src/main/res/layout-land/activity_profile.xml" value="0.15" />
+        <entry key="..\:/Users/paula/AndroidStudioProjects/SeniorCare_App/app/src/main/res/layout-land/activity_profile.xml" value="0.25" />
         <entry key="..\:/Users/paula/AndroidStudioProjects/SeniorCare_App/app/src/main/res/layout-land/activity_relative_profile.xml" value="0.33" />
         <entry key="..\:/Users/paula/AndroidStudioProjects/SeniorCare_App/app/src/main/res/layout-land/activity_sign_up.xml" value="0.22" />
         <entry key="..\:/Users/paula/AndroidStudioProjects/SeniorCare_App/app/src/main/res/layout-land/fragment_profile_tv.xml" value="0.21" />
@@ -30,7 +30,7 @@
         <entry key="..\:/Users/paula/AndroidStudioProjects/SeniorCare_App/app/src/main/res/layout/fragment_history.xml" value="0.16" />
         <entry key="..\:/Users/paula/AndroidStudioProjects/SeniorCare_App/app/src/main/res/layout/fragment_profile_tv.xml" value="0.13595553655408293" />
         <entry key="..\:/Users/paula/AndroidStudioProjects/SeniorCare_App/app/src/main/res/layout/fragment_relatives.xml" value="0.1" />
-        <entry key="..\:/Users/paula/AndroidStudioProjects/SeniorCare_App/app/src/main/res/layout/fragment_relatives_tv.xml" value="0.1" />
+        <entry key="..\:/Users/paula/AndroidStudioProjects/SeniorCare_App/app/src/main/res/layout/fragment_relatives_tv.xml" value="0.25" />
         <entry key="..\:/Users/paula/AndroidStudioProjects/SeniorCare_App/app/src/main/res/layout/fragment_tv.xml" value="0.1" />
         <entry key="..\:/Users/paula/AndroidStudioProjects/SeniorCare_App/app/src/main/res/layout/history_item.xml" value="0.22" />
         <entry key="..\:/Users/paula/AndroidStudioProjects/SeniorCare_App/app/src/main/res/layout/petition_item.xml" value="0.22" />

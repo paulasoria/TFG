@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="@color/grayish_blue"
     android:padding="10dp"
-    tools:context=".AddRelativeFragment">
+    tools:context=".view.AddRelativeFragment">
 
     <LinearLayout
         android:layout_width="match_parent"

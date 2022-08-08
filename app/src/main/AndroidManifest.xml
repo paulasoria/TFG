@@ -3,6 +3,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.paula.seniorcare_app">
 
+    <uses-feature
+        android:name="android.software.leanback"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.touchscreen"
+        android:required="false" />
+
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -17,16 +24,16 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SeniorCare_App">
         <activity
-            android:name=".VideocallActivity"
+            android:name=".view.VideocallActivity"
             android:exported="false" />
         <activity
-            android:name=".IncomingVideocallActivity"
+            android:name=".view.IncomingVideocallActivity"
             android:exported="false" />
         <activity
-            android:name=".TvActivity"
+            android:name=".view.TvActivity"
             android:exported="false" />
         <activity
-            android:name=".OutgoingVideocallActivity"
+            android:name=".view.OutgoingVideocallActivity"
             android:exported="false" />
 
         <meta-data
@@ -37,35 +44,35 @@
             android:resource="@color/turquoise" />
 
         <activity
-            android:name=".RelativeProfileActivity"
+            android:name=".view.RelativeProfileActivity"
             android:exported="false" />
         <activity
-            android:name=".HomeActivity"
+            android:name=".view.HomeActivity"
             android:exported="false" />
         <activity
-            android:name=".ProfileActivity"
+            android:name=".view.ProfileActivity"
             android:exported="false" />
         <activity
-            android:name=".SignUpActivity"
+            android:name=".view.SignUpActivity"
             android:exported="false" />
         <activity
-            android:name=".LogInActivity"
+            android:name=".view.LogInActivity"
             android:exported="false" />
         <activity
-            android:name=".ShowAlertActivity"
+            android:name=".view.ShowAlertActivity"
             android:exported="false" />
         <activity
-            android:name=".AuthActivity"
+            android:name=".view.AuthActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
             </intent-filter>
         </activity>
 
         <service
-            android:name=".MessagingService"
+            android:name=".service.MessagingService"
             android:exported="false"
             tools:ignore="Instantiatable">
             <intent-filter>

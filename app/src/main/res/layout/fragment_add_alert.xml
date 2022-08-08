@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/grayish_blue"
     android:padding="20dp"
-    tools:context=".AddAlertFragment">
+    tools:context=".view.AddAlertFragment">
 
     <LinearLayout
         android:layout_width="match_parent"

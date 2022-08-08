@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/dark_blue"
-    tools:context=".ProfileActivity">
+    tools:context=".view.ProfileActivity">
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -48,7 +48,7 @@
 
             <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="400dp"
+                android:layout_height="match_parent"
                 android:orientation="vertical">
 
                 <View
@@ -157,40 +157,6 @@
                         android:text="Rol"
                         android:textColor="@color/super_light_grayish_blue"
                         android:textSize="18sp" />
-                </LinearLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="8dp" />
-
-                <LinearLayout
-                    android:id="@+id/providerLinearLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="30dp"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginRight="16dp"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="100dp"
-                        android:layout_height="match_parent"
-                        android:text="Proveedor"
-                        android:textColor="@color/white"
-                        android:textSize="18sp" />
-
-                    <View
-                        android:layout_width="10dp"
-                        android:layout_height="match_parent" />
-
-                    <TextView
-                        android:id="@+id/providerTextView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:text="Proveedor"
-                        android:textColor="@color/super_light_grayish_blue"
-                        android:textSize="18sp" />
-
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>

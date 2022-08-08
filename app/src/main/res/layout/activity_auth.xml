@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/dark_blue"
     android:textAlignment="center"
-    tools:context=".AuthActivity">
+    tools:context=".view.AuthActivity">
 
     <LinearLayout
         android:id="@+id/authLayout"

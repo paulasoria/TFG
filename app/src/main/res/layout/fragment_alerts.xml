@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/grayish_blue"
-    tools:context=".AlertsFragment">
+    tools:context=".view.AlertsFragment">
 
     <ListView
         android:id="@+id/alertsListView"
