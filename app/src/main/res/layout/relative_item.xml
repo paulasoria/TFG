@@ -4,8 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="500dp"
     android:orientation="vertical"
-    android:backgroundTint="@color/light_grayish_blue"
-    android:focusable="true"
+    app:cardBackgroundColor="@drawable/relative_item_selector"
     android:layout_margin="10dp">
 
     <LinearLayout
@@ -28,6 +27,7 @@
             android:paddingLeft="10dp"
             android:textSize="20sp"
             android:text="Nombre"
+            android:textColor="@color/white"
             android:textAllCaps="true"/>
 
         <TextView
@@ -36,7 +36,8 @@
             android:layout_height="wrap_content"
             android:padding="10dp"
             android:textSize="14sp"
-            android:text="Email"/>
+            android:text="Email"
+            android:textColor="@color/white"/>
 
     </LinearLayout>
 

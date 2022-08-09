@@ -14,13 +14,14 @@
         android:orientation="vertical"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:padding="20dp">
+        app:layout_constraintBottom_toBottomOf="parent">
 
         <ImageView
             android:id="@+id/profileImageView"
             android:layout_width="300dp"
             android:layout_height="300dp"
+            android:layout_marginStart="100dp"
+            android:layout_marginEnd="50dp"
             android:layout_gravity="left"
             android:maxWidth="150dp"
             android:maxHeight="150dp"

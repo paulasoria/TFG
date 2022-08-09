@@ -111,6 +111,10 @@ class RelativesFragment : Fragment(), RelativesContract.View {
             noResultsTextView.visibility = View.INVISIBLE
             adapter = RelativesAdapter(addedRelativesList, requireContext())
             addedRelativesGridView.adapter = adapter
+            /*addedRelativesGridView.setOnKeyListener { _,_,_ ->
+                addedRelativesGridView.setSelection(addedRelativesGridView.selectedItemPosition + 1)
+                true
+            }*/
             addedRelativesGridView.setOnItemClickListener{ _,_,position,_ ->
                 val intent = Intent(context, RelativeProfileActivity::class.java)
                 intent.putExtra("user", addedRelativesList[position])

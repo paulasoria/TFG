@@ -4,13 +4,15 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Users/paula/AndroidStudioProjects/SeniorCare_App/app/src/main/res/drawable/default_background.xml" value="0.123" />
+        <entry key="..\:/Users/paula/AndroidStudioProjects/SeniorCare_App/app/src/main/res/drawable/relative_item_card_view.xml" value="0.1" />
+        <entry key="..\:/Users/paula/AndroidStudioProjects/SeniorCare_App/app/src/main/res/drawable/relative_item_selector.xml" value="0.176" />
         <entry key="..\:/Users/paula/AndroidStudioProjects/SeniorCare_App/app/src/main/res/layout-land/activity_auth.xml" value="0.1" />
         <entry key="..\:/Users/paula/AndroidStudioProjects/SeniorCare_App/app/src/main/res/layout-land/activity_incoming_videocall.xml" value="0.17328042328042328" />
         <entry key="..\:/Users/paula/AndroidStudioProjects/SeniorCare_App/app/src/main/res/layout-land/activity_outgoing_videocall.xml" value="0.33" />
         <entry key="..\:/Users/paula/AndroidStudioProjects/SeniorCare_App/app/src/main/res/layout-land/activity_profile.xml" value="0.25" />
-        <entry key="..\:/Users/paula/AndroidStudioProjects/SeniorCare_App/app/src/main/res/layout-land/activity_relative_profile.xml" value="0.33" />
+        <entry key="..\:/Users/paula/AndroidStudioProjects/SeniorCare_App/app/src/main/res/layout-land/activity_relative_profile.xml" value="0.22" />
         <entry key="..\:/Users/paula/AndroidStudioProjects/SeniorCare_App/app/src/main/res/layout-land/activity_sign_up.xml" value="0.22" />
-        <entry key="..\:/Users/paula/AndroidStudioProjects/SeniorCare_App/app/src/main/res/layout-land/fragment_profile_tv.xml" value="0.21" />
+        <entry key="..\:/Users/paula/AndroidStudioProjects/SeniorCare_App/app/src/main/res/layout-land/fragment_profile_tv.xml" value="0.13" />
         <entry key="..\:/Users/paula/AndroidStudioProjects/SeniorCare_App/app/src/main/res/layout/activity_auth.xml" value="0.18" />
         <entry key="..\:/Users/paula/AndroidStudioProjects/SeniorCare_App/app/src/main/res/layout/activity_auth_tv.xml" value="0.1" />
         <entry key="..\:/Users/paula/AndroidStudioProjects/SeniorCare_App/app/src/main/res/layout/activity_details.xml" value="0.1" />
