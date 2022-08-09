@@ -85,7 +85,7 @@ class RelativeProfileInteractor: RelativeProfileContract.Interactor {
         return try {
             val db = FirebaseFirestore.getInstance()
             val currentUid = FirebaseAuth.getInstance().currentUser!!.uid
-            return db.collection("users").document(currentUid).collection("petitions").whereEqualTo("receiver",receiver).get().await()
+            return db.collection("users").document(currentUid).collection("petitions").whereEqualTo("receiver",receiver).whereEqualTo("state","pending").get().await()
         } catch (e: Exception) {
             Log.e(ContentValues.TAG, "CONSULTING IF PETITION IS PENDING ERROR", e)
             null
@@ -96,7 +96,7 @@ class RelativeProfileInteractor: RelativeProfileContract.Interactor {
         return try {
             val db = FirebaseFirestore.getInstance()
             val currentUid = FirebaseAuth.getInstance().currentUser!!.uid
-            return db.collection("users").document(currentUid).collection("petitions").whereEqualTo("sender",sender).get().await()
+            return db.collection("users").document(currentUid).collection("petitions").whereEqualTo("sender",sender).whereEqualTo("state","pending").get().await()
         } catch (e: Exception) {
             Log.e(ContentValues.TAG, "CONSULTING IF PETITION IS PENDING ERROR", e)
             null
