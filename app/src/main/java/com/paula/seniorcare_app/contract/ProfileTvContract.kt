@@ -5,7 +5,7 @@ import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.StorageReference
 
-class ProfileTvContract {
+interface ProfileTvContract {
     interface View {
         fun selectImageFromGallery()
         fun deleteUserData()
