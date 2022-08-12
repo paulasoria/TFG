@@ -65,32 +65,7 @@ class LogInActivity : AppCompatActivity(), LogInContract.View {
         }
 
         resetPasswordButton.setOnClickListener {
-            val builder = AlertDialog.Builder(this)
-            val view = layoutInflater.inflate(R.layout.activity_reset_password, null)
-            builder.setView(view)
-            builder.setTitle("Contraseña olvidada")
-            builder.setMessage("Escribe tu email y te enviaremos un correo para reestablecer tu contraseña")
-            builder.setPositiveButton("Aceptar") { _,_ ->
-                val email = view.resetPasswordEditText.text.toString()
-                if (email.isNotEmpty()) {
-                    lifecycleScope.launch {
-                        withContext(Dispatchers.IO) {
-                            if (logInPresenter.resetPassword(email)) {
-                                withContext(Dispatchers.Main) {
-                                    Toast.makeText(baseContext, "Correo enviado", Toast.LENGTH_SHORT).show()
-                                }
-                            } else {
-                                withContext(Dispatchers.Main) {
-                                    Toast.makeText(baseContext, "Se ha producido un error", Toast.LENGTH_SHORT).show()
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            builder.setNegativeButton("Cancelar",null)
-            val dialog: AlertDialog = builder.create()
-            dialog.show()
+            showResetPasswordDialog()
         }
     }
 
@@ -115,6 +90,34 @@ class LogInActivity : AppCompatActivity(), LogInContract.View {
         } else {
             Toast.makeText(this, "Se ha producido un error", Toast.LENGTH_SHORT).show()
         }
+    }
 
+    override fun showResetPasswordDialog(){
+        val builder = AlertDialog.Builder(this)
+        val view = layoutInflater.inflate(R.layout.activity_reset_password, null)
+        builder.setView(view)
+        builder.setTitle("Contraseña olvidada")
+        builder.setMessage("Escribe tu email y te enviaremos un correo para reestablecer tu contraseña")
+        builder.setPositiveButton("Aceptar") { _,_ ->
+            val email = view.resetPasswordEditText.text.toString()
+            if (email.isNotEmpty()) {
+                lifecycleScope.launch {
+                    withContext(Dispatchers.IO) {
+                        if (logInPresenter.resetPassword(email)) {
+                            withContext(Dispatchers.Main) {
+                                Toast.makeText(baseContext, "Correo enviado", Toast.LENGTH_SHORT).show()
+                            }
+                        } else {
+                            withContext(Dispatchers.Main) {
+                                Toast.makeText(baseContext, "Se ha producido un error", Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        builder.setNegativeButton("Cancelar",null)
+        val dialog: AlertDialog = builder.create()
+        dialog.show()
     }
 }

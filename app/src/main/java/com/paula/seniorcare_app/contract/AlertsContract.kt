@@ -7,6 +7,7 @@ import com.paula.seniorcare_app.dataclass.Alert
 
 interface AlertsContract {
     interface View {
+        fun showConfiguredAlerts()
         fun showResults(alertsList: ArrayList<Alert>)
     }
 

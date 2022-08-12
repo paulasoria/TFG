@@ -33,10 +33,16 @@ class AlertsFragment : Fragment(), AlertsContract.View {
         val addAlertButton:FloatingActionButton = view.findViewById(R.id.addAlertButton)
         val addAlertFragment = AddAlertFragment()
 
+        showConfiguredAlerts()
+
         addAlertButton.setOnClickListener {
             activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.wrapper,addAlertFragment)?.commit()
         }
 
+        return view
+    }
+
+    override fun showConfiguredAlerts() {
         val db = FirebaseFirestore.getInstance()
         val alertsList = ArrayList<Alert>()
         alertsList.clear()
@@ -66,8 +72,6 @@ class AlertsFragment : Fragment(), AlertsContract.View {
             }
             showResults(alertsList)
         }
-
-        return view
     }
 
     override fun showResults(alertsList: ArrayList<Alert>) {

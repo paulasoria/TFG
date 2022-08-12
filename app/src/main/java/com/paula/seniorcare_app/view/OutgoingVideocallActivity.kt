@@ -76,17 +76,20 @@ class OutgoingVideocallActivity : AppCompatActivity(), OutgoingVideocallContract
             }
         }
 
-        endCallButton.setOnClickListener{
-            lifecycleScope.launch {
-                withContext(Dispatchers.IO) {
-                    outgoingVideocallPresenter.changeStateCall(db, callId!!, "lost")
-                    //HTTP FUNCTION
-                    val receiver = outgoingVideocallPresenter.getUser(db, receiverUid)
-                    val receiverToken = receiver?.get("token") as String
-                    outgoingVideocallPresenter.rejectCallHttp(receiverToken, callId!!)
-                }
-                finish()
+        endVideocallButton.setOnClickListener{
+            callId?.let { it1 -> endVideocall(db, it1, receiverUid) }
+        }
+    }
+
+    override fun endVideocall(db: FirebaseFirestore, callId: String, receiverUid: String) {
+        lifecycleScope.launch {
+            withContext(Dispatchers.IO) {
+                outgoingVideocallPresenter.changeStateCall(db, callId!!, "lost")
+                val receiver = outgoingVideocallPresenter.getUser(db, receiverUid)
+                val receiverToken = receiver?.get("token") as String
+                outgoingVideocallPresenter.rejectCallHttp(receiverToken, callId!!)
             }
+            finish()
         }
     }
 }

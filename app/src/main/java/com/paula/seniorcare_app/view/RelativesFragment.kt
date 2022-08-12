@@ -34,51 +34,23 @@ class RelativesFragment : Fragment(), RelativesContract.View {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val view:View = inflater.inflate(R.layout.fragment_relatives, container, false)
-        val addRelativeButton:Button = view.findViewById(R.id.addRelativeButton)
+        val searchRelativeButton:Button = view.findViewById(R.id.searchRelativeButton)
         val petitionsButton:FloatingActionButton = view.findViewById(R.id.petitionsButton)
 
-        addRelativeButton.setOnClickListener {
-            val uid = FirebaseAuth.getInstance().currentUser!!.uid
-            val db = FirebaseFirestore.getInstance()
-            lifecycleScope.launch {
-                withContext(Dispatchers.IO) {
-                    val user = relativesPresenter.getUser(db, uid)
-                    if(user?.get("role") == "Administrador"){
-                        activity?.supportFragmentManager?.beginTransaction()?.replace(
-                            R.id.wrapper,
-                            AddRelativeFragment()
-                        )?.commit()
-                    } else {    //Familiar
-                        activity?.supportFragmentManager?.beginTransaction()?.replace(
-                            R.id.wrapper_tv,
-                            AddRelativeFragment()
-                        )?.commit()
-                    }
-                }
-            }
+        showAddedRelatives()
+
+        searchRelativeButton.setOnClickListener {
+            searchRelative()
         }
 
         petitionsButton.setOnClickListener {
-            val uid = FirebaseAuth.getInstance().currentUser!!.uid
-            val db = FirebaseFirestore.getInstance()
-            lifecycleScope.launch {
-                withContext(Dispatchers.IO) {
-                    val user = relativesPresenter.getUser(db, uid)
-                    if(user?.get("role") == "Administrador") {
-                        activity?.supportFragmentManager?.beginTransaction()?.replace(
-                            R.id.wrapper,
-                            PetitionsFragment()
-                        )?.commit()
-                    } else {    //Familiar
-                        activity?.supportFragmentManager?.beginTransaction()?.replace(
-                            R.id.wrapper_tv,
-                            PetitionsFragment()
-                        )?.commit()
-                    }
-                }
-            }
+            showPetitions()
         }
 
+        return view
+    }
+
+    override fun showAddedRelatives(){
         val db = FirebaseFirestore.getInstance()
         val addedRelativesList = ArrayList<User>()
         addedRelativesList.clear()
@@ -97,7 +69,49 @@ class RelativesFragment : Fragment(), RelativesContract.View {
             }
             showResults(addedRelativesList)
         }
-        return view
+    }
+
+    override fun showPetitions() {
+        val uid = FirebaseAuth.getInstance().currentUser!!.uid
+        val db = FirebaseFirestore.getInstance()
+        lifecycleScope.launch {
+            withContext(Dispatchers.IO) {
+                val user = relativesPresenter.getUser(db, uid)
+                if(user?.get("role") == "Administrador") {
+                    activity?.supportFragmentManager?.beginTransaction()?.replace(
+                        R.id.wrapper,
+                        PetitionsFragment()
+                    )?.commit()
+                } else {    //Familiar
+                    activity?.supportFragmentManager?.beginTransaction()?.replace(
+                        R.id.wrapper_tv,
+                        PetitionsFragment()
+                    )?.commit()
+                }
+            }
+        }
+
+    }
+
+    override fun searchRelative(){
+        val uid = FirebaseAuth.getInstance().currentUser!!.uid
+        val db = FirebaseFirestore.getInstance()
+        lifecycleScope.launch {
+            withContext(Dispatchers.IO) {
+                val user = relativesPresenter.getUser(db, uid)
+                if(user?.get("role") == "Administrador"){
+                    activity?.supportFragmentManager?.beginTransaction()?.replace(
+                        R.id.wrapper,
+                        AddRelativeFragment()
+                    )?.commit()
+                } else {    //Familiar
+                    activity?.supportFragmentManager?.beginTransaction()?.replace(
+                        R.id.wrapper_tv,
+                        AddRelativeFragment()
+                    )?.commit()
+                }
+            }
+        }
     }
 
     override fun showResults(addedRelativesList: ArrayList<User>) {

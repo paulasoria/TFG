@@ -3,7 +3,6 @@ package com.paula.seniorcare_app.view
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import android.widget.EditText
 import android.widget.RadioButton
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -33,22 +32,7 @@ class AuthActivity : AppCompatActivity(), AuthContract.View {
         setContentView(R.layout.activity_auth)
         authPresenter = AuthPresenter(this, AuthInteractor())
 
-        if(FirebaseAuth.getInstance().currentUser != null){
-            authLayout.visibility = View.INVISIBLE
-            val uid = FirebaseAuth.getInstance().currentUser!!.uid
-            lifecycleScope.launch {
-                withContext(Dispatchers.IO) {
-                    val user = authPresenter.getUser(uid)
-                    if(user?.get("role") == "Administrador") {
-                        val homeIntent = Intent(baseContext, HomeActivity::class.java)
-                        startActivity(homeIntent)
-                    } else {
-                        val tvIntent = Intent(baseContext, TvActivity::class.java)
-                        startActivity(tvIntent)
-                    }
-                }
-            }
-        }
+        loadSession()
 
         logInButton.setOnClickListener {
             val logInIntent = Intent(this, LogInActivity::class.java)
@@ -66,6 +50,25 @@ class AuthActivity : AppCompatActivity(), AuthContract.View {
             val googleClient = GoogleSignIn.getClient(this, googleConf)
             googleClient.signOut()
             startActivityForResult(googleClient.signInIntent, GOOGLE_SIGN_IN)
+        }
+    }
+
+    override fun loadSession(){
+        if(FirebaseAuth.getInstance().currentUser != null){
+            authLayout.visibility = View.INVISIBLE
+            val uid = FirebaseAuth.getInstance().currentUser!!.uid
+            lifecycleScope.launch {
+                withContext(Dispatchers.IO) {
+                    val user = authPresenter.getUser(uid)
+                    if(user?.get("role") == "Administrador") {
+                        val homeIntent = Intent(baseContext, HomeActivity::class.java)
+                        startActivity(homeIntent)
+                    } else {
+                        val tvIntent = Intent(baseContext, TvActivity::class.java)
+                        startActivity(tvIntent)
+                    }
+                }
+            }
         }
     }
 

@@ -10,7 +10,7 @@ import androidx.lifecycle.lifecycleScope
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.paula.seniorcare_app.R
-import com.paula.seniorcare_app.adapter.HistoryAlertAdapter
+import com.paula.seniorcare_app.adapter.HistoryAdapter
 import com.paula.seniorcare_app.adapter.VideocallAdapter
 import com.paula.seniorcare_app.contract.HistoryContract
 import com.paula.seniorcare_app.interactor.HistoryInteractor
@@ -118,16 +118,16 @@ class HistoryFragment : Fragment(), HistoryContract.View {
     }
 
     override fun showResultsAlerts(historyList: ArrayList<History>) {
-        val alertAdapter: HistoryAlertAdapter?
+        val adapter: HistoryAdapter?
         if(historyList.isEmpty()){
             noHistoryTextView.visibility = View.VISIBLE
             noHistoryTextView.text = getString(R.string.no_config_alerts)
-            alertAdapter = HistoryAlertAdapter(historyList, requireContext())
-            historyListView.adapter = alertAdapter
+            adapter = HistoryAdapter(historyList, requireContext())
+            historyListView.adapter = adapter
         } else {
             noHistoryTextView.visibility = View.INVISIBLE
-            alertAdapter = HistoryAlertAdapter(historyList, requireContext())
-            historyListView.adapter = alertAdapter
+            adapter = HistoryAdapter(historyList, requireContext())
+            historyListView.adapter = adapter
         }
     }
 }

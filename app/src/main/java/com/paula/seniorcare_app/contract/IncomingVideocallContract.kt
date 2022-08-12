@@ -9,7 +9,8 @@ import kotlinx.coroutines.tasks.await
 
 interface IncomingVideocallContract {
     interface View {
-
+        fun rejectVideocall(db: FirebaseFirestore, callId: String, senderUid: String)
+        fun acceptVideocall(db: FirebaseFirestore, callId: String, senderUid: String, receiverJwt: String)
     }
 
     interface Presenter {

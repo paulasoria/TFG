@@ -7,6 +7,7 @@ import com.paula.seniorcare_app.dataclass.User
 
 interface AddRelativeContract {
     interface View {
+        fun showPetitions()
         fun showResults(searchList: ArrayList<User>)
     }
 

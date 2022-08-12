@@ -88,15 +88,7 @@ class RelativeProfileActivity : AppCompatActivity(), RelativeProfileContract.Vie
         }
 
         addRelativeButton.setOnClickListener {
-            val db = FirebaseFirestore.getInstance()
-            val currentUid = FirebaseAuth.getInstance().currentUser!!.uid
-            lifecycleScope.launch {
-                withContext(Dispatchers.IO) {
-                    relativeProfilePresenter.createPetitionInDatabase(db, currentUid, relativeUid)   //sender, receiver
-                }
-            }
-            Toast.makeText(this, "Solicitud de familiar enviada", Toast.LENGTH_SHORT).show()
-            addRelativeButton.isEnabled = false
+            sendPetition(relativeUid)
         }
 
         deleteRelativeButton.setOnClickListener {
@@ -112,6 +104,18 @@ class RelativeProfileActivity : AppCompatActivity(), RelativeProfileContract.Vie
             intent.putExtra("image", user.image.toString())
             startActivity(intent)
         }
+    }
+
+    override fun sendPetition(relativeUid: String){
+        val db = FirebaseFirestore.getInstance()
+        val currentUid = FirebaseAuth.getInstance().currentUser!!.uid
+        lifecycleScope.launch {
+            withContext(Dispatchers.IO) {
+                relativeProfilePresenter.createPetitionInDatabase(db, currentUid, relativeUid)   //sender, receiver
+            }
+        }
+        Toast.makeText(this, "Solicitud de familiar enviada", Toast.LENGTH_SHORT).show()
+        addRelativeButton.isEnabled = false
     }
 
     override fun onPause() {

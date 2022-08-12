@@ -6,6 +6,7 @@ import com.google.firebase.firestore.QuerySnapshot
 
 interface RelativeProfileContract {
     interface View {
+        fun sendPetition(relativeUid: String)
         fun showDeleteRelativeDialog(relativeUid: String)
     }
 

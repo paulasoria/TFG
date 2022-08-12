@@ -6,6 +6,7 @@ import com.google.firebase.firestore.DocumentSnapshot
 
 interface AuthContract {
     interface View {
+        fun loadSession()
         fun showAlertGoogle()
         fun showChooseRoleDialog(account: GoogleSignInAccount)
     }

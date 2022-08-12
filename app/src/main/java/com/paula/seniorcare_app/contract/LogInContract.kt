@@ -8,6 +8,7 @@ interface LogInContract {
         fun emptyEditText(text: TextInputLayout)
         fun showAlertLogIn()
         fun successfullySentEmail(success: Boolean)
+        fun showResetPasswordDialog()
     }
 
     interface Presenter {

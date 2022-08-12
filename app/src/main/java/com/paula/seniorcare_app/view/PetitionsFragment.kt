@@ -47,9 +47,7 @@ class PetitionsFragment : Fragment(), PetitionsContract.View {
                         val state : String = petition.data.getValue("state").toString()
                         val sender : String = petition.data.getValue("sender").toString()
                         if (state == "pending" && sender != uid) {
-                            //Obtener datos de los usuarios que enviaron esas peticiones
                             val id : String = petition.data.getValue("id").toString()
-                            //val sender : String = petition.data.getValue("sender").toString()
                             val receiver : String = petition.data.getValue("receiver").toString()
                             val senderUser = petitionsPresenter.getSenderOfPetition(db, sender)
                             val senderName : String = senderUser?.data?.getValue("name").toString()
@@ -71,8 +69,7 @@ class PetitionsFragment : Fragment(), PetitionsContract.View {
         if(petitionsList.isEmpty()){
             noPetitionsTextView.visibility = View.VISIBLE
             noPetitionsTextView.text = getString(R.string.no_petitions)
-            //QUITAR CONTENIDO DEL ADAPTER ???
-            adapter = PetitionsAdapter(petitionsList, requireContext())     //CREAR ADAPTER
+            adapter = PetitionsAdapter(petitionsList, requireContext())
             petitionsListView.adapter = adapter
         } else {
             noPetitionsTextView.visibility = View.INVISIBLE

@@ -19,11 +19,11 @@
             android:orientation="vertical">
 
             <Button
-                android:id="@+id/addRelativeButton"
+                android:id="@+id/searchRelativeButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:backgroundTint="@color/dark_blue"
-                android:text="Añadir familiar" />
+                android:text="Buscar familiar" />
 
             <GridView
                 android:id="@+id/addedRelativesGridView"

@@ -39,27 +39,31 @@ class AddRelativeFragment : Fragment(), AddRelativeContract.View, SearchView.OnQ
         relativesSearchView.setOnQueryTextListener(this)
 
         petitionsButton.setOnClickListener {
-            val uid = FirebaseAuth.getInstance().currentUser!!.uid
-            val db = FirebaseFirestore.getInstance()
-            lifecycleScope.launch {
-                withContext(Dispatchers.IO) {
-                    val user = addRelativePresenter.getUser(db, uid)
-                    if(user?.get("role") == "Administrador") {
-                        activity?.supportFragmentManager?.beginTransaction()?.replace(
-                            R.id.wrapper,
-                            PetitionsFragment()
-                        )?.commit()
-                    } else {    //Familiar
-                        activity?.supportFragmentManager?.beginTransaction()?.replace(
-                            R.id.wrapper_tv,
-                            PetitionsFragment()
-                        )?.commit()
-                    }
-                }
-            }
+            showPetitions()
         }
 
         return view
+    }
+
+    override fun showPetitions(){
+        val uid = FirebaseAuth.getInstance().currentUser!!.uid
+        val db = FirebaseFirestore.getInstance()
+        lifecycleScope.launch {
+            withContext(Dispatchers.IO) {
+                val user = addRelativePresenter.getUser(db, uid)
+                if(user?.get("role") == "Administrador") {
+                    activity?.supportFragmentManager?.beginTransaction()?.replace(
+                        R.id.wrapper,
+                        PetitionsFragment()
+                    )?.commit()
+                } else {    //Familiar
+                    activity?.supportFragmentManager?.beginTransaction()?.replace(
+                        R.id.wrapper_tv,
+                        PetitionsFragment()
+                    )?.commit()
+                }
+            }
+        }
     }
 
     override fun onQueryTextSubmit(query: String?): Boolean {

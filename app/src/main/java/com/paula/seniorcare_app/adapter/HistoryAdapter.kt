@@ -8,7 +8,7 @@ import android.widget.*
 import com.paula.seniorcare_app.R
 import com.paula.seniorcare_app.dataclass.History
 
-class HistoryAlertAdapter(private var historyList: ArrayList<History>, var context: Context) : BaseAdapter() {
+class HistoryAdapter(private var historyList: ArrayList<History>, var context: Context) : BaseAdapter() {
     override fun getCount(): Int {
         return historyList.size
     }

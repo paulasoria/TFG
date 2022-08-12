@@ -15,7 +15,7 @@ import java.util.*
 
 interface OutgoingVideocallContract {
     interface View {
-
+        fun endVideocall(db: FirebaseFirestore, callId: String, receiverUid: String)
     }
 
     interface Presenter {
