@@ -65,7 +65,7 @@ class AuthInteractor {
 
     suspend fun signUp(email: String, password: String): Boolean {
         return try {
-            FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password)
+            FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password).await()
             true
         } catch (e: Exception) {
             Log.e(ContentValues.TAG, "SIGN UP ERROR", e)

@@ -44,7 +44,7 @@ class ProfileActivity : AppCompatActivity(), ProfileContract.View {
 
         }
 
-        editImageButton.setOnClickListener {    //SE ADELANTA (PORQUE NO GUARDA IMAGEN EN BBDD), MIRAR CORRUTINAS
+        editImageButton.setOnClickListener {
             selectImageFromGallery()
         }
 

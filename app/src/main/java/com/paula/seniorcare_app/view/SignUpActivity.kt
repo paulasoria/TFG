@@ -52,15 +52,14 @@ class SignUpActivity : AppCompatActivity(), SignUpContract.View {
                                 val url = signUpPresenter.getPhotoUrl(st, filename)
                                 url?.let {
                                     signUpPresenter.createUser(db, url, name, email, roleMenu)
+                                    if(roleMenu == "Administrador"){
+                                        val homeIntent = Intent(baseContext, HomeActivity::class.java)
+                                        startActivity(homeIntent)
+                                    } else {    //Familiar
+                                        val tvIntent = Intent(baseContext, TvActivity::class.java)
+                                        startActivity(tvIntent)
+                                    }
                                 }
-                            }
-
-                            if(roleMenu == "Administrador"){
-                                val homeIntent = Intent(baseContext, HomeActivity::class.java)
-                                startActivity(homeIntent)
-                            } else {    //Familiar
-                                val tvIntent = Intent(baseContext, TvActivity::class.java)
-                                startActivity(tvIntent)
                             }
                         } else {
                             withContext(Dispatchers.Main) {
