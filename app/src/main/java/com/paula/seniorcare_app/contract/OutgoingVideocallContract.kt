@@ -25,12 +25,4 @@ interface OutgoingVideocallContract {
         suspend fun getUser(db: FirebaseFirestore, uid: String): DocumentSnapshot?
         suspend fun changeStateCall(db: FirebaseFirestore, callId: String, state: String): Boolean
     }
-
-    interface Interactor {
-        fun rejectCallHttp(token: String, callId: String): Task<String>
-        fun createCallHttp(senderUid: String, senderName: String, senderEmail: String, senderImage: String, receiverUid: String, receiverName: String, receiverEmail: String, receiverImage: String, receiverToken: String, callId: String): Task<String>
-        suspend fun createCall(db: FirebaseFirestore, receiver: String, receiverName: String, senderName: String?, date: String?, time: String?, state: String, timestamp: FieldValue): String?
-        suspend fun getUser(db: FirebaseFirestore, uid: String): DocumentSnapshot?
-        suspend fun changeStateCall(db: FirebaseFirestore, callId: String, state: String): Boolean
-    }
 }

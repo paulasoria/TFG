@@ -28,18 +28,10 @@ interface AddAlertContract {
     }
 
     interface Presenter {
-        suspend fun getAddedRelativesList(db: FirebaseFirestore) : QuerySnapshot?
+        suspend fun getAddedRelatives(db: FirebaseFirestore) : QuerySnapshot?
         suspend fun isManagerOfRelative(db: FirebaseFirestore, relativeUid: String): Boolean
-        suspend fun getReceiverOfAlert(db: FirebaseFirestore, email: String): QuerySnapshot?
-        suspend fun createAlertInDatabase(db: FirebaseFirestore, receiver: String, tag: String, repetition: String, time: String, daysOfWeek: HashMap<String, Int>?, date: String?): Boolean
-        suspend fun updateAlertInDatabase(db: FirebaseFirestore, id: String, receiver: String, tag: String, repetition: String, time: String, daysOfWeek: HashMap<String, Int>?, date: String?): Boolean
-    }
-
-    interface Interactor {
-        suspend fun getAddedRelativesList(db: FirebaseFirestore) : QuerySnapshot?
-        suspend fun isManagerOfRelative(db: FirebaseFirestore, relativeUid: String): Boolean
-        suspend fun getReceiverOfAlert(db: FirebaseFirestore, email: String): QuerySnapshot?
-        suspend fun createAlertInDatabase(db: FirebaseFirestore, receiver: String, tag: String, repetition: String, time: String, daysOfWeek: HashMap<String, Int>?, date: String?): Boolean
-        suspend fun updateAlertInDatabase(db: FirebaseFirestore, id: String, receiver: String, tag: String, repetition: String, time: String, daysOfWeek: HashMap<String, Int>?, date: String?): Boolean
+        suspend fun getReceiverOfAlertEmail(db: FirebaseFirestore, email: String): QuerySnapshot?
+        suspend fun createAlert(db: FirebaseFirestore, receiver: String, tag: String, repetition: String, time: String, daysOfWeek: HashMap<String, Int>?, date: String?): Boolean
+        suspend fun updateAlert(db: FirebaseFirestore, id: String, receiver: String, tag: String, repetition: String, time: String, daysOfWeek: HashMap<String, Int>?, date: String?): Boolean
     }
 }

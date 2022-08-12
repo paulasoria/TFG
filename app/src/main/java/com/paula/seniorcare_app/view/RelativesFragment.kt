@@ -14,7 +14,6 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.paula.seniorcare_app.R
 import com.paula.seniorcare_app.adapter.RelativesAdapter
 import com.paula.seniorcare_app.contract.RelativesContract
-import com.paula.seniorcare_app.interactor.RelativesInteractor
 import com.paula.seniorcare_app.dataclass.User
 import com.paula.seniorcare_app.presenter.RelativesPresenter
 import kotlinx.android.synthetic.main.fragment_add_relative.noResultsTextView
@@ -24,13 +23,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class RelativesFragment : Fragment(), RelativesContract.View {
-
-    lateinit var relativesPresenter: RelativesPresenter
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        relativesPresenter = RelativesPresenter(this, RelativesInteractor())
-    }
+    private val relativesPresenter = RelativesPresenter()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val view:View = inflater.inflate(R.layout.fragment_relatives, container, false)
@@ -56,7 +49,7 @@ class RelativesFragment : Fragment(), RelativesContract.View {
         addedRelativesList.clear()
         lifecycleScope.launch {
             withContext(Dispatchers.IO) {
-                val documents = relativesPresenter.getAddedRelativesList(db)
+                val documents = relativesPresenter.getAddedRelatives(db)
                 documents?.iterator()?.forEach { document ->
                     val uid: String = document.data.getValue("uid").toString()
                     val name: String = document.data.getValue("name").toString()

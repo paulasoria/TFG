@@ -12,7 +12,6 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.*
 import com.paula.seniorcare_app.R
 import com.paula.seniorcare_app.contract.RelativeProfileContract
-import com.paula.seniorcare_app.interactor.RelativeProfileInteractor
 import com.paula.seniorcare_app.dataclass.User
 import com.paula.seniorcare_app.presenter.RelativeProfilePresenter
 import kotlinx.android.synthetic.main.activity_relative_profile.*
@@ -21,13 +20,11 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class RelativeProfileActivity : AppCompatActivity(), RelativeProfileContract.View {
-
-    lateinit var relativeProfilePresenter: RelativeProfilePresenter
+    private val relativeProfilePresenter = RelativeProfilePresenter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_relative_profile)
-        relativeProfilePresenter = RelativeProfilePresenter(this, RelativeProfileInteractor())
 
         val user = intent.getSerializableExtra("user") as User
         val relativeUid = user.uid.toString()
@@ -111,7 +108,7 @@ class RelativeProfileActivity : AppCompatActivity(), RelativeProfileContract.Vie
         val currentUid = FirebaseAuth.getInstance().currentUser!!.uid
         lifecycleScope.launch {
             withContext(Dispatchers.IO) {
-                relativeProfilePresenter.createPetitionInDatabase(db, currentUid, relativeUid)   //sender, receiver
+                relativeProfilePresenter.createPetition(db, currentUid, relativeUid)   //sender, receiver
             }
         }
         Toast.makeText(this, "Solicitud de familiar enviada", Toast.LENGTH_SHORT).show()
@@ -126,13 +123,13 @@ class RelativeProfileActivity : AppCompatActivity(), RelativeProfileContract.Vie
         if(gestorCheckBox.isChecked){
             lifecycleScope.launch {
                 withContext(Dispatchers.IO) {
-                    relativeProfilePresenter.setManagerOnDatabase(db, relativeUid)
+                    relativeProfilePresenter.setManager(db, relativeUid)
                 }
             }
         } else {
             lifecycleScope.launch {
                 withContext(Dispatchers.IO) {
-                    relativeProfilePresenter.deleteManagerOnDatabase(db, relativeUid)
+                    relativeProfilePresenter.deleteManager(db, relativeUid)
                 }
             }
         }
@@ -146,7 +143,7 @@ class RelativeProfileActivity : AppCompatActivity(), RelativeProfileContract.Vie
         builder.setPositiveButton("Aceptar") { _,_ ->
             lifecycleScope.launch {
                 withContext(Dispatchers.IO) {
-                    relativeProfilePresenter.deleteRelativeFromDB(db, currentUid, relativeUid)
+                    relativeProfilePresenter.deleteRelative(db, currentUid, relativeUid)
                 }
             }
         }

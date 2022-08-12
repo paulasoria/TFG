@@ -20,7 +20,6 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.paula.seniorcare_app.R
 import com.paula.seniorcare_app.contract.ProfileTvContract
-import com.paula.seniorcare_app.interactor.ProfileTvInteractor
 import com.paula.seniorcare_app.presenter.ProfileTvPresenter
 import kotlinx.android.synthetic.main.fragment_profile_tv.*
 import kotlinx.coroutines.Dispatchers
@@ -28,14 +27,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class ProfileTvFragment : Fragment(), ProfileTvContract.View {
-
     private val GALLERY_INTENT = 2
-    lateinit var profileTvPresenter: ProfileTvPresenter
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        profileTvPresenter = ProfileTvPresenter(this, ProfileTvInteractor())
-    }
+    private val profileTvPresenter = ProfileTvPresenter()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val view:View = inflater.inflate(R.layout.fragment_profile_tv, container, false)
@@ -50,7 +43,7 @@ class ProfileTvFragment : Fragment(), ProfileTvContract.View {
 
         lifecycleScope.launch {
             withContext(Dispatchers.IO) {
-                user = profileTvPresenter.getUserFromDB(db, uid)
+                user = profileTvPresenter.getUser(db, uid)
             }
             nameTextView.text = user?.get("name") as String?
             emailTextView.text = user?.get("email") as String?
@@ -95,11 +88,11 @@ class ProfileTvFragment : Fragment(), ProfileTvContract.View {
 
             lifecycleScope.launch {
                 withContext(Dispatchers.IO){
-                    val uploadedSuccessfully = profileTvPresenter.uploadPhotoToFireStorage(st, uri, filename, uid)
+                    val uploadedSuccessfully = profileTvPresenter.uploadPhoto(st, uri, filename)
                     if (uploadedSuccessfully) {
-                        val url = profileTvPresenter.getURLofPhotoInFireStorage(st, filename, uid)
+                        val url = profileTvPresenter.getPhotoUrl(st, filename)
                         url?.let {
-                            profileTvPresenter.updatePhotoURLForUser(db, uid, url)
+                            profileTvPresenter.updatePhotoUrl(db, url)
                         }
                     }
                 }
@@ -127,7 +120,7 @@ class ProfileTvFragment : Fragment(), ProfileTvContract.View {
 
             lifecycleScope.launch {
                 withContext(Dispatchers.IO) {
-                    profileTvPresenter.editUserNameInDatabase(db, uid, newNameEditText.text.toString())
+                    profileTvPresenter.editUserName(db, newNameEditText.text.toString())
                 }
             }
         }

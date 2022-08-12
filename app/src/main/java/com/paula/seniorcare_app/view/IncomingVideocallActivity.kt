@@ -9,7 +9,6 @@ import com.bumptech.glide.Glide
 import com.google.firebase.firestore.FirebaseFirestore
 import com.paula.seniorcare_app.R
 import com.paula.seniorcare_app.contract.IncomingVideocallContract
-import com.paula.seniorcare_app.interactor.IncomingVideocallInteractor
 import com.paula.seniorcare_app.presenter.IncomingVideocallPresenter
 import kotlinx.android.synthetic.main.activity_incoming_videocall.*
 import kotlinx.coroutines.Dispatchers
@@ -17,13 +16,11 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class IncomingVideocallActivity : AppCompatActivity(), IncomingVideocallContract.View {
-
-    lateinit var incomingVideocallPresenter: IncomingVideocallPresenter
+    private val incomingVideocallPresenter = IncomingVideocallPresenter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_incoming_videocall)
-        incomingVideocallPresenter = IncomingVideocallPresenter(this, IncomingVideocallInteractor())
 
         val db = FirebaseFirestore.getInstance()
 

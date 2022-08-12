@@ -11,7 +11,6 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.paula.seniorcare_app.R
 import com.paula.seniorcare_app.adapter.AlertsAdapter
 import com.paula.seniorcare_app.contract.AlertsContract
-import com.paula.seniorcare_app.interactor.AlertsInteractor
 import com.paula.seniorcare_app.dataclass.Alert
 import com.paula.seniorcare_app.presenter.AlertsPresenter
 import kotlinx.android.synthetic.main.fragment_alerts.*
@@ -20,13 +19,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class AlertsFragment : Fragment(), AlertsContract.View {
-
-    lateinit var alertsPresenter: AlertsPresenter
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        alertsPresenter = AlertsPresenter(this, AlertsInteractor())
-    }
+    private val alertsPresenter = AlertsPresenter()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val view:View = inflater.inflate(R.layout.fragment_alerts, container, false)
@@ -48,12 +41,12 @@ class AlertsFragment : Fragment(), AlertsContract.View {
         alertsList.clear()
         lifecycleScope.launch {
             withContext(Dispatchers.IO) {
-                val alerts = alertsPresenter.getConfiguredAlertsFromDB(db)
+                val alerts = alertsPresenter.getConfiguredAlerts(db)
                 alerts?.iterator()?.forEach { alert ->
                     val id: String = alert.data.getValue("id").toString()
                     val sender: String = alert.data.getValue("sender").toString()
                     val receiver: String = alert.data.getValue("receiver").toString()
-                    val receiverUser = alertsPresenter.getReceiverOfAlert(db, receiver)
+                    val receiverUser = alertsPresenter.getReceiverOfAlertUid(db, receiver)
                     val receiverName : String = receiverUser?.data?.getValue("name").toString()
                     val receiverEmail : String = receiverUser?.data?.getValue("email").toString()
                     val tag: String = alert.data.getValue("tag").toString()

@@ -1,30 +1,15 @@
 package com.paula.seniorcare_app.interactor
 
 import android.content.ContentValues
-import android.provider.Settings.System.getString
 import android.util.Log
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.iid.FirebaseInstanceId
-import com.paula.seniorcare_app.R
-import com.paula.seniorcare_app.contract.AuthContract
 import kotlinx.coroutines.tasks.await
 
-class AuthInteractor: AuthContract.Interactor {
-    override suspend fun getUser(uid: String): DocumentSnapshot?{
-        val db = FirebaseFirestore.getInstance()
-        return try {
-            val user = db.collection("users").document(uid).get().await()
-            user
-        } catch (e: Exception) {
-            Log.e(ContentValues.TAG, "GETTING USER FROM DATABASE ERROR", e)
-            null
-        }
-    }
-
-    override suspend fun createUserFromGoogle(account: GoogleSignInAccount, googleRole: String): Boolean {
+class AuthInteractor {
+    suspend fun createUserFromGoogle(account: GoogleSignInAccount, googleRole: String): Boolean {
         val db = FirebaseFirestore.getInstance()
         val uid = FirebaseAuth.getInstance().currentUser!!.uid
         return try {
@@ -42,6 +27,48 @@ class AuthInteractor: AuthContract.Interactor {
             true
         }  catch (e: Exception) {
             Log.e(ContentValues.TAG, "CREATING USER FROM GOOGLE ERROR", e)
+            false
+        }
+    }
+
+    suspend fun logIn(email: String, password: String): Boolean {
+        return try {
+            FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password).await()
+            true
+        } catch (e: Exception) {
+            Log.e(ContentValues.TAG, "LOG IN ERROR", e)
+            false
+        }
+    }
+
+    suspend fun resetPassword(email: String): Boolean {
+        return try {
+            FirebaseAuth.getInstance().sendPasswordResetEmail(email).await()
+            true
+        } catch (e: Exception) {
+            Log.e(ContentValues.TAG, "RESETTING PASSWORD ERROR", e)
+            false
+        }
+    }
+
+    suspend fun changeUserToken(uid: String): Boolean {
+        val db = FirebaseFirestore.getInstance()
+        return try {
+            val token = FirebaseInstanceId.getInstance().instanceId.await().token
+            db.collection("users").document(uid).update("token", token).await()
+            true
+        } catch (e: Exception) {
+            Log.e(ContentValues.TAG, "CHANGING USER TOKEN ERROR", e)
+            false
+        }
+    }
+
+    suspend fun signUp(email: String, password: String): Boolean {
+        return try {
+            FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password)
+            true
+        } catch (e: Exception) {
+            Log.e(ContentValues.TAG, "SIGN UP ERROR", e)
             false
         }
     }

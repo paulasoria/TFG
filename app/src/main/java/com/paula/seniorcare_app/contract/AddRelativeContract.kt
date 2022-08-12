@@ -15,9 +15,4 @@ interface AddRelativeContract {
         suspend fun getUser(db: FirebaseFirestore, uid: String): DocumentSnapshot?
         suspend fun getSearchUsers(db: FirebaseFirestore, query:String): QuerySnapshot?
     }
-
-    interface Interactor {
-        suspend fun getUser(db: FirebaseFirestore, uid: String): DocumentSnapshot?
-        suspend fun getSearchUsers(db: FirebaseFirestore, query:String): QuerySnapshot?
-    }
 }

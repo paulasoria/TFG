@@ -6,23 +6,22 @@ import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.iid.FirebaseInstanceId
 import com.google.firebase.storage.StorageReference
-import com.paula.seniorcare_app.contract.ProfileContract
 import kotlinx.coroutines.tasks.await
 
-class ProfileInteractor: ProfileContract.Interactor {
-    override suspend fun getCurrentUserFromDB(db: FirebaseFirestore): DocumentSnapshot? {
-        val uid = FirebaseAuth.getInstance().currentUser!!.uid
+class UsersInteractor {
+    suspend fun getUser(db: FirebaseFirestore, uid: String): DocumentSnapshot? {
         return try {
             val user = db.collection("users").document(uid).get().await()
             user
         } catch (e: Exception) {
-            Log.e(ContentValues.TAG, "GETTING CURRENT USER ERROR", e)
+            Log.e(ContentValues.TAG, "GETTING USER ERROR", e)
             null
         }
     }
 
-    override suspend fun uploadPhotoToFireStorage(st: StorageReference, uri: Uri, filename: String): Boolean {
+    suspend fun uploadPhoto(st: StorageReference, uri: Uri, filename: String): Boolean {
         val uid = FirebaseAuth.getInstance().currentUser!!.uid
         return try {
             val filepath = st.child(uid).child(filename)
@@ -34,7 +33,7 @@ class ProfileInteractor: ProfileContract.Interactor {
         }
     }
 
-    override suspend fun getURLofPhotoInFireStorage(st: StorageReference, filename: String): String? {
+    suspend fun getPhotoUrl(st: StorageReference, filename: String): String? {
         val uid = FirebaseAuth.getInstance().currentUser!!.uid
         return try {
             val filepath = st.child(uid).child(filename)
@@ -47,7 +46,7 @@ class ProfileInteractor: ProfileContract.Interactor {
         }
     }
 
-    override suspend fun updatePhotoURLForUser(db: FirebaseFirestore, url: String): Boolean? {
+    suspend fun updatePhotoUrl(db: FirebaseFirestore, url: String): Boolean? {
         val uid = FirebaseAuth.getInstance().currentUser!!.uid
         return try {
             db.collection("users").document(uid).update("image", url).await()
@@ -58,13 +57,34 @@ class ProfileInteractor: ProfileContract.Interactor {
         }
     }
 
-    override suspend fun editUserNameInDatabase(db: FirebaseFirestore, name: String): Boolean? {
+    suspend fun editUserName(db: FirebaseFirestore, name: String): Boolean? {
         val uid = FirebaseAuth.getInstance().currentUser!!.uid
         return try {
             db.collection("users").document(uid).update("name", name).await()
             true
         } catch (e: Exception) {
             Log.e(ContentValues.TAG, "UPDATING USER NAME ERROR", e)
+            false
+        }
+    }
+
+    suspend fun createUser(db: FirebaseFirestore, url: String, name: String, email: String, roleMenu: String): Boolean {
+        return try {
+            val uid = FirebaseAuth.getInstance().currentUser!!.uid
+            val token = FirebaseInstanceId.getInstance().instanceId.await().token
+            db.collection("users").document(uid).set(
+                hashMapOf(
+                    "uid" to uid,
+                    "token" to token,
+                    "image" to url,
+                    "name" to name,
+                    "email" to email,
+                    "role" to roleMenu
+                )
+            ).await()
+            true
+        } catch (e: Exception) {
+            Log.e(ContentValues.TAG, "CREATING USER IN DATABASE ERROR", e)
             false
         }
     }

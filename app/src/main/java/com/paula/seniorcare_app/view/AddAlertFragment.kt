@@ -14,7 +14,6 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
 import com.paula.seniorcare_app.R
 import com.paula.seniorcare_app.contract.AddAlertContract
-import com.paula.seniorcare_app.interactor.AddAlertInteractor
 import com.paula.seniorcare_app.dataclass.Alert
 import com.paula.seniorcare_app.presenter.AddAlertPresenter
 import kotlinx.android.synthetic.main.fragment_add_alert.*
@@ -24,13 +23,7 @@ import kotlinx.coroutines.withContext
 import java.util.*
 
 class AddAlertFragment : Fragment(), AddAlertContract.View {
-
-    lateinit var addAlertPresenter: AddAlertPresenter
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        addAlertPresenter = AddAlertPresenter(this, AddAlertInteractor())
-    }
+    private val addAlertPresenter = AddAlertPresenter()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val view:View = inflater.inflate(R.layout.fragment_add_alert, container, false)
@@ -78,7 +71,7 @@ class AddAlertFragment : Fragment(), AddAlertContract.View {
         addedRelativesList.clear()
         lifecycleScope.launch {
             withContext(Dispatchers.IO) {
-                relatives = addAlertPresenter.getAddedRelativesList(db)
+                relatives = addAlertPresenter.getAddedRelatives(db)
                 relatives?.iterator()?.forEach { relative ->
                     val relativeUid: String = relative.data.getValue("uid").toString()
                     if(addAlertPresenter.isManagerOfRelative(db, relativeUid)) {
@@ -167,13 +160,13 @@ class AddAlertFragment : Fragment(), AddAlertContract.View {
                     val daysOfWeek = getSelectedDays(week)
                     lifecycleScope.launch {
                         withContext(Dispatchers.IO) {
-                            val userRelative = addAlertPresenter.getReceiverOfAlert(db,relative)
+                            val userRelative = addAlertPresenter.getReceiverOfAlertEmail(db,relative)
                             userRelative?.iterator()?.forEach { relative ->
                                 val receiverUid = relative.data.getValue("uid").toString()
                                 if(editing != null){
-                                    addAlertPresenter.updateAlertInDatabase(db, alertId!!, receiverUid, tag, "weekly", time, daysOfWeek, null)
+                                    addAlertPresenter.updateAlert(db, alertId!!, receiverUid, tag, "weekly", time, daysOfWeek, null)
                                 } else{
-                                    addAlertPresenter.createAlertInDatabase(db, receiverUid, tag, "weekly", time, daysOfWeek, null)
+                                    addAlertPresenter.createAlert(db, receiverUid, tag, "weekly", time, daysOfWeek, null)
                                 }
                             }
                         }
@@ -193,13 +186,13 @@ class AddAlertFragment : Fragment(), AddAlertContract.View {
                 val date = setDateButton.text.toString()
                 lifecycleScope.launch {
                     withContext(Dispatchers.IO) {
-                        val userRelative = addAlertPresenter.getReceiverOfAlert(db,relative)
+                        val userRelative = addAlertPresenter.getReceiverOfAlertEmail(db,relative)
                         userRelative?.iterator()?.forEach { relative ->
                             val receiverUid = relative.data.getValue("uid").toString()
                             if(editing != null){
-                                addAlertPresenter.updateAlertInDatabase(db, alertId!!, receiverUid, tag, "eventually", time, null, date)
+                                addAlertPresenter.updateAlert(db, alertId!!, receiverUid, tag, "eventually", time, null, date)
                             } else{
-                                addAlertPresenter.createAlertInDatabase(db, receiverUid, tag, "eventually", time, null, date)
+                                addAlertPresenter.createAlert(db, receiverUid, tag, "eventually", time, null, date)
                             }
                         }
                     }

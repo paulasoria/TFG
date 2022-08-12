@@ -1,23 +1,15 @@
 package com.paula.seniorcare_app.view
 
-import android.content.ContentValues
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
-import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.functions.FirebaseFunctions
-import com.google.firebase.functions.ktx.functions
-import com.google.firebase.ktx.Firebase
 import com.paula.seniorcare_app.R
 import com.paula.seniorcare_app.contract.OutgoingVideocallContract
-import com.paula.seniorcare_app.interactor.OutgoingVideocallInteractor
 import com.paula.seniorcare_app.presenter.OutgoingVideocallPresenter
 import kotlinx.android.synthetic.main.activity_outgoing_videocall.*
 import kotlinx.coroutines.Dispatchers
@@ -27,13 +19,11 @@ import kotlinx.coroutines.withContext
 import java.util.*
 
 class OutgoingVideocallActivity : AppCompatActivity(), OutgoingVideocallContract.View {
-
-    lateinit var outgoingVideocallPresenter: OutgoingVideocallPresenter
+    private val outgoingVideocallPresenter = OutgoingVideocallPresenter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_outgoing_videocall)
-        outgoingVideocallPresenter = OutgoingVideocallPresenter(this, OutgoingVideocallInteractor())
 
         var callId: String? = null
 

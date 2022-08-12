@@ -11,22 +11,10 @@ interface RelativeProfileContract {
     }
 
     interface Presenter {
-        suspend fun setManagerOnDatabase(db: FirebaseFirestore, relativeUid: String): Boolean
-        suspend fun deleteManagerOnDatabase(db: FirebaseFirestore, relativeUid: String): Boolean
-        suspend fun deleteRelativeFromDB(db: FirebaseFirestore, currentUid: String, uid: String): Boolean
-        suspend fun createPetitionInDatabase(db: FirebaseFirestore, sender: String, receiver: String): Boolean
-        suspend fun relativeIsManager(uid: String): Boolean
-        suspend fun relativeIsAdded(uid: String): Boolean
-        suspend fun petitionIsPendingByReceiver(receiver: String): QuerySnapshot?
-        suspend fun petitionIsPendingBySender(sender: String): QuerySnapshot?
-        suspend fun getUser(db: FirebaseFirestore, uid: String): DocumentSnapshot?
-    }
-
-    interface Interactor {
-        suspend fun setManagerOnDatabase(db: FirebaseFirestore, relativeUid: String): Boolean
-        suspend fun deleteManagerOnDatabase(db: FirebaseFirestore, relativeUid: String): Boolean
-        suspend fun deleteRelativeFromDB(db: FirebaseFirestore, currentUid: String, uid: String): Boolean
-        suspend fun createPetitionInDatabase(db: FirebaseFirestore, sender: String, receiver: String): Boolean
+        suspend fun setManager(db: FirebaseFirestore, relativeUid: String): Boolean
+        suspend fun deleteManager(db: FirebaseFirestore, relativeUid: String): Boolean
+        suspend fun deleteRelative(db: FirebaseFirestore, currentUid: String, uid: String): Boolean
+        suspend fun createPetition(db: FirebaseFirestore, sender: String, receiver: String): Boolean
         suspend fun relativeIsManager(uid: String): Boolean
         suspend fun relativeIsAdded(uid: String): Boolean
         suspend fun petitionIsPendingByReceiver(receiver: String): QuerySnapshot?

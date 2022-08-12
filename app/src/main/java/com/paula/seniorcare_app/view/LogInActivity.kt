@@ -8,10 +8,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.iid.FirebaseInstanceId
 import com.paula.seniorcare_app.R
 import com.paula.seniorcare_app.contract.LogInContract
-import com.paula.seniorcare_app.interactor.LogInInteractor
 import com.paula.seniorcare_app.presenter.LogInPresenter
 import kotlinx.android.synthetic.main.activity_auth.logInButton
 import kotlinx.android.synthetic.main.activity_log_in.*
@@ -24,13 +24,11 @@ import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 
 class LogInActivity : AppCompatActivity(), LogInContract.View {
-
-    lateinit var logInPresenter: LogInPresenter
+    private val logInPresenter = LogInPresenter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_log_in)
-        logInPresenter = LogInPresenter(this, LogInInteractor())
 
         logInButton.setOnClickListener {
             val email = emailTextInput.editText?.text.toString()
@@ -39,8 +37,9 @@ class LogInActivity : AppCompatActivity(), LogInContract.View {
                 lifecycleScope.launch {
                     withContext(Dispatchers.IO) {
                         if (logInPresenter.logIn(email, password)) {
+                            val db = FirebaseFirestore.getInstance()
                             val uid = FirebaseAuth.getInstance().currentUser!!.uid
-                            val user = logInPresenter.getUser(uid)
+                            val user = logInPresenter.getUser(db, uid)
                             if (user?.get("token") != FirebaseInstanceId.getInstance().instanceId.await().token) {
                                 logInPresenter.changeUserToken(uid)
                             }
@@ -82,14 +81,6 @@ class LogInActivity : AppCompatActivity(), LogInContract.View {
         builder.setPositiveButton("Aceptar",null)
         val dialog: AlertDialog = builder.create()
         dialog.show()
-    }
-
-    override fun successfullySentEmail(success: Boolean) {
-        if(success){
-            Toast.makeText(this, "Correo enviado", Toast.LENGTH_SHORT).show()
-        } else {
-            Toast.makeText(this, "Se ha producido un error", Toast.LENGTH_SHORT).show()
-        }
     }
 
     override fun showResetPasswordDialog(){

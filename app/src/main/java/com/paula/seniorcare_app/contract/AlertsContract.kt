@@ -12,12 +12,7 @@ interface AlertsContract {
     }
 
     interface Presenter {
-        suspend fun getReceiverOfAlert(db: FirebaseFirestore, uid: String): DocumentSnapshot?
-        suspend fun getConfiguredAlertsFromDB(db: FirebaseFirestore): QuerySnapshot?
-    }
-
-    interface Interactor {
-        suspend fun getReceiverOfAlert(db: FirebaseFirestore, uid: String): DocumentSnapshot?
-        suspend fun getConfiguredAlertsFromDB(db: FirebaseFirestore): QuerySnapshot?
+        suspend fun getReceiverOfAlertUid(db: FirebaseFirestore, uid: String): DocumentSnapshot?
+        suspend fun getConfiguredAlerts(db: FirebaseFirestore): QuerySnapshot?
     }
 }

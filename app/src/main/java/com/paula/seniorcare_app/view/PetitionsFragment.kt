@@ -11,7 +11,6 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.paula.seniorcare_app.R
 import com.paula.seniorcare_app.adapter.PetitionsAdapter
 import com.paula.seniorcare_app.contract.PetitionsContract
-import com.paula.seniorcare_app.interactor.PetitionsInteractor
 import com.paula.seniorcare_app.dataclass.Petition
 import com.paula.seniorcare_app.presenter.PetitionsPresenter
 import kotlinx.android.synthetic.main.fragment_petitions.*
@@ -20,13 +19,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class PetitionsFragment : Fragment(), PetitionsContract.View {
-
-    lateinit var petitionsPresenter: PetitionsPresenter
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        petitionsPresenter = PetitionsPresenter(this, PetitionsInteractor())
-    }
+    private val petitionsPresenter = PetitionsPresenter()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val view:View = inflater.inflate(R.layout.fragment_petitions, container, false)
@@ -42,7 +35,7 @@ class PetitionsFragment : Fragment(), PetitionsContract.View {
         lifecycleScope.launch {
             withContext(Dispatchers.IO) {
                 if (uid != null) {
-                    val petitions = petitionsPresenter.getPendingPetitionsFromDB(db, uid)
+                    val petitions = petitionsPresenter.getPendingPetitions(db, uid)
                     petitions?.iterator()?.forEach { petition ->
                         val state : String = petition.data.getValue("state").toString()
                         val sender : String = petition.data.getValue("sender").toString()

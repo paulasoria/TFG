@@ -12,12 +12,7 @@ interface PetitionsContract {
     }
 
     interface Presenter {
-        suspend fun getPendingPetitionsFromDB(db: FirebaseFirestore, uid: String): QuerySnapshot?
-        suspend fun getSenderOfPetition(db: FirebaseFirestore, uid: String): DocumentSnapshot?
-    }
-
-    interface Interactor {
-        suspend fun getPendingPetitionsFromDB(db: FirebaseFirestore, uid: String): QuerySnapshot?
+        suspend fun getPendingPetitions(db: FirebaseFirestore, uid: String): QuerySnapshot?
         suspend fun getSenderOfPetition(db: FirebaseFirestore, uid: String): DocumentSnapshot?
     }
 }

@@ -13,7 +13,6 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.paula.seniorcare_app.R
 import com.paula.seniorcare_app.contract.SignUpContract
-import com.paula.seniorcare_app.interactor.SignUpInteractor
 import com.paula.seniorcare_app.presenter.SignUpPresenter
 import kotlinx.android.synthetic.main.activity_auth.signUpButton
 import kotlinx.android.synthetic.main.activity_sign_up.*
@@ -22,15 +21,13 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class SignUpActivity : AppCompatActivity(), SignUpContract.View {
-
     private val GALLERY_INTENT = 2
     private var uri: Uri = Uri.EMPTY
-    lateinit var signUpPresenter: SignUpPresenter
+    private val signUpPresenter = SignUpPresenter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sign_up)
-        signUpPresenter = SignUpPresenter(this, SignUpInteractor())
 
         val db = FirebaseFirestore.getInstance()
         val st = FirebaseStorage.getInstance().reference
@@ -50,11 +47,11 @@ class SignUpActivity : AppCompatActivity(), SignUpContract.View {
                         if(signUpPresenter.signUp(email, password)) {
                             val segments = uri.path!!.split("/".toRegex()).toTypedArray()
                             val filename = segments[segments.size - 1]
-                            val uploadedSuccessfully = signUpPresenter.uploadPhotoToFireStorage(st, uri, filename)
+                            val uploadedSuccessfully = signUpPresenter.uploadPhoto(st, uri, filename)
                             if (uploadedSuccessfully) {
-                                val url = signUpPresenter.getURLofPhotoInFireStorage(st, filename)
+                                val url = signUpPresenter.getPhotoUrl(st, filename)
                                 url?.let {
-                                    signUpPresenter.createUserInDatabase(db, url, name, email, roleMenu)
+                                    signUpPresenter.createUser(db, url, name, email, roleMenu)
                                 }
                             }
 

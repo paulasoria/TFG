@@ -13,9 +13,9 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.firestore.FirebaseFirestore
 import com.paula.seniorcare_app.R
 import com.paula.seniorcare_app.contract.AuthContract
-import com.paula.seniorcare_app.interactor.AuthInteractor
 import com.paula.seniorcare_app.presenter.AuthPresenter
 import kotlinx.android.synthetic.main.activity_auth.*
 import kotlinx.coroutines.Dispatchers
@@ -25,12 +25,11 @@ import kotlinx.coroutines.withContext
 class AuthActivity : AppCompatActivity(), AuthContract.View {
 
     private val GOOGLE_SIGN_IN = 1
-    lateinit var authPresenter: AuthPresenter
+    private val authPresenter = AuthPresenter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_auth)
-        authPresenter = AuthPresenter(this, AuthInteractor())
 
         loadSession()
 
@@ -56,10 +55,11 @@ class AuthActivity : AppCompatActivity(), AuthContract.View {
     override fun loadSession(){
         if(FirebaseAuth.getInstance().currentUser != null){
             authLayout.visibility = View.INVISIBLE
+            val db = FirebaseFirestore.getInstance()
             val uid = FirebaseAuth.getInstance().currentUser!!.uid
             lifecycleScope.launch {
                 withContext(Dispatchers.IO) {
-                    val user = authPresenter.getUser(uid)
+                    val user = authPresenter.getUser(db, uid)
                     if(user?.get("role") == "Administrador") {
                         val homeIntent = Intent(baseContext, HomeActivity::class.java)
                         startActivity(homeIntent)

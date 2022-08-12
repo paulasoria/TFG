@@ -13,7 +13,6 @@ import com.paula.seniorcare_app.R
 import com.paula.seniorcare_app.adapter.HistoryAdapter
 import com.paula.seniorcare_app.adapter.VideocallAdapter
 import com.paula.seniorcare_app.contract.HistoryContract
-import com.paula.seniorcare_app.interactor.HistoryInteractor
 import com.paula.seniorcare_app.dataclass.History
 import com.paula.seniorcare_app.dataclass.Videocall
 import com.paula.seniorcare_app.presenter.HistoryPresenter
@@ -24,13 +23,7 @@ import kotlinx.coroutines.withContext
 import java.util.*
 
 class HistoryFragment : Fragment(), HistoryContract.View {
-
-    lateinit var historyPresenter: HistoryPresenter
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        historyPresenter = HistoryPresenter(this, HistoryInteractor())
-    }
+    private val historyPresenter = HistoryPresenter()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val view:View = inflater.inflate(R.layout.fragment_history, container, false)

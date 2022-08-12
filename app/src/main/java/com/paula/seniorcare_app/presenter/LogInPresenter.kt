@@ -1,26 +1,28 @@
 package com.paula.seniorcare_app.presenter
 
 import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.FirebaseFirestore
 import com.paula.seniorcare_app.contract.LogInContract
+import com.paula.seniorcare_app.interactor.AuthInteractor
+import com.paula.seniorcare_app.interactor.UsersInteractor
 
-class LogInPresenter(private val logInView: LogInContract.View, private val logInInteractor: LogInContract.Interactor) : LogInContract.Presenter {
+class LogInPresenter : LogInContract.Presenter {
+    private val authInteractor = AuthInteractor()
+    private val usersInteractor = UsersInteractor()
+
     override suspend fun logIn(email: String, password: String): Boolean {
-        return logInInteractor.logIn(email, password)
+        return authInteractor.logIn(email, password)
     }
 
     override suspend fun changeUserToken(uid: String) {
-        logInInteractor.changeUserToken(uid)
+        authInteractor.changeUserToken(uid)
     }
 
-    override suspend fun getUser(uid: String): DocumentSnapshot? {
-        return logInInteractor.getUser(uid)
+    override suspend fun getUser(db: FirebaseFirestore, uid: String): DocumentSnapshot? {
+        return usersInteractor.getUser(db, uid)
     }
 
     override suspend fun resetPassword(email: String): Boolean {
-        return logInInteractor.resetPassword(email)
-    }
-
-    override fun succesfullySentEmail(success: Boolean){
-        logInView.successfullySentEmail(success)
+        return authInteractor.resetPassword(email)
     }
 }

@@ -1,8 +1,8 @@
 package com.paula.seniorcare_app.contract
 
-import android.content.Context
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.FirebaseFirestore
 
 interface AuthContract {
     interface View {
@@ -12,12 +12,7 @@ interface AuthContract {
     }
 
     interface Presenter {
-        suspend fun getUser(uid: String): DocumentSnapshot?
-        suspend fun createUserFromGoogle(account: GoogleSignInAccount, googleRole: String): Boolean
-    }
-
-    interface Interactor {
-        suspend fun getUser(uid: String): DocumentSnapshot?
+        suspend fun getUser(db: FirebaseFirestore, uid: String): DocumentSnapshot?
         suspend fun createUserFromGoogle(account: GoogleSignInAccount, googleRole: String): Boolean
     }
 }

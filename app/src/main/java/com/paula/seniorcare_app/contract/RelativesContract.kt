@@ -14,12 +14,7 @@ interface RelativesContract {
     }
 
     interface Presenter {
-        suspend fun getAddedRelativesList(db: FirebaseFirestore) : QuerySnapshot?
-        suspend fun getUser(db: FirebaseFirestore, uid: String): DocumentSnapshot?
-    }
-
-    interface Interactor {
-        suspend fun getAddedRelativesList(db: FirebaseFirestore) : QuerySnapshot?
+        suspend fun getAddedRelatives(db: FirebaseFirestore) : QuerySnapshot?
         suspend fun getUser(db: FirebaseFirestore, uid: String): DocumentSnapshot?
     }
 }

@@ -13,15 +13,8 @@ interface SignUpContract {
 
     interface Presenter {
         suspend fun signUp(email: String, password: String): Boolean
-        suspend fun createUserInDatabase(db: FirebaseFirestore, url: String, name: String, email: String, roleMenu: String): Boolean
-        suspend fun uploadPhotoToFireStorage(st: StorageReference, uri: Uri, filename: String): Boolean
-        suspend fun getURLofPhotoInFireStorage(st: StorageReference, filename: String): String?
-    }
-
-    interface Interactor {
-        suspend fun signUp(email: String, password: String): Boolean
-        suspend fun createUserInDatabase(db: FirebaseFirestore, url: String, name: String, email: String, roleMenu: String): Boolean
-        suspend fun uploadPhotoToFireStorage(st: StorageReference, uri: Uri, filename: String): Boolean
-        suspend fun getURLofPhotoInFireStorage(st: StorageReference, filename: String): String?
+        suspend fun createUser(db: FirebaseFirestore, url: String, name: String, email: String, roleMenu: String): Boolean
+        suspend fun uploadPhoto(st: StorageReference, uri: Uri, filename: String): Boolean
+        suspend fun getPhotoUrl(st: StorageReference, filename: String): String?
     }
 }

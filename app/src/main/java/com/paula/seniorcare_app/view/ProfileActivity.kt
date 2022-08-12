@@ -13,7 +13,6 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.paula.seniorcare_app.R
 import com.paula.seniorcare_app.contract.ProfileContract
-import com.paula.seniorcare_app.interactor.ProfileInteractor
 import com.paula.seniorcare_app.presenter.ProfilePresenter
 import kotlinx.android.synthetic.main.activity_profile.*
 import kotlinx.coroutines.Dispatchers
@@ -21,22 +20,21 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class ProfileActivity : AppCompatActivity(), ProfileContract.View {
-
     private val GALLERY_INTENT = 2
-    lateinit var profilePresenter: ProfilePresenter
+    private val profilePresenter = ProfilePresenter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile)
-        profilePresenter = ProfilePresenter(this, ProfileInteractor())
 
         val db = FirebaseFirestore.getInstance()
         var downloadImage : String?
         var user: DocumentSnapshot?
+        val uid = FirebaseAuth.getInstance().currentUser!!.uid
 
         lifecycleScope.launch {
             withContext(Dispatchers.IO) {
-                user = profilePresenter.getCurrentUserFromDB(db)
+                user = profilePresenter.getUser(db, uid)
             }
             nameTextView.text = user?.get("name") as String?
             emailTextView.text = user?.get("email") as String?
@@ -82,11 +80,11 @@ class ProfileActivity : AppCompatActivity(), ProfileContract.View {
 
             lifecycleScope.launch {
                 withContext(Dispatchers.IO){
-                    val uploadedSuccessfully = profilePresenter.uploadPhotoToFireStorage(st, uri, filename)
+                    val uploadedSuccessfully = profilePresenter.uploadPhoto(st, uri, filename)
                     if (uploadedSuccessfully) {
-                        val url = profilePresenter.getURLofPhotoInFireStorage(st, filename)
+                        val url = profilePresenter.getPhotoUrl(st, filename)
                         url?.let {
-                            profilePresenter.updatePhotoURLForUser(db, url)
+                            profilePresenter.updatePhotoUrl(db, url)
                         }
                     }
                 }
@@ -108,7 +106,7 @@ class ProfileActivity : AppCompatActivity(), ProfileContract.View {
             nameTextView.text = newNameEditText.text.toString()
             lifecycleScope.launch {
                 withContext(Dispatchers.IO) {
-                    profilePresenter.editUserNameInDatabase(db, newNameEditText.text.toString())
+                    profilePresenter.editUserName(db, newNameEditText.text.toString())
                 }
             }
         }

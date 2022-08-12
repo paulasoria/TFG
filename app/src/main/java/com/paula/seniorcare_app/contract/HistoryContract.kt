@@ -18,9 +18,4 @@ interface HistoryContract {
         suspend fun getVideocalls(db: FirebaseFirestore): QuerySnapshot?
         suspend fun getHistoryOfAlerts(db: FirebaseFirestore): QuerySnapshot?
     }
-
-    interface Interactor {
-        suspend fun getVideocalls(db: FirebaseFirestore): QuerySnapshot?
-        suspend fun getHistoryOfAlerts(db: FirebaseFirestore): QuerySnapshot?
-    }
 }

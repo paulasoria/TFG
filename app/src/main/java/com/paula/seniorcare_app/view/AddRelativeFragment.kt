@@ -14,7 +14,6 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.paula.seniorcare_app.R
 import com.paula.seniorcare_app.adapter.RelativesAdapter
 import com.paula.seniorcare_app.contract.AddRelativeContract
-import com.paula.seniorcare_app.interactor.AddRelativeInteractor
 import com.paula.seniorcare_app.dataclass.User
 import com.paula.seniorcare_app.presenter.AddRelativePresenter
 import kotlinx.android.synthetic.main.fragment_add_relative.*
@@ -23,13 +22,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class AddRelativeFragment : Fragment(), AddRelativeContract.View, SearchView.OnQueryTextListener {
-
-    lateinit var addRelativePresenter: AddRelativePresenter
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        addRelativePresenter = AddRelativePresenter(this, AddRelativeInteractor())
-    }
+    private val addRelativePresenter = AddRelativePresenter()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val view:View = inflater.inflate(R.layout.fragment_add_relative, container, false)
