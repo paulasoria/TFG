@@ -1,4 +1,4 @@
-package com.paula.seniorcare_app.interactor
+package com.paula.seniorcare_app.model
 
 import android.content.ContentValues
 import android.util.Log
@@ -11,7 +11,7 @@ import kotlinx.coroutines.tasks.await
 import java.util.*
 import kotlin.collections.HashMap
 
-class AlertsInteractor {
+class AlertsModel {
     suspend fun getReceiverOfAlertEmail(db: FirebaseFirestore, email: String): QuerySnapshot? {
         return try {
             val user = db.collection("users").whereEqualTo("email", email).get().await()

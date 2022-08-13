@@ -1,4 +1,4 @@
-package com.paula.seniorcare_app.interactor
+package com.paula.seniorcare_app.model
 
 import android.content.ContentValues
 import android.util.Log
@@ -7,7 +7,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
 import kotlinx.coroutines.tasks.await
 
-class RelativesInteractor {
+class RelativesModel {
     suspend fun getAddedRelatives(db: FirebaseFirestore) : QuerySnapshot? {
         return try {
             val currentUid = FirebaseAuth.getInstance().currentUser?.uid

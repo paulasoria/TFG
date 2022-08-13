@@ -5,28 +5,28 @@ import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.StorageReference
 import com.paula.seniorcare_app.contract.ProfileContract
-import com.paula.seniorcare_app.interactor.UsersInteractor
+import com.paula.seniorcare_app.model.UsersModel
 
 class ProfilePresenter : ProfileContract.Presenter {
-    private val usersInteractor = UsersInteractor()
+    private val usersModel = UsersModel()
 
     override suspend fun getUser(db: FirebaseFirestore, uid: String): DocumentSnapshot? {
-        return usersInteractor.getUser(db, uid)
+        return usersModel.getUser(db, uid)
     }
 
     override suspend fun uploadPhoto(st: StorageReference, uri: Uri, filename: String): Boolean {
-        return usersInteractor.uploadPhoto(st, uri, filename)
+        return usersModel.uploadPhoto(st, uri, filename)
     }
 
     override suspend fun getPhotoUrl(st: StorageReference, filename: String): String? {
-        return usersInteractor.getPhotoUrl(st, filename)
+        return usersModel.getPhotoUrl(st, filename)
     }
 
     override suspend fun updatePhotoUrl(db: FirebaseFirestore, url: String): Boolean? {
-        return usersInteractor.updatePhotoUrl(db, url)
+        return usersModel.updatePhotoUrl(db, url)
     }
 
     override suspend fun editUserName(db: FirebaseFirestore, name: String): Boolean? {
-        return usersInteractor.editUserName(db, name)
+        return usersModel.editUserName(db, name)
     }
 }

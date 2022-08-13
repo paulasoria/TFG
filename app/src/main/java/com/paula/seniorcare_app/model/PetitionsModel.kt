@@ -1,4 +1,4 @@
-package com.paula.seniorcare_app.interactor
+package com.paula.seniorcare_app.model
 
 import android.content.ContentValues
 import android.util.Log
@@ -9,7 +9,7 @@ import com.google.firebase.firestore.QuerySnapshot
 import kotlinx.coroutines.tasks.await
 import java.util.*
 
-class PetitionsInteractor {
+class PetitionsModel {
     suspend fun getPendingPetitions(db: FirebaseFirestore, uid: String): QuerySnapshot? {
         return try {
             val data = db.collection("users").document(uid).collection("petitions").get().await()

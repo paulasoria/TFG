@@ -1,4 +1,4 @@
-package com.paula.seniorcare_app.interactor
+package com.paula.seniorcare_app.model
 
 import android.content.ContentValues
 import android.util.Log
@@ -8,7 +8,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.iid.FirebaseInstanceId
 import kotlinx.coroutines.tasks.await
 
-class AuthInteractor {
+class AuthModel {
     suspend fun createUserFromGoogle(account: GoogleSignInAccount, googleRole: String): Boolean {
         val db = FirebaseFirestore.getInstance()
         val uid = FirebaseAuth.getInstance().currentUser!!.uid

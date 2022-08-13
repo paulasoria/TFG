@@ -1,4 +1,4 @@
-package com.paula.seniorcare_app.interactor
+package com.paula.seniorcare_app.model
 
 import android.content.ContentValues
 import android.net.Uri
@@ -10,7 +10,7 @@ import com.google.firebase.iid.FirebaseInstanceId
 import com.google.firebase.storage.StorageReference
 import kotlinx.coroutines.tasks.await
 
-class UsersInteractor {
+class UsersModel {
     suspend fun getUser(db: FirebaseFirestore, uid: String): DocumentSnapshot? {
         return try {
             val user = db.collection("users").document(uid).get().await()

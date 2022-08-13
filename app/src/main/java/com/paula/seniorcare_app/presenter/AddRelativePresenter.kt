@@ -4,18 +4,18 @@ import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
 import com.paula.seniorcare_app.contract.AddRelativeContract
-import com.paula.seniorcare_app.interactor.RelativesInteractor
-import com.paula.seniorcare_app.interactor.UsersInteractor
+import com.paula.seniorcare_app.model.RelativesModel
+import com.paula.seniorcare_app.model.UsersModel
 
 class AddRelativePresenter : AddRelativeContract.Presenter {
-    private val usersInteractor = UsersInteractor()
-    private val relativesInteractor = RelativesInteractor()
+    private val usersModel = UsersModel()
+    private val relativesModel = RelativesModel()
 
     override suspend fun getUser(db: FirebaseFirestore, uid: String): DocumentSnapshot? {
-        return usersInteractor.getUser(db, uid)
+        return usersModel.getUser(db, uid)
     }
 
     override suspend fun getSearchUsers(db: FirebaseFirestore, query:String): QuerySnapshot? {
-        return relativesInteractor.getSearchUsers(db, query)
+        return relativesModel.getSearchUsers(db, query)
     }
 }

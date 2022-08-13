@@ -1,4 +1,4 @@
-package com.paula.seniorcare_app.interactor
+package com.paula.seniorcare_app.model
 
 import android.content.ContentValues
 import android.util.Log
@@ -14,7 +14,7 @@ import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.tasks.await
 import java.util.*
 
-class VideocallsInteractor {
+class VideocallsModel {
     suspend fun getVideocalls(db: FirebaseFirestore): QuerySnapshot? {
         return try {
             val data = db.collection("videocalls").orderBy("timestamp", Query.Direction.DESCENDING).get().await()
