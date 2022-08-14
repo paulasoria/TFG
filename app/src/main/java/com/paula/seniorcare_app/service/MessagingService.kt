@@ -36,7 +36,6 @@ class MessagingService: FirebaseMessagingService() {
                 startActivity(intent)
             }
             else if(data["type"] == "incomingCall") {
-                //sendNotificationIncomingCall();
                 val intent = Intent(baseContext, IncomingVideocallActivity::class.java)
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 intent.putExtra("senderUid", data["senderUid"])
@@ -94,7 +93,7 @@ class MessagingService: FirebaseMessagingService() {
         val intent = Intent(this, ShowAlertActivity::class.java) //Pantalla de alertas o de llamada
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         intent.putExtra("msg", data["msg"])
-        intent.putExtra("time", data["time"])   //Se pone una hora que no es
+        intent.putExtra("time", data["time"])
         intent.putExtra("date", data["date"])
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         val pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_MUTABLE)

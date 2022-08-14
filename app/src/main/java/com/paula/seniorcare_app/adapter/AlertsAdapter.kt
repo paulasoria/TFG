@@ -89,7 +89,7 @@ class AlertsAdapter(private var alertsList: ArrayList<Alert>, var context: Conte
         builder.setMessage(context.getString(R.string.delete_alert))
         builder.setPositiveButton("Aceptar") { _,_ ->
             alertsList.remove(alert)
-            deleteAlertFromDB(db, currentUid, alert.id.toString())
+            deleteAlert(db, currentUid, alert.id.toString())
             notifyDataSetChanged()
         }
         builder.setNegativeButton("Cancelar",null)
@@ -97,7 +97,7 @@ class AlertsAdapter(private var alertsList: ArrayList<Alert>, var context: Conte
         dialog.show()
     }
 
-    private fun deleteAlertFromDB(db: FirebaseFirestore, currentUid: String, id: String){
+    private fun deleteAlert(db: FirebaseFirestore, currentUid: String, id: String){
         db.collection("users").document(currentUid).collection("alerts").document(id).delete()
     }
 }

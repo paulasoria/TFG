@@ -45,19 +45,30 @@ class SignUpActivity : AppCompatActivity(), SignUpContract.View {
                 lifecycleScope.launch {
                     withContext(Dispatchers.IO) {
                         if(signUpPresenter.signUp(email, password)) {
-                            val segments = uri.path!!.split("/".toRegex()).toTypedArray()
-                            val filename = segments[segments.size - 1]
-                            val uploadedSuccessfully = signUpPresenter.uploadPhoto(st, uri, filename)
-                            if (uploadedSuccessfully) {
-                                val url = signUpPresenter.getPhotoUrl(st, filename)
-                                url?.let {
-                                    signUpPresenter.createUser(db, url, name, email, roleMenu)
-                                    if(roleMenu == "Administrador"){
-                                        val homeIntent = Intent(baseContext, HomeActivity::class.java)
-                                        startActivity(homeIntent)
-                                    } else {    //Familiar
-                                        val tvIntent = Intent(baseContext, TvActivity::class.java)
-                                        startActivity(tvIntent)
+                            if(uri == Uri.EMPTY){
+                                signUpPresenter.createUser(db, "https://firebasestorage.googleapis.com/v0/b/seniorcare-tfg.appspot.com/o/no_photo_user.jpg?alt=media&token=5c2a71ea-774b-450a-868c-4fce85e356c8", name, email, roleMenu)
+                                if(roleMenu == "Administrador"){
+                                    val homeIntent = Intent(baseContext, HomeActivity::class.java)
+                                    startActivity(homeIntent)
+                                } else {    //Familiar
+                                    val tvIntent = Intent(baseContext, TvActivity::class.java)
+                                    startActivity(tvIntent)
+                                }
+                            } else {
+                                val segments = uri.path!!.split("/".toRegex()).toTypedArray()
+                                val filename = segments[segments.size - 1]
+                                val uploadedSuccessfully = signUpPresenter.uploadPhoto(st, uri, filename)
+                                if (uploadedSuccessfully) {
+                                    val url = signUpPresenter.getPhotoUrl(st, filename)
+                                    url?.let {
+                                        signUpPresenter.createUser(db, url, name, email, roleMenu)
+                                        if(roleMenu == "Administrador"){
+                                            val homeIntent = Intent(baseContext, HomeActivity::class.java)
+                                            startActivity(homeIntent)
+                                        } else {    //Familiar
+                                            val tvIntent = Intent(baseContext, TvActivity::class.java)
+                                            startActivity(tvIntent)
+                                        }
                                     }
                                 }
                             }

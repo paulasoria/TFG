@@ -108,7 +108,7 @@ class RelativeProfileActivity : AppCompatActivity(), RelativeProfileContract.Vie
         val currentUid = FirebaseAuth.getInstance().currentUser!!.uid
         lifecycleScope.launch {
             withContext(Dispatchers.IO) {
-                relativeProfilePresenter.createPetition(db, currentUid, relativeUid)   //sender, receiver
+                relativeProfilePresenter.createPetition(db, currentUid, relativeUid)
             }
         }
         Toast.makeText(this, "Solicitud de familiar enviada", Toast.LENGTH_SHORT).show()

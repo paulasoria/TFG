@@ -20,12 +20,11 @@ import java.util.*
 
 class OutgoingVideocallActivity : AppCompatActivity(), OutgoingVideocallContract.View {
     private val outgoingVideocallPresenter = OutgoingVideocallPresenter()
+    var callId: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_outgoing_videocall)
-
-        var callId: String? = null
 
         val receiverUid = intent.getStringExtra("uid").toString()
         val receiverImage = intent.getStringExtra("image").toString()
@@ -39,7 +38,7 @@ class OutgoingVideocallActivity : AppCompatActivity(), OutgoingVideocallContract
         val db = FirebaseFirestore.getInstance()
         val calendar = Calendar.getInstance()
         val date = "${calendar.get(Calendar.DAY_OF_MONTH)}/${calendar.get(Calendar.MONTH)+1}/${calendar.get(Calendar.YEAR)}"
-        val hour = calendar.get(Calendar.HOUR)
+        val hour = calendar.get(Calendar.HOUR_OF_DAY)
         val minute = calendar.get(Calendar.MINUTE)
         val time = if(minute.toString().length == 1 || minute.toString() == "00"){
             "$hour:0$minute"
@@ -71,13 +70,20 @@ class OutgoingVideocallActivity : AppCompatActivity(), OutgoingVideocallContract
         }
     }
 
+    override fun onBackPressed() {
+        super.onBackPressed()
+        val db = FirebaseFirestore.getInstance()
+        val receiverUid = intent.getStringExtra("uid").toString()
+        callId?.let { endVideocall(db, it, receiverUid) }
+    }
+
     override fun endVideocall(db: FirebaseFirestore, callId: String, receiverUid: String) {
         lifecycleScope.launch {
             withContext(Dispatchers.IO) {
-                outgoingVideocallPresenter.changeStateCall(db, callId!!, "lost")
+                outgoingVideocallPresenter.changeStateCall(db, callId, "lost")
                 val receiver = outgoingVideocallPresenter.getUser(db, receiverUid)
                 val receiverToken = receiver?.get("token") as String
-                outgoingVideocallPresenter.rejectCallHttp(receiverToken, callId!!)
+                outgoingVideocallPresenter.rejectCallHttp(receiverToken, callId)
             }
             finish()
         }

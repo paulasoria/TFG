@@ -31,7 +31,7 @@ class RelativesModel {
 
     suspend fun getSearchUsers(db: FirebaseFirestore, query:String): QuerySnapshot? {
         return try {
-            val data = db.collection("users").orderBy("email").startAt(query).get().await()
+            val data = db.collection("users").orderBy("email").startAt(query).endAt(query+"\uf8ff").get().await()
             data
         } catch (e: Exception) {
             Log.e(ContentValues.TAG, "GETTING SEARCH USERS ERROR", e)

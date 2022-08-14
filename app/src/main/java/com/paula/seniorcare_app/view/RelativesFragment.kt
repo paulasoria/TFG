@@ -83,7 +83,6 @@ class RelativesFragment : Fragment(), RelativesContract.View {
                 }
             }
         }
-
     }
 
     override fun searchRelative(){
