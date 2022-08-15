@@ -8,6 +8,12 @@ import com.google.firebase.firestore.QuerySnapshot
 import kotlinx.coroutines.tasks.await
 
 class RelativesModel {
+    /**
+     * Gets the added relatives of the current user from the database
+     *
+     * @param db
+     * @return
+     */
     suspend fun getAddedRelatives(db: FirebaseFirestore) : QuerySnapshot? {
         return try {
             val currentUid = FirebaseAuth.getInstance().currentUser?.uid
@@ -19,6 +25,13 @@ class RelativesModel {
         }
     }
 
+    /**
+     * Checks if the user is manager of the relative
+     *
+     * @param db
+     * @param relativeUid
+     * @return
+     */
     suspend fun isManagerOfRelative(db: FirebaseFirestore, relativeUid: String): Boolean {
         return try {
             val currentUid = FirebaseAuth.getInstance().currentUser?.uid
@@ -29,6 +42,13 @@ class RelativesModel {
         }
     }
 
+    /**
+     * Gets the search of users from a query
+     *
+     * @param db
+     * @param query
+     * @return
+     */
     suspend fun getSearchUsers(db: FirebaseFirestore, query:String): QuerySnapshot? {
         return try {
             val data = db.collection("users").orderBy("email").startAt(query).endAt(query+"\uf8ff").get().await()
@@ -39,6 +59,13 @@ class RelativesModel {
         }
     }
 
+    /**
+     * Sets a relative as manager of the user from the database
+     *
+     * @param db
+     * @param relativeUid
+     * @return
+     */
     suspend fun setManager(db: FirebaseFirestore, relativeUid: String): Boolean {
         return try {
             val currentUid = FirebaseAuth.getInstance().currentUser!!.uid
@@ -50,6 +77,13 @@ class RelativesModel {
         }
     }
 
+    /**
+     * Deletes a relative as manager of the user from the database
+     *
+     * @param db
+     * @param relativeUid
+     * @return
+     */
     suspend fun deleteManager(db: FirebaseFirestore, relativeUid: String): Boolean {
         return try {
             val currentUid = FirebaseAuth.getInstance().currentUser!!.uid
@@ -61,6 +95,14 @@ class RelativesModel {
         }
     }
 
+    /**
+     * Deletes a relative of the user from the database
+     *
+     * @param db
+     * @param currentUid
+     * @param uid
+     * @return
+     */
     suspend fun deleteRelative(db: FirebaseFirestore, currentUid: String, uid: String): Boolean {
         return try {
             db.collection("users").document(currentUid).collection("relatives").document(uid).delete().await()
@@ -71,6 +113,12 @@ class RelativesModel {
         }
     }
 
+    /**
+     * Checks if the relative if manager of the user
+     *
+     * @param uid
+     * @return
+     */
     suspend fun relativeIsManager(uid: String): Boolean {
         return try {
             val db = FirebaseFirestore.getInstance()
@@ -82,6 +130,12 @@ class RelativesModel {
         }
     }
 
+    /**
+     * Checks if the relative is added to the user relatives
+     *
+     * @param uid
+     * @return
+     */
     suspend fun relativeIsAdded(uid: String): Boolean {
         return try {
             val db = FirebaseFirestore.getInstance()

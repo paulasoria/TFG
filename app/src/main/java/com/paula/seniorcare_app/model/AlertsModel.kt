@@ -12,6 +12,13 @@ import java.util.*
 import kotlin.collections.HashMap
 
 class AlertsModel {
+    /**
+     * Gets the receiver of an alert searching by the email
+     *
+     * @param db
+     * @param email
+     * @return
+     */
     suspend fun getReceiverOfAlertEmail(db: FirebaseFirestore, email: String): QuerySnapshot? {
         return try {
             val user = db.collection("users").whereEqualTo("email", email).get().await()
@@ -22,6 +29,13 @@ class AlertsModel {
         }
     }
 
+    /**
+     * Gets the receiver of an alert searching by the uid
+     *
+     * @param db
+     * @param uid
+     * @return
+     */
     suspend fun getReceiverOfAlertUid(db: FirebaseFirestore, uid: String): DocumentSnapshot? {
         return try{
             val user = db.collection("users").document(uid).get().await()
@@ -32,6 +46,18 @@ class AlertsModel {
         }
     }
 
+    /**
+     * Creates an alert on the database using the data provided by the user
+     *
+     * @param db
+     * @param receiver
+     * @param tag
+     * @param repetition
+     * @param time
+     * @param daysOfWeek
+     * @param date
+     * @return
+     */
     suspend fun createAlert(db: FirebaseFirestore, receiver: String, tag: String, repetition: String, time: String, daysOfWeek: HashMap<String, Int>?, date: String?): Boolean {
         return try {
             val id = UUID.randomUUID().toString()
@@ -44,6 +70,19 @@ class AlertsModel {
         }
     }
 
+    /**
+     * Updates an alert on the database with the data provided by the user
+     *
+     * @param db
+     * @param id
+     * @param receiver
+     * @param tag
+     * @param repetition
+     * @param time
+     * @param daysOfWeek
+     * @param date
+     * @return
+     */
     suspend fun updateAlert(db: FirebaseFirestore, id: String, receiver: String, tag: String, repetition: String, time: String, daysOfWeek: HashMap<String, Int>?, date: String?): Boolean {
         return try {
             val sender = FirebaseAuth.getInstance().currentUser!!.uid
@@ -55,6 +94,12 @@ class AlertsModel {
         }
     }
 
+    /**
+     * Gets the configured alerts by the user from the database
+     *
+     * @param db
+     * @return
+     */
     suspend fun getConfiguredAlerts(db: FirebaseFirestore): QuerySnapshot? {
         return try {
             val currentUid = FirebaseAuth.getInstance().currentUser?.uid
@@ -67,6 +112,12 @@ class AlertsModel {
         }
     }
 
+    /**
+     * Gets the history of alerts from the database
+     *
+     * @param db
+     * @return
+     */
     suspend fun getHistoryOfAlerts(db: FirebaseFirestore): QuerySnapshot? {
         return try {
             val currentUid = FirebaseAuth.getInstance().currentUser?.uid

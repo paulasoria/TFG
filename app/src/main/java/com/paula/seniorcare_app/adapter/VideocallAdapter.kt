@@ -48,7 +48,6 @@ class VideocallAdapter(private var videocallList: ArrayList<Videocall>, var cont
             }
             name.text = videocall.senderName
         }
-
         return rootView
     }
 }

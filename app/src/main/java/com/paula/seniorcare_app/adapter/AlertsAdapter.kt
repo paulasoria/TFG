@@ -82,6 +82,11 @@ class AlertsAdapter(private var alertsList: ArrayList<Alert>, var context: Conte
         return rootView
     }
 
+    /**
+     * Shows a dialog to the user asking if is he sure he wants to delete an alert
+     *
+     * @param alert
+     */
     private fun showDeleteAlertDialog(alert: Alert){
         val db = FirebaseFirestore.getInstance()
         val currentUid = FirebaseAuth.getInstance().currentUser!!.uid
@@ -97,6 +102,13 @@ class AlertsAdapter(private var alertsList: ArrayList<Alert>, var context: Conte
         dialog.show()
     }
 
+    /**
+     * Deletes an alert from the database
+     *
+     * @param db
+     * @param currentUid
+     * @param id
+     */
     private fun deleteAlert(db: FirebaseFirestore, currentUid: String, id: String){
         db.collection("users").document(currentUid).collection("alerts").document(id).delete()
     }

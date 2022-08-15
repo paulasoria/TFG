@@ -63,10 +63,23 @@ class PetitionsAdapter(private var petitionsList: ArrayList<Petition>, var conte
         return rootView
     }
 
+    /**
+     * Changes the state of a petition in the database
+     *
+     * @param db
+     * @param petition
+     * @param state
+     */
     private fun changePetitionState(db: FirebaseFirestore, petition: Petition, state: String) {
         db.collection("users").document(petition.receiver.toString()).collection("petitions").document(petition.id.toString()).update("state", state)
     }
 
+    /**
+     * Adds a new relative to a user in the database
+     *
+     * @param db
+     * @param petition
+     */
     private fun addNewRelative(db: FirebaseFirestore, petition: Petition){
         db.collection("users").document(petition.receiver.toString()).collection("relatives").document(petition.sender.toString()).set(
             hashMapOf(

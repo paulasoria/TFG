@@ -9,6 +9,13 @@ import com.google.firebase.iid.FirebaseInstanceId
 import kotlinx.coroutines.tasks.await
 
 class AuthModel {
+    /**
+     * Creates an account when accesing with Google Services
+     *
+     * @param account
+     * @param googleRole
+     * @return
+     */
     suspend fun createUserFromGoogle(account: GoogleSignInAccount, googleRole: String): Boolean {
         val db = FirebaseFirestore.getInstance()
         val uid = FirebaseAuth.getInstance().currentUser!!.uid
@@ -31,6 +38,13 @@ class AuthModel {
         }
     }
 
+    /**
+     * Logs in the user with the email and the password provided
+     *
+     * @param email
+     * @param password
+     * @return
+     */
     suspend fun logIn(email: String, password: String): Boolean {
         return try {
             FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password).await()
@@ -41,6 +55,12 @@ class AuthModel {
         }
     }
 
+    /**
+     * Sends an email for reseting the password of the email provided
+     *
+     * @param email
+     * @return
+     */
     suspend fun resetPassword(email: String): Boolean {
         return try {
             FirebaseAuth.getInstance().sendPasswordResetEmail(email).await()
@@ -51,6 +71,12 @@ class AuthModel {
         }
     }
 
+    /**
+     * Changes the user token when he access the application on another device
+     *
+     * @param uid
+     * @return
+     */
     suspend fun changeUserToken(uid: String): Boolean {
         val db = FirebaseFirestore.getInstance()
         return try {
@@ -63,6 +89,13 @@ class AuthModel {
         }
     }
 
+    /**
+     * Signs up  the user with the email and the password provided
+     *
+     * @param email
+     * @param password
+     * @return
+     */
     suspend fun signUp(email: String, password: String): Boolean {
         return try {
             FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password).await()

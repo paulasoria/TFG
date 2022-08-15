@@ -10,6 +10,13 @@ import kotlinx.coroutines.tasks.await
 import java.util.*
 
 class PetitionsModel {
+    /**
+     * Gets the pending petitions of the user
+     *
+     * @param db
+     * @param uid
+     * @return
+     */
     suspend fun getPendingPetitions(db: FirebaseFirestore, uid: String): QuerySnapshot? {
         return try {
             val data = db.collection("users").document(uid).collection("petitions").get().await()
@@ -20,6 +27,13 @@ class PetitionsModel {
         }
     }
 
+    /**
+     * Gets the sender of a petition
+     *
+     * @param db
+     * @param uid
+     * @return
+     */
     suspend fun getSenderOfPetition(db: FirebaseFirestore, uid: String): DocumentSnapshot? {
         return try{
             val user = db.collection("users").document(uid).get().await()
@@ -30,6 +44,14 @@ class PetitionsModel {
         }
     }
 
+    /**
+     * Creates a petition with state "pending" on the database
+     *
+     * @param db
+     * @param sender
+     * @param receiver
+     * @return
+     */
     suspend fun createPetition(db: FirebaseFirestore, sender: String, receiver: String): Boolean {
         return try {
             val id = UUID.randomUUID().toString()
@@ -46,6 +68,12 @@ class PetitionsModel {
         }
     }
 
+    /**
+     * Checks if the petition is pending by the receiver
+     *
+     * @param receiver
+     * @return
+     */
     suspend fun petitionIsPendingByReceiver(receiver: String): QuerySnapshot? {
         return try {
             val db = FirebaseFirestore.getInstance()
@@ -57,6 +85,12 @@ class PetitionsModel {
         }
     }
 
+    /**
+     * Checks if the petition is pending by the sender
+     *
+     * @param sender
+     * @return
+     */
     suspend fun petitionIsPendingBySender(sender: String): QuerySnapshot? {
         return try {
             val db = FirebaseFirestore.getInstance()

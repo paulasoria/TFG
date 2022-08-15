@@ -15,6 +15,12 @@ import kotlinx.coroutines.tasks.await
 import java.util.*
 
 class VideocallsModel {
+    /**
+     * Gets the history of videocalls of the user from the database
+     *
+     * @param db
+     * @return
+     */
     suspend fun getVideocalls(db: FirebaseFirestore): QuerySnapshot? {
         return try {
             val data = db.collection("videocalls").orderBy("timestamp", Query.Direction.DESCENDING).get().await()
@@ -25,6 +31,13 @@ class VideocallsModel {
         }
     }
 
+    /**
+     * Rejects a videocall calling the Google Cloud Function
+     *
+     * @param token
+     * @param callId
+     * @return
+     */
     fun rejectCallHttp(token: String, callId: String): Task<String> {
         val functions: FirebaseFunctions = Firebase.functions
         val data = hashMapOf(
@@ -41,6 +54,13 @@ class VideocallsModel {
             }
     }
 
+    /**
+     * Accepts the videocall calling the Google Cloud Function
+     *
+     * @param token
+     * @param callId
+     * @return
+     */
     fun acceptCallHttp(token: String, callId: String): Task<String> {
         val functions: FirebaseFunctions = Firebase.functions
         val data = hashMapOf(
@@ -57,6 +77,21 @@ class VideocallsModel {
             }
     }
 
+    /**
+     * Creates a videocall calling the Google Cloud Function
+     *
+     * @param senderUid
+     * @param senderName
+     * @param senderEmail
+     * @param senderImage
+     * @param receiverUid
+     * @param receiverName
+     * @param receiverEmail
+     * @param receiverImage
+     * @param receiverToken
+     * @param callId
+     * @return
+     */
     fun createCallHttp(senderUid: String, senderName: String, senderEmail: String, senderImage: String, receiverUid: String, receiverName: String, receiverEmail: String, receiverImage: String, receiverToken: String, callId: String): Task<String> {
         val functions: FirebaseFunctions = Firebase.functions
         val data = hashMapOf(
@@ -81,6 +116,14 @@ class VideocallsModel {
             }
     }
 
+    /**
+     * Changes the state of a videocall on the database
+     *
+     * @param db
+     * @param callId
+     * @param state
+     * @return
+     */
     suspend fun changeStateCall(db: FirebaseFirestore, callId: String, state: String): Boolean {
         return try{
             db.collection("videocalls").document(callId).update("state", state).await()
@@ -91,6 +134,19 @@ class VideocallsModel {
         }
     }
 
+    /**
+     * Creates a videocall on the database
+     *
+     * @param db
+     * @param receiver
+     * @param receiverName
+     * @param senderName
+     * @param date
+     * @param time
+     * @param state
+     * @param timestamp
+     * @return
+     */
     suspend fun createCall(db: FirebaseFirestore, receiver: String, receiverName: String, senderName: String?, date: String?, time: String?, state: String, timestamp: FieldValue): String? {
         return try {
             val id = UUID.randomUUID().toString()

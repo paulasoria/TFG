@@ -11,6 +11,13 @@ import com.google.firebase.storage.StorageReference
 import kotlinx.coroutines.tasks.await
 
 class UsersModel {
+    /**
+     * Gets the user from the database
+     *
+     * @param db
+     * @param uid
+     * @return
+     */
     suspend fun getUser(db: FirebaseFirestore, uid: String): DocumentSnapshot? {
         return try {
             val user = db.collection("users").document(uid).get().await()
@@ -21,6 +28,14 @@ class UsersModel {
         }
     }
 
+    /**
+     * Uploads a photo to the storage
+     *
+     * @param st
+     * @param uri
+     * @param filename
+     * @return
+     */
     suspend fun uploadPhoto(st: StorageReference, uri: Uri, filename: String): Boolean {
         val uid = FirebaseAuth.getInstance().currentUser!!.uid
         return try {
@@ -33,6 +48,13 @@ class UsersModel {
         }
     }
 
+    /**
+     * Gets the url of the photo from the storage
+     *
+     * @param st
+     * @param filename
+     * @return
+     */
     suspend fun getPhotoUrl(st: StorageReference, filename: String): String? {
         val uid = FirebaseAuth.getInstance().currentUser!!.uid
         return try {
@@ -46,6 +68,13 @@ class UsersModel {
         }
     }
 
+    /**
+     * Updates the url of the user photo in the database
+     *
+     * @param db
+     * @param url
+     * @return
+     */
     suspend fun updatePhotoUrl(db: FirebaseFirestore, url: String): Boolean? {
         val uid = FirebaseAuth.getInstance().currentUser!!.uid
         return try {
@@ -57,6 +86,13 @@ class UsersModel {
         }
     }
 
+    /**
+     * Updates the name of the user on the database
+     *
+     * @param db
+     * @param name
+     * @return
+     */
     suspend fun editUserName(db: FirebaseFirestore, name: String): Boolean? {
         val uid = FirebaseAuth.getInstance().currentUser!!.uid
         return try {
@@ -68,6 +104,16 @@ class UsersModel {
         }
     }
 
+    /**
+     * Creates a new user on the database
+     *
+     * @param db
+     * @param url
+     * @param name
+     * @param email
+     * @param roleMenu
+     * @return
+     */
     suspend fun createUser(db: FirebaseFirestore, url: String, name: String, email: String, roleMenu: String): Boolean {
         return try {
             val uid = FirebaseAuth.getInstance().currentUser!!.uid
