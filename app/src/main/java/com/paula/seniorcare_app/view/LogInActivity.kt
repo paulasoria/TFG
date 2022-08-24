@@ -45,9 +45,13 @@ class LogInActivity : AppCompatActivity(), LogInContract.View {
                             }
                             if (user?.get("role") == "Administrador") {
                                 val homeIntent = Intent(baseContext, HomeActivity::class.java)
+                                homeIntent.flags =
+                                    Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                                 startActivity(homeIntent)
                             } else {
                                 val tvIntent = Intent(baseContext, TvActivity::class.java)
+                                tvIntent.flags =
+                                    Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                                 startActivity(tvIntent)
                             }
                         } else {

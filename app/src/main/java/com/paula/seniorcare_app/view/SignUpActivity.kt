@@ -49,9 +49,13 @@ class SignUpActivity : AppCompatActivity(), SignUpContract.View {
                                 signUpPresenter.createUser(db, "https://firebasestorage.googleapis.com/v0/b/seniorcare-tfg.appspot.com/o/no_photo_user.jpg?alt=media&token=5c2a71ea-774b-450a-868c-4fce85e356c8", name, email, roleMenu)
                                 if(roleMenu == "Administrador"){
                                     val homeIntent = Intent(baseContext, HomeActivity::class.java)
+                                    homeIntent.flags =
+                                        Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                                     startActivity(homeIntent)
                                 } else {    //Familiar
                                     val tvIntent = Intent(baseContext, TvActivity::class.java)
+                                    tvIntent.flags =
+                                        Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                                     startActivity(tvIntent)
                                 }
                             } else {
@@ -64,9 +68,13 @@ class SignUpActivity : AppCompatActivity(), SignUpContract.View {
                                         signUpPresenter.createUser(db, url, name, email, roleMenu)
                                         if(roleMenu == "Administrador"){
                                             val homeIntent = Intent(baseContext, HomeActivity::class.java)
+                                            homeIntent.flags =
+                                                Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                                             startActivity(homeIntent)
                                         } else {    //Familiar
                                             val tvIntent = Intent(baseContext, TvActivity::class.java)
+                                            tvIntent.flags =
+                                                Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                                             startActivity(tvIntent)
                                         }
                                     }

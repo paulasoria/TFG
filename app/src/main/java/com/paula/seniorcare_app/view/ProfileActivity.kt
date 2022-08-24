@@ -56,6 +56,8 @@ class ProfileActivity : AppCompatActivity(), ProfileContract.View {
             FirebaseAuth.getInstance().signOut()
             onBackPressed()
             val authIntent = Intent(this, AuthActivity::class.java)
+            authIntent.flags =
+                Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             startActivity(authIntent)
         }
     }
