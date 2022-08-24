@@ -78,7 +78,6 @@ class ProfileTvFragment : Fragment(), ProfileTvContract.View {
         super.onActivityResult(requestCode, resultCode, data)
         val db = FirebaseFirestore.getInstance()
         val st = FirebaseStorage.getInstance().reference
-        val uid = FirebaseAuth.getInstance().currentUser!!.uid
 
         if(requestCode == GALLERY_INTENT && resultCode == AppCompatActivity.RESULT_OK){
             val uri = data!!.data!!

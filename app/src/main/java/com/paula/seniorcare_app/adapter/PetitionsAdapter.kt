@@ -46,16 +46,13 @@ class PetitionsAdapter(private var petitionsList: ArrayList<Petition>, var conte
 
         acceptButton.setOnClickListener {
             changePetitionState(db, petition, "accepted")
-            //Google Function que actualice peticion del sender
             petitionsList.remove(petition)
             addNewRelative(db, petition)
-            //Googlw Function que agregue al receiver como familiar
             notifyDataSetChanged()
         }
 
         rejectButton.setOnClickListener {
             changePetitionState(db, petition, "rejected")
-            //Google Function que actualice peticion del sender
             petitionsList.remove(petition)
             notifyDataSetChanged()
         }
@@ -82,13 +79,7 @@ class PetitionsAdapter(private var petitionsList: ArrayList<Petition>, var conte
      */
     private fun addNewRelative(db: FirebaseFirestore, petition: Petition){
         db.collection("users").document(petition.receiver.toString()).collection("relatives").document(petition.sender.toString()).set(
-            hashMapOf(
-                "uid" to petition.sender,
-                "image" to petition.senderImage,
-                "role" to petition.senderRole,
-                "name" to petition.senderName,
-                "email" to petition.senderEmail
-            )
+            hashMapOf("uid" to petition.sender)
         )
     }
 }

@@ -51,11 +51,12 @@ class RelativesFragment : Fragment(), RelativesContract.View {
             withContext(Dispatchers.IO) {
                 val documents = relativesPresenter.getAddedRelatives(db)
                 documents?.iterator()?.forEach { document ->
-                    val uid: String = document.data.getValue("uid").toString()
-                    val name: String = document.data.getValue("name").toString()
-                    val email: String = document.data.getValue("email").toString()
-                    val image: String = document.data.getValue("image").toString()
-                    val role: String = document.data.getValue("role").toString()
+                    val relative = relativesPresenter.getUser(db,document.data.getValue("uid").toString())
+                    val uid: String = relative?.data?.getValue("uid").toString()
+                    val name: String = relative?.data?.getValue("name").toString()
+                    val email: String = relative?.data?.getValue("email").toString()
+                    val image: String = relative?.data?.getValue("image").toString()
+                    val role: String = relative?.data?.getValue("role").toString()
                     val user = User(uid, null, image, name, email, role)
                     addedRelativesList.add(user)
                 }

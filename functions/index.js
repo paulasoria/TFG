@@ -55,8 +55,7 @@ exports.createRelative = functions.firestore
       admin.firestore().collection("users").doc(uidB).get().then((B) => {
         return admin.firestore().collection("users").doc(uidA)
             .collection("relatives").doc(B.get("uid"))
-            .set({uid: B.get("uid"), name: B.get("name"), role: B.get("role"),
-              email: B.get("email"), image: B.get("image")});
+            .set({uid: B.get("uid")});
       });
       return null;
     });
