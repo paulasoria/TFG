@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/dark_blue"
+    tools:context=".view.SignUpActivity">
+
+    <LinearLayout
+        android:id="@+id/authLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
+        android:orientation="vertical"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/dataAuthLayout">
+
+        <TextView
+            android:id="@+id/Titulo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/pacifico"
+            android:text="Registro"
+            android:textColor="@color/white"
+            android:textSize="40sp" />
+
+        <ImageView
+            android:id="@+id/userImageView"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:maxWidth="150dp"
+            android:maxHeight="150dp"
+            android:layout_marginTop="20dp"
+            android:layout_gravity="center"
+            android:src="@drawable/no_photo_user"
+            android:clickable="true"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="8dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/dataAuthLayout"
+        android:layout_width="700dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toRightOf="@+id/authLayout">
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/nameTextInput"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:hint="Nombre"
+            app:errorIconDrawable="@null"
+            app:helperText="*Obligatorio"
+            app:startIconDrawable="@drawable/ic_face"
+            app:boxStrokeColor="@color/super_light_grayish_blue"
+            app:helperTextTextColor="@color/super_light_grayish_blue"
+            app:startIconTint="@color/super_light_grayish_blue"
+            android:textColorHint="@color/super_light_grayish_blue">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPersonName"
+                android:textColor="@color/super_light_grayish_blue" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="8dp" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/emailTextInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            app:startIconDrawable="@drawable/ic_email"
+            app:errorIconDrawable="@null"
+            app:helperText="*Obligatorio"
+            app:boxStrokeColor="@color/super_light_grayish_blue"
+            app:helperTextTextColor="@color/super_light_grayish_blue"
+            app:startIconTint="@color/super_light_grayish_blue"
+            android:textColorHint="@color/super_light_grayish_blue"
+            android:hint="Email">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textEmailAddress" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="8dp" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/passwordTextInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            app:startIconDrawable="@drawable/ic_password"
+            app:endIconMode="password_toggle"
+            app:errorIconDrawable="@null"
+            app:helperText="*Obligatorio"
+            app:boxStrokeColor="@color/super_light_grayish_blue"
+            app:helperTextTextColor="@color/super_light_grayish_blue"
+            app:startIconTint="@color/super_light_grayish_blue"
+            android:textColorHint="@color/super_light_grayish_blue"
+            app:endIconTint="@color/super_light_grayish_blue"
+            android:hint="Contraseña">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPassword"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="8dp" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/dropdownMenu"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+            app:startIconDrawable="@drawable/ic_person"
+            app:helperText="*Obligatorio"
+            app:errorIconDrawable="@null"
+            app:boxStrokeColor="@color/super_light_grayish_blue"
+            app:helperTextTextColor="@color/super_light_grayish_blue"
+            app:startIconTint="@color/super_light_grayish_blue"
+            android:textColorHint="@color/super_light_grayish_blue">
+
+            <AutoCompleteTextView
+                android:id="@+id/roleMenuTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="none"
+                android:hint="Rol" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <Button
+            android:id="@+id/signUpButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_weight="1"
+            android:text="Siguiente" />
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
