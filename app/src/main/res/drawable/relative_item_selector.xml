@@ -2,5 +2,7 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:state_focused="true"
         android:color="@color/super_light_grayish_blue"/> <!-- focused -->
+    <item android:state_selected="true"
+        android:color="@color/super_light_grayish_blue"/> <!-- selected -->
     <item android:color="@color/light_grayish_blue"/> <!-- default -->
 </selector>

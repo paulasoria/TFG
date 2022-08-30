@@ -61,6 +61,7 @@ class IncomingVideocallActivity : AppCompatActivity(), IncomingVideocallContract
                 val senderToken = sender?.get("token") as String    //Dice que es null ???
                 incomingVideocallPresenter.acceptCallHttp(senderToken, callId)
             }
+            finish()
             val intent = Intent(baseContext, VideocallActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             val sp: SharedPreferences = getSharedPreferences("JWT_FILE", MODE_PRIVATE)

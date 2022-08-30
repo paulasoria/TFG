@@ -7,6 +7,7 @@ import android.widget.AutoCompleteTextView
 import android.widget.TextView
 import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
 import com.paula.seniorcare_app.R
@@ -28,6 +29,7 @@ interface AddAlertContract {
     }
 
     interface Presenter {
+        suspend fun getUser(db: FirebaseFirestore, uid: String): DocumentSnapshot?
         suspend fun getAddedRelatives(db: FirebaseFirestore) : QuerySnapshot?
         suspend fun isManagerOfRelative(db: FirebaseFirestore, relativeUid: String): Boolean
         suspend fun getReceiverOfAlertEmail(db: FirebaseFirestore, email: String): QuerySnapshot?

@@ -14,7 +14,8 @@
         app:itemIconTint="@color/super_light_grayish_blue"
         app:itemTextColor="@color/super_light_grayish_blue"
         app:labelVisibilityMode="selected"
-        app:menu="@menu/menu_tv" />
+        app:menu="@menu/menu_tv"
+        android:nextFocusRight="@layout/fragment_add_relative"/>
 
     <FrameLayout
         android:id="@+id/wrapper_tv"

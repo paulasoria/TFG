@@ -6,7 +6,9 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.Button
+import androidx.core.view.get
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
@@ -118,11 +120,8 @@ class RelativesFragment : Fragment(), RelativesContract.View {
             noResultsTextView.visibility = View.INVISIBLE
             adapter = RelativesAdapter(addedRelativesList, requireContext())
             addedRelativesGridView.adapter = adapter
-            /*addedRelativesGridView.setOnKeyListener { _,_,_ ->
-                addedRelativesGridView.setSelection(addedRelativesGridView.selectedItemPosition + 1)
-                true
-            }*/
-            addedRelativesGridView.setOnItemClickListener{ _,_,position,_ ->
+
+            addedRelativesGridView.setOnItemClickListener { _,_,position,_ ->
                 val intent = Intent(context, RelativeProfileActivity::class.java)
                 intent.putExtra("user", addedRelativesList[position])
                 startActivity(intent)

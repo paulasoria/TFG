@@ -10,6 +10,7 @@ import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.textfield.TextInputLayout
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
 import com.paula.seniorcare_app.R
@@ -75,8 +76,8 @@ class AddAlertFragment : Fragment(), AddAlertContract.View {
                 relatives?.iterator()?.forEach { relative ->
                     val relativeUid: String = relative.data.getValue("uid").toString()
                     if(addAlertPresenter.isManagerOfRelative(db, relativeUid)) {
-                        val email: String = relative.data.getValue("email").toString()
-                        addedRelativesList.add(email)
+                        val user: DocumentSnapshot? = addAlertPresenter.getUser(db, relativeUid)
+                        addedRelativesList.add(user?.data?.getValue("email").toString())
                     }
                 }
             }

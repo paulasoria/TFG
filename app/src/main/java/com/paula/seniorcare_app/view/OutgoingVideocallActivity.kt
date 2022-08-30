@@ -77,6 +77,11 @@ class OutgoingVideocallActivity : AppCompatActivity(), OutgoingVideocallContract
         callId?.let { endVideocall(db, it, receiverUid) }
     }
 
+    override fun onStop() {
+        super.onStop()
+        finish()
+    }
+
     override fun endVideocall(db: FirebaseFirestore, callId: String, receiverUid: String) {
         lifecycleScope.launch {
             withContext(Dispatchers.IO) {

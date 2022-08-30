@@ -15,12 +15,21 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.paula.seniorcare_app.R
+import com.paula.seniorcare_app.model.UsersModel
 import com.paula.seniorcare_app.view.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 
 const val channelId = 0
 const val channelName = "CHANNEL_NAME"
 
 class MessagingService: FirebaseMessagingService() {
+    private val job = SupervisorJob()
+    private val scope = CoroutineScope(Dispatchers.IO + job)
+
     @RequiresApi(Build.VERSION_CODES.S)
     override fun onMessageReceived(message: RemoteMessage) {
         super.onMessageReceived(message)
@@ -55,22 +64,24 @@ class MessagingService: FirebaseMessagingService() {
             else if(data["type"] == "rejectedCall"){
                 val db = FirebaseFirestore.getInstance()
                 val uid = FirebaseAuth.getInstance().currentUser!!.uid
-                if(getUser(db, uid)?.data?.get("role") == "Administrador"){
-                    val intent = Intent(baseContext, HomeActivity::class.java)
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                    startActivity(intent)
-                } else {    //Familiar
-                    val intent = Intent(baseContext, TvActivity::class.java)
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                    startActivity(intent)
+                scope.launch {
+                    if(getUser(db, uid)?.data?.get("role") == "Administrador"){
+                        val intent = Intent(baseContext, HomeActivity::class.java)
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                        startActivity(intent)
+                    } else if (getUser(db, uid)?.data?.get("role") == "Familiar"){
+                        val intent = Intent(baseContext, TvActivity::class.java)
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                        startActivity(intent)
+                    }
                 }
             }
         }
     }
 
-    private fun getUser(db: FirebaseFirestore, uid: String): DocumentSnapshot? {
+    private suspend fun getUser(db: FirebaseFirestore, uid: String): DocumentSnapshot? {
         return try {
-            val user = db.collection("users").document(uid).get().result
+            val user = db.collection("users").document(uid).get().await()
             user
         } catch (e: Exception) {
             null
