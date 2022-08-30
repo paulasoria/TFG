@@ -18,7 +18,8 @@
             android:layout_height="wrap_content"
             android:background="@drawable/round_button_shape"
             android:backgroundTint="@color/light_grayish_blue"
-            android:queryHint="Busca familiares por email" />
+            android:queryHint="Busca familiares por email"
+            android:queryBackground="@color/white"/>
 
         <View
             android:layout_width="match_parent"

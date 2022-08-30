@@ -36,12 +36,16 @@
             app:startIconDrawable="@drawable/ic_email"
             app:errorIconDrawable="@null"
             app:helperText="*Obligatorio"
+            app:boxStrokeColor="@color/super_light_grayish_blue"
+            app:helperTextTextColor="@color/super_light_grayish_blue"
+            app:startIconTint="@color/super_light_grayish_blue"
+            android:textColorHint="@color/super_light_grayish_blue"
             android:hint="Email">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textEmailAddress"/>
+                android:inputType="textEmailAddress" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -58,6 +62,11 @@
             app:endIconMode="password_toggle"
             app:errorIconDrawable="@null"
             app:helperText="*Obligatorio"
+            app:boxStrokeColor="@color/super_light_grayish_blue"
+            app:helperTextTextColor="@color/super_light_grayish_blue"
+            app:startIconTint="@color/super_light_grayish_blue"
+            android:textColorHint="@color/super_light_grayish_blue"
+            app:endIconTint="@color/super_light_grayish_blue"
             android:hint="Contraseña">
 
             <com.google.android.material.textfield.TextInputEditText
