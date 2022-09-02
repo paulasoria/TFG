@@ -62,7 +62,7 @@ async function getActualAlarms(){
 
 
 /**
- * Gets the receiver of an alert searching by the email
+ * Puts the alert on the history collection of the user
  *
  * @param idSender
  * @param receiverName
@@ -71,7 +71,7 @@ async function getActualAlarms(){
  * @param actualDate
  * @param timestamp
  */ 
-async function putAlertOnHistory(idSender, receiverName, alert, actualTime, actualDate, timestamp){
+async function putAlertOnHistory(idSender, receiverName, alert, actualTime, actualDate, timestamp) {
     db.collection("users").doc(idSender).collection("historyAlerts").doc()
     .set({id: alert.id, tag: alert.tag, receiver: receiverName, time: actualTime, date: actualDate, timestamp: timestamp})
     .then(snapshot => {

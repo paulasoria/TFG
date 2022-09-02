@@ -85,7 +85,7 @@ class HistoryFragment : Fragment(), HistoryContract.View {
                 alerts?.iterator()?.forEach { alert ->
                     val id: String = alert.data.getValue("id").toString()
                     val receiver: String = alert.data.getValue("receiver").toString()
-                    val tag: String = alert.data.getValue("tag").toString() //Etiqueta alerta
+                    val tag: String = alert.data.getValue("tag").toString()
                     val time: String = alert.data.getValue("time").toString()
                     val date : String = alert.data.getValue("date").toString()
                     val a = History(id, receiver, time, date, tag)
