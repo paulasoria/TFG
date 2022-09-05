@@ -1,5 +1,7 @@
 # SeniorCare
 
+<img src="./seniorcare_gif.gif" width="260" height="550" align=right>
+
 ![cropped_logo](https://user-images.githubusercontent.com/75267240/188323789-6d7b27d1-a3cc-48a6-bbbd-fb90d8e3b32c.png)
 
 Trabajo de Fin de Grado de Ingeniería Informática en la USAL
